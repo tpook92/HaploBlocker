@@ -1,1 +1,17 @@
+Figure 1: 
+Schematic overview of the steps of the HaploBlocker method.} Steps include (1) Cluster-building: Classify local haplotype variants in short windows into groups. (2) Cluster-merging: Simplify window cluster by merging and neglecting nodes. (3) Block-identification: Identify blocks based on transition probabilities between nodes. (4) Block-filtering: Creation of a haplotype library by reducing the set of blocks to the most relevant ones for the later application. (5) Block-extension: Extend blocks by single windows and SNPs.
 
+Figure 2:
+Cluster-merging-step: Development of the window cluster in the Cluster-merging-step after each application of SM, SG, NN. 
+
+Figure 3: 
+Excerpt of a window cluster. This included all edges (transitions) from the nodes of one of the common paths in the example dataset.
+
+Figure 4:
+Graphical representation of the block structure for the first 20'000 SNPs of chromosome 1 in maize. Haplotypes are sorted for similarity in SNP 10'000. In that region block structures are most visible and transitions between blocks can be tracked easily.
+
+Figure 5:
+Proportion of the dataset represented by the haplotype library (coverage) of the training and test set in regard to size of the training set.
+
+Figure 6: 
+Influence of the minimum minor allele frequency set to identify subgroups with variable markers.
