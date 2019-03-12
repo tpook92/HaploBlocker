@@ -1,3 +1,7 @@
 The current upload contains genetic data for 910 DH-lines genotyped at 501,124 markers (501 Kemater Landmais Gelb & 409 Petkuser Ferdinand Rot).
 All results presented in the manuscript are obtained using chromosome 1.
 Under the current state we can only provide genomic data for chromosome 1 but will upload data for the whole genome as soon as project partners publish there population genetic studies.
+
+Secondly, we provide genetic data for chromosome 1 of 888 chicken from a breeding line and 1810 chicken from a diversity panel.
+Note that an additional phasing step is necessary for the application of HaploBlocker.
+We will provide phased version of both dataset soon.
