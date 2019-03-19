@@ -1,13 +1,13 @@
-#' Fast Simple Merge nodes
+#' Fast Simple Merge knots
 #'
-#' Faster version of simple_merge_probv2 to perform simple merge for node data
-#' @param data node-dataset
+#' Faster version of simple_merge_probv2 to perform simple merge for knot data
+#' @param data knot-dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @export
 
 
 simple_merge <- function(data, intersect_func=intersect){
-  cat(paste0("Start_simple_merge: ", length(data),"\n"))
+  print(c("Start_simple_merge:", length(data)))
   a <- start_end_block(data)
   relevant <- (a[,1]>1)
   relevant <- (1:nrow(a))[relevant]

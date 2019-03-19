@@ -8,7 +8,7 @@
 #' @param nwindow number of windows in the dataset
 #' @param bp_map vector of positions for each SNP in bp (default: NULL - all 0)
 #' @param max_extending_diff_snp Maximum number of SNPs with variants in SNP-extending-algorithm (step V; default: 0)
-#' @param extending_ratio_snp Minimum ratio of SNPs with only one allele to those with variants (default: Inf)#' @param off_node_addition If TRUE use off-variant-identification (default: FALSE)
+#' @param extending_ratio_snp Minimum ratio of SNPs with only one allele to those with variants (default: Inf)#' @param off_knot_addition If TRUE use off-variant-identification (default: FALSE)
 #' @export
 
 
@@ -21,7 +21,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
 
   }
   prev <- numeric(max_l)
-  extensions_done <- 0
+  extentions_done <- 0
   for(index in 1:length(blocklist)){
     activ <- blocklist[[index]]
 
@@ -30,7 +30,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
 
       diff <- 0
       same <- 0
-      extension_length <- 0
+      extention_length <- 0
       max_diff <- 0
       position_diff <- NULL
       position <- activ[[2]]$snp -1
@@ -44,22 +44,22 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
           position_diff <- c(position, position_diff)
         }
         if(same/diff >= max_diff){
-          extension_length <- activ[[2]]$snp - position
+          extention_length <- activ[[2]]$snp - position
           max_diff <- same/diff
         }
         position <- position -1
       }
 
       if(max_diff >= extending_ratio_snp){
-        if(extension_length==max_l){
-          cat("SNP-extension over full window. That is not supposed to happen\n")
+        if(extention_length==max_l){
+          print("Hier ist was schief gegangen!")
         }
-        extensions_done <- extensions_done +1
-        activ[[2]]$snp <- activ[[2]]$snp - extension_length
+        extentions_done <- extentions_done +1
+        activ[[2]]$snp <- activ[[2]]$snp - extention_length
         activ[[2]]$bp <- bp_map[activ[[2]]$snp]
-        text <- paste("SNP-Extension:",activ[[2]]$snp,"_",  activ[[2]]$snp + extension_length-1, sep="")
+        text <- paste("SNP-Extension:",activ[[2]]$snp,"_",  activ[[2]]$snp + extention_length-1, sep="")
         activ[[1]] <- c(text, activ[[1]])
-        #activ[[4]] <- c(prev[activ[[2]]$window + 1:extension_length -1],activ[[4]])
+        #activ[[4]] <- c(prev[activ[[2]]$window + 1:extention_length -1],activ[[4]])
 
         blocklist[[index]] <- activ
       }
@@ -72,7 +72,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
 
       diff <- 0
       same <- 0
-      extension_length <- 0
+      extention_length <- 0
       max_diff <- 0
       position_diff <- NULL
       position <- activ[[3]]$snp +1
@@ -86,7 +86,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
           position_diff <- c(position, position_diff)
         }
         if(same/diff >= max_diff){
-          extension_length <- position - activ[[3]]$snp
+          extention_length <- position - activ[[3]]$snp
           max_diff <- same/diff
         }
 
@@ -94,15 +94,15 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
       }
 
       if(max_diff >= extending_ratio_snp){
-        if(extension_length==max_l){
-          cat("SNP-extension over full window. That is not supposed to happen\n")
+        if(extention_length==max_l){
+          print("Hier ist was schief gegangen!")
         }
-        extensions_done <- extensions_done +1
-        activ[[3]]$snp <- activ[[3]]$snp + extension_length
+        extentions_done <- extentions_done +1
+        activ[[3]]$snp <- activ[[3]]$snp + extention_length
         activ[[3]]$bp <- bp_map[activ[[3]]$snp]
-        text <- paste("SNP-Extension:",activ[[2]]$snp - extension_length+1,"_",  activ[[2]]$snp, sep="")
+        text <- paste("SNP-Extension:",activ[[2]]$snp - extention_length+1,"_",  activ[[2]]$snp, sep="")
         activ[[1]] <- c(activ[[1]], text)
-        #activ[[4]] <- c(activ[[4]],  prev[activ[[3]]$window + 1:extension_length - extension_length])
+        #activ[[4]] <- c(activ[[4]],  prev[activ[[3]]$window + 1:extention_length - extention_length])
         blocklist[[index]] <- activ
 
       }

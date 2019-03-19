@@ -1,7 +1,7 @@
-#' Calculate transition probabilities between nodes
+#' Calculate transition probabilities between knots
 #'
-#' Internal Function to calculate transition probabilities between nodes
-#' @param data node-dataset
+#' Internal Function to calculate transition probabilities between knots
+#' @param data knot-dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @export
 

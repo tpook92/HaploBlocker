@@ -1,7 +1,7 @@
-#' node-boundaries
+#' Knot-boundaries
 #'
-#' Function to calculate start and end points of a node dataset
-#' @param data node-dataset
+#' Function to calculate start and end points of a knot dataset
+#' @param data knot-dataset
 #' @export
 
 

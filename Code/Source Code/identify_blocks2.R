@@ -11,74 +11,48 @@
 #' @param subgroups possible subgroups to consider in the block identification process (default: NULL - list(1:indi))
 #' @param min_per_subgroup minimum number of haplotypes per block per subgroup (default: 0)
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
-#' @param identify_filter If TRUE filter out Starting blocks to avoid duplicated (default: FALSE)
 #' @export
 
-identify_blocks <- function(data, indi, nwindow, mindestanteil=0.95, consider_knoten=TRUE, consider_trans=TRUE,
-                            trans_min=5, subgroups=NULL, min_per_subgroup= 0, intersect_func=intersect,
-                            identify_filter=FALSE){
+identify_blocks2 <- function(data, indi, nwindow, mindestanteil=0.95, consider_knoten=TRUE, consider_trans=TRUE,
+                            trans_min=5, subgroups=NULL, min_per_subgroup= 0, intersect_func=intersect){
   if(length(subgroups)==0){
     subgroups <- list(1:indi)
   }
   b <- knoten_size(data) # Individuen pro Block
   blocklist <- list()
   blockcounter <- 1
-  activ_blocks <- NULL
   for(start in 1:length(data)){
     options <- list()
     if(consider_knoten==TRUE){
-      if(nrow(data[[start]][[7]])>1 || (nrow(data[[start]][[7]])==1 && data[[start]][[7]][1,1]==0) || (nrow(data[[start]][[7]])==1 && nrow(data[[data[[start]][[7]][1,1]]][[6]])>=2)){
-        for(group in subgroups){
-          options[[length(options)+1]] <- list(start, data[[start]][[4]], intersect_func(data[[start]][[5]], group))
-        }
+      for(group in subgroups){
+        options[[length(options)+1]] <- list(start, data[[start]][[4]], intersect_func(data[[start]][[5]], group))
       }
+
     }
     if(consider_trans==TRUE){
       valid <- data[[start]][[6]][(data[[start]][[6]][,2]>=trans_min) * (data[[start]][[6]][,1]>0) * 1:nrow(data[[start]][[6]]),1]
-      if((nrow(data[[start]][[6]])!=1 && data[[start]][[6]][1,1]!=0 ) || consider_knoten==FALSE){
-        if(length(valid)>0){
-          for(index in valid){
-            for(group in subgroups){
-              options[[length(options)+1]] <- list(c(start), c(data[[start]][[4]]), intersect_func(group, intersect_func(data[[start]][[5]], data[[index]][[5]])) )
-            }
+      if(length(valid)>0){
+        for(index in valid){
+          for(group in subgroups){
+            options[[length(options)+1]] <- list(c(start), c(data[[start]][[4]]), intersect_func(group, intersect_func(data[[start]][[5]], data[[index]][[5]]) ))
           }
         }
       }
     }
 
     if(min_per_subgroup>0){
-      if(length(options)>0){
-        for(index in length(options):1){
-          checker <- 1
-          for(group in subgroups){
-            if(min_per_subgroup> length(intersect_func(group, options[[index]][[3]]))){
-              checker <- 0
-            }
+      for(index in length(options):1){
+        checker <- 1
+        for(group in subgroups){
+          if(min_per_subgroup> length(intersect_func(group, options[[index]][[3]]))){
+            checker <- 0
           }
-          if(checker==0){
-            options[[index]] <- NULL
-          }
+        }
+        if(checker==0){
+          options[[index]] <- NULL
         }
       }
     }
-
-    if(identify_filter){
-      if(length(options)>0){
-        for(index in length(options):1){
-          candidates <- which(activ_blocks[,4]==length(options[[index]][[3]]))
-          for(check in candidates){
-            if(prod(options[[index]][[3]]==blocklist[[activ_blocks[check,3]]][[6]])){
-              options[[index]] <- NULL
-              break
-
-            }
-          }
-        }
-      }
-
-      # Hier werden optionen aussortiert!
-    }
-
     for(option in options){
       block <- option[[1]]
       windows <- option[[2]]
@@ -155,13 +129,6 @@ identify_blocks <- function(data, indi, nwindow, mindestanteil=0.95, consider_kn
       blocklist[[blockcounter]][[6]] <- individuen
       blocklist[[blockcounter]][[5]] <- length(individuen)
       blockcounter <- blockcounter + 1
-    }
-
-    if(identify_filter){
-      activ_blocks <- activ_blocks[activ_blocks[,2]>=data[[start]]$end$window,]
-      if(length(options)>0){
-        activ_blocks <- rbind(activ_blocks, cbind(blocklist_startend(blocklist, first_block = length(blocklist)- length(options)+1), (length(blocklist)- length(options)+1):length(blocklist), blocklist_size(blocklist, first_block = length(blocklist)- length(options)+1)))
-      }
     }
   }
 

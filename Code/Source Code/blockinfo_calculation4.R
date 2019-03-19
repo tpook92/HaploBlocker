@@ -9,11 +9,15 @@
 #' @param window_anchor_gens matrix to constructed window_sequence base on start/end points in bp (e.g. gen regions, per row: start, gen)
 #' @param at_least_one If TRUE no allowed merging errors in windows of size 1
 #' @param blockinfo_mode Structure of the groups in step I (default: 0 - Common haplos as major variants, 1- minimum number of groups)
+#' @param actual_snp_weight Set weight for difference between two alleles in a SNP (more than 1 possible base pair)
+#' @param na_snp_weight Set weight for difference between NA and allele in a SNP (more than 1 possible base pair)
+#' @param na_seq_weight Set weight for difference between NA and allele a loci with 1 possible base pair
 #' @export
 
 
-blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging_error=1, bp_map=NULL,
-                                  window_anchor_gens=NULL, at_least_one=TRUE, blockinfo_mode=0){
+blockinfo_calculation4 <- function(dhm, window_sequence=NULL, window_size=32, merging_error=3, bp_map=NULL,
+                                  window_anchor_gens=NULL, at_least_one=TRUE, blockinfo_mode=0, actual_snp_weight = 5,
+                                  na_snp_weight=2, na_seq_weight=0){
 
   if(length(window_anchor_gens)>0 && length(window_sequence)==0 && length(bp_map)>0){
     window_sequence <- matrix(0, ncol=2, nrow=nrow(window_anchor_gens)*2+1)
@@ -60,6 +64,18 @@ blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, mer
     if(is.matrix(activ)==FALSE){
       activ <- t(as.matrix(activ))
     }
+    snp_weight <- rep(1, window_sequence[index,3])
+    na_weight <- rep(na_seq_weight, window_sequence[index,3])
+    if(TRUE){
+      for(checkor in 1:window_sequence[index,3]){
+        possible_snp <- unique(c("0", activ[checkor,]))
+        if(length(possible_snp)>2){
+          snp_weight[checkor] <- actual_snp_weight
+          na_weight[checkor] <- actual_snp_weight - na_snp_weight
+          window_sequence[index,4] <- window_sequence[index,4] +actual_snp_weight -1
+        }
+      }
+    }
 
     vers <- t(unique(activ, MARGIN=2))
     nblocks <- nrow(vers)
@@ -67,7 +83,8 @@ blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, mer
     similarity <- matrix(0, ncol=nblocks, nrow=nblocks)
     for(col in 1:nblocks){
       for(row in 1:col){
-        similarity[row,col] <- sum(vers[col,]==vers[row,])
+
+        similarity[row,col] <- sum((vers[col,]==vers[row,])*snp_weight) + sum( ((vers[col,]==0)*(vers[row,]!=0) + (vers[col,]==0)*(vers[row,]!=0)) * na_weight)
         similarity[col,row] <- similarity[row,col]
       }
     }
@@ -111,13 +128,7 @@ blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, mer
         hblocks[count] <- sum(current.block==count)
       }
     } else{
-      similarity <- matrix(0, ncol=nblocks, nrow=nblocks)
-      for(col in 1:nblocks){
-        for(row in 1:col){
-          similarity[row,col] <- sum(vers[col,]==vers[row,])
-          similarity[col,row] <- similarity[row,col]
-        }
-      }
+
 
       options <- numeric(nrow(vers))
       for(index2 in 1:length(options)){

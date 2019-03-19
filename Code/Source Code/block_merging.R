@@ -9,14 +9,13 @@
 #' @param window_sequence_list sequence of predefined windows (default: NULL ;per row: start$snp, end$snp, length, length - merging_error, start$bp, end$bp)
 #' @param dataset dataset which variant nr. for each window
 #' @param off_lines minimum number of haplotypes to looose in the creation of a bigger block (default: 5)
-#' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)
-#' @param consider_all If TRUE always haplotypes which are not in the node to be in a generated block
-#' @param save_allblock If TRUE keep all haplotypes with all windows according to a block (even under min_similarity)
-#' @param node_min minimum number of haplotypes per block (default: 5)
+#' @param mindestaehnlichkeit minimum rate of the same SNPs to be added to the block (default: 0.99)
+#' @param consider_all If TRUE always haplotypes which are not in the knot to be in a generated block
+#' @param save_allblock If TRUE keep all haplotypes with all windows according to a block (even under mindestaehnlichkeit)
+#' @param minimum.blocksize minimum.blocksize
 #' @param subgroups possible subgroups to consider in the block identification process (default: NULL - list(1:indi))
 #' @param min_per_subgroup minimum number of haplotypes per block per subgroup (default: 0)
-#' @param subgroup_exception allow for not all subgroups to include a block
-#' @param anteil_filter Use only relevant Sequences for filter which haplotypes to check in min_similarity
+#' @param anteil_filter Use only relevant Sequences for filter which haplotypes to check in mindestaehnlichkeit
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @param helper Interal information used as a fast abort criterion
 #' @param c_dhm Bit-wise coded SNP-dataset
@@ -24,9 +23,9 @@
 #' @export
 
 
-block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list,  off_lines=5, min_similarity=0.99, consider_all=TRUE,
-                          save_allblock=TRUE, node_min=0, subgroups=NULL, min_per_subgroup= 0, anteil_filter=TRUE, helper=NULL,
-                          c_dhm=NULL, c_dhm_mode=TRUE, intersect_func=intersect, subgroup_exception=0){
+block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list,  off_lines=5, mindestaehnlichkeit=0.99, consider_all=TRUE,
+                          save_allblock=TRUE, minimum.blocksize=0, subgroups=NULL, min_per_subgroup= 0, anteil_filter=TRUE, helper=NULL,
+                          c_dhm=NULL, c_dhm_mode=TRUE, intersect_func=intersect){
   if(length(helper)==0){
     helper <- rowSums(blocklist_startend(blocklist, type="snp"))
   } else{
@@ -148,7 +147,7 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
         if(length(blocklist[[index]])>=9 && length(blocklist[[index]][[9]])>0){
           laenge <- blocklist[[index]][[3]]$snp - blocklist[[index]][[2]]$snp + 1
           max_anteil <- blocklist[[index]][[9]][to_consider,1] + laenge - blocklist[[index]][[9]][to_consider,2]
-          to_consider <- to_consider[max_anteil > (laenge * min_similarity)]
+          to_consider <- to_consider[max_anteil > (laenge * mindestaehnlichkeit)]
         }
 
       }
@@ -165,7 +164,7 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
         }
       }
 
-      keep <- which((anteil > ((blocklist[[index]][[3]]$snp - blocklist[[index]][[2]]$snp +1 )*min_similarity)) + save_allblock* (blockanteil == length(haplotyp))>0)
+      keep <- which((anteil > ((blocklist[[index]][[3]]$snp - blocklist[[index]][[2]]$snp +1 )*mindestaehnlichkeit)) + save_allblock* (blockanteil == length(haplotyp))>0)
 
 
       if(anteil_filter==TRUE){
@@ -196,18 +195,12 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
       blocklist[[index]][[5]] <- length(blocklist[[index]][[6]])
     }
   }
-
-
   if(min_per_subgroup>0){
     for(index in length(blocklist):1){
       remover <- 0
-      exception <- subgroup_exception
       for(group in subgroups){
         if(length(intersect_func(blocklist[[index]][[6]], group))< min_per_subgroup){
-          exception <- exception - 1
-          if(exception<0){
-            remover <- 1
-          }
+          remover <- 1
         }
       }
       if(remover==1){
@@ -215,7 +208,7 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
       }
     }
   }
-  blocklist <- blocklist_reorder(blocklist, node_min)
+  blocklist <- blocklist_reorder(blocklist, minimum.blocksize)
 
 
 

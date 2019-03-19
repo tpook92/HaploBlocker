@@ -4,10 +4,10 @@
 #' @param blocklist block-dataset
 #' @param dhm dataset to check for overlap with the blocklist
 #' @param max maximum number in each cell (overlapping blocks; default: 1)
-#' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)
+#' @param mindestaehnlichkeit minimum rate of the same SNPs to be added to the block (default: 0.99)
 #' #' @export
 
-overlap_test <- function(blocklist, dhm , max=1, min_similarity=0.99){
+overlap_test <- function(blocklist, dhm , max=1, mindestaehnlichkeit=0.99){
   overlap <- matrix(0, nrow=nrow(dhm), ncol=ncol(dhm))
   for(index in 1:length(blocklist)){
     seq <- blocklist[[index]][[7]]$snp
@@ -15,7 +15,7 @@ overlap_test <- function(blocklist, dhm , max=1, min_similarity=0.99){
     end <- blocklist[[index]][[3]]$snp
 
     sim <-colSums(dhm[start:end,]== seq)
-    included <- which(sim >= (min_similarity*(end-start+1)))
+    included <- which(sim >= (mindestaehnlichkeit*(end-start+1)))
     if(length(included)>0){
       overlap[start:end, included] <- overlap[start:end, included] +1
     }

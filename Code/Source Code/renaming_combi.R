@@ -1,12 +1,12 @@
 #' Renaming function
 #'
-#' Internal Function to remove empty nodes and rename after merging
-#' @param data node-dataset
+#' Internal Function to remove empty knots and rename after merging
+#' @param data knot-dataset
 #' @param nwindow number of windows in the dataset
 #' @export
 
 renaming_combi <- function(data, nwindow){
-  b <- nodes_size(data)
+  b <- knoten_size(data)
   a <- start_end_block(data)
 
   relevant <- which(b>0)

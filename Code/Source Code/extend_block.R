@@ -12,7 +12,7 @@
 
 extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extending_ratio=10, dataset, window_sequence_list){
   prev <- numeric(max(nwindow))
-  extensions_done <- 0
+  extentions_done <- 0
   for(index in 1:length(blocklist)){
     activ <- blocklist[[index]]
 
@@ -21,7 +21,7 @@ extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extendi
 
       diff <- 0
       same <- 0
-      extension_length <- 0
+      extention_length <- 0
       max_diff <- 0
       position_diff <- NULL
       position <- activ[[2]]$window -1
@@ -40,20 +40,20 @@ extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extendi
         }
         if(same/diff >= max_diff && length(uniques) == 1){
           changes <- position_diff
-          extension_length <- activ[[2]]$window - position
+          extention_length <- activ[[2]]$window - position
           max_diff <- same/diff
         }
         position <- position -1
       }
 
       if(max_diff > extending_ratio){
-        extensions_done <- extensions_done +1
-        activ[[2]]$window <- activ[[2]]$window - extension_length
+        extentions_done <- extentions_done +1
+        activ[[2]]$window <- activ[[2]]$window - extention_length
         activ[[2]]$snp <- window_sequence_list[[activ[[12]]]][activ[[2]]$window,1]
         activ[[2]]$bp <- window_sequence_list[[activ[[12]]]][activ[[2]]$window,5]
-        text <- paste("Extension_", activ[[2]]$window,"_", activ[[2]]$window + extension_length, sep="")
+        text <- paste("Extention_", activ[[2]]$window,"_", activ[[2]]$window + extention_length, sep="")
         activ[[1]] <- c(text, activ[[1]])
-        activ[[4]] <- c(prev[activ[[2]]$window + 1:extension_length -1],activ[[4]])
+        activ[[4]] <- c(prev[activ[[2]]$window + 1:extention_length -1],activ[[4]])
 
         if(length(activ)>=8 && length(c(activ[[8]], changes))>0){
           activ[[8]] <- sort(c(activ[[8]], changes))
@@ -71,7 +71,7 @@ extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extendi
 
       diff <- 0
       same <- 0
-      extension_length <- 0
+      extention_length <- 0
       max_diff <- 0
       position_diff <- NULL
       position <- activ[[3]]$window +1
@@ -90,20 +90,20 @@ extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extendi
         }
         if(same/diff >= max_diff && length(uniques) == 1){
           changes <- position_diff
-          extension_length <- position - activ[[3]]$window
+          extention_length <- position - activ[[3]]$window
           max_diff <- same/diff
         }
         position <- position +1
       }
 
       if(max_diff > extending_ratio){
-        extensions_done <- extensions_done +1
-        activ[[3]]$window <- activ[[3]]$window + extension_length
+        extentions_done <- extentions_done +1
+        activ[[3]]$window <- activ[[3]]$window + extention_length
         activ[[3]]$snp <- window_sequence_list[[activ[[12]]]][activ[[3]]$window,2]
         activ[[3]]$bp <- window_sequence_list[[activ[[12]]]][activ[[3]]$window,6]
-        text <- paste("Extension_", activ[[3]]$window- extension_length,"_", activ[[3]]$window , sep="")
+        text <- paste("Extention_", activ[[3]]$window- extention_length,"_", activ[[3]]$window , sep="")
         activ[[1]] <- c(activ[[1]], text)
-        activ[[4]] <- c(activ[[4]],  prev[activ[[3]]$window + 1:extension_length - extension_length])
+        activ[[4]] <- c(activ[[4]],  prev[activ[[3]]$window + 1:extention_length - extention_length])
         if(length(activ)>=8 && length(c(activ[[8]], changes))>0){
           activ[[8]] <- sort(c(activ[[8]], changes))
         } else if(length(changes)>0){
@@ -119,5 +119,5 @@ extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extendi
 
   }
 
-  return(list(blocklist, extensions_done))
+  return(list(blocklist, extentions_done))
 }
