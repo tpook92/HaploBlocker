@@ -11,8 +11,11 @@
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @export
 
-blocklist_comparison<- function(blocklist1, blocklist2, indi=313, type="snp", compair_region=NULL, shift=0, turn.around=FALSE, intersect_func=intersect){
+blocklist_comparison<- function(blocklist1, blocklist2, indi=NULL, type="snp", compair_region=NULL, shift=0, turn.around=FALSE, intersect_func=intersect){
 
+  if(length(indi)==0){
+    indi <- indi_calc(blocklist1)
+  }
   se1 <- blocklist_startend(blocklist1, type=type)
   se2 <- blocklist_startend(blocklist2, type=type)
   if(turn.around==TRUE){
@@ -28,7 +31,6 @@ blocklist_comparison<- function(blocklist1, blocklist2, indi=313, type="snp", co
   min_s <- min(compair_region)
   sim <- matrix(0, nrow=length(blocklist1), ncol=length(blocklist2))
   for(index1 in 1:length(blocklist1)){
-    print(index1)
     for(index2 in 1:length(blocklist2)){
       inters <- intersect_func(blocklist1[[index1]][[6]], blocklist2[[index2]][[6]])
       sim[index1,index2] <- length(inters) / length(unique(c(blocklist1[[index1]][[6]], blocklist2[[index2]][[6]])))

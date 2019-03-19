@@ -6,7 +6,10 @@
 #' @param nwindow number of windows in the dataset
 #' @export
 
-block_dataset_construction <- function(blockinfo, indi, nwindow){
+block_dataset_construction <- function(blockinfo, indi=NULL, nwindow){
+  if(length(indi)==0){
+    indi <- indi_calc(blocklist)
+  }
   dataset <- matrix(0, nrow=nwindow, ncol=indi)
   for(index in 1:length(blockinfo)){
     for(index2 in 1:length(blockinfo[[index]][[5]])){
@@ -23,7 +26,10 @@ block_dataset_construction <- function(blockinfo, indi, nwindow){
 #' @param indi number of haplotypes in the dataset
 #' @export
 
-block_matrix_construction <- function(blocklist, indi){
+block_matrix_construction <- function(blocklist, indi=NULL){
+  if(length(indi)==0){
+    indi <- indi_calc(blocklist)
+  }
   dataset <- matrix(0, nrow=length(blocklist), ncol=indi)
   for(index in 1:length(blocklist)){
     dataset[index,blocklist[[index]][[6]]] <- 1

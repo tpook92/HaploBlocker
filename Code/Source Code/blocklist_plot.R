@@ -20,7 +20,7 @@ blocklist_plot <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, type="sn
   start <- bpstart[switch]
   end <- bpend[switch]
   size <- size[switch]
-  plot(0,-100, xlim=c(1,length(start)), ylim=c(0, max(end)))
+  plot(-1000,0, xlim=c(1,length(start)), ylim=c(0, max(end)), xlab="block number", ylab="SNP")
   for(index in 1:length(start)){
     lines(c(index,index), c(start[index], end[index]))
   }

@@ -7,7 +7,11 @@
 #' @param max maximum number in each cell (overlapping blocks; default: 1)
 #' @export
 
-coverage_test <- function(blocklist, indi, type="snp", max=1){
+coverage_test <- function(blocklist, indi=NULL, type="snp", max=1){
+  if(length(indi)==0){
+    indi <- indi_calc(blocklist)
+  }
+
   se <- blocklist_startend(blocklist, type=type )
   nwindow <- max(se[,2])
   coverage.test <- matrix(0, ncol=indi, nrow=nwindow)
@@ -19,11 +23,3 @@ coverage_test <- function(blocklist, indi, type="snp", max=1){
   return(coverage.test)
 }
 
-
-#blocktest <- numeric(length(blocklist))
-
-#for(index in 1:length(blocklist)){
-#  if(sum(blocklist[[index]][[6]]==9)&& blocklist[[index]][[2]]$window<=760&& blocklist[[index]][[3]]$window>760){
-##    blocktest[index] <- 1
-#  }
-#}

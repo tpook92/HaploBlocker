@@ -7,7 +7,12 @@
 #' @param bw bandwidth for the smoothing of the coverage (default: bw=1 - no smoothing)
 #' @export
 
-block_plot <- function(blocklist,indi=313, type="snp", bw=1){
+block_plot <- function(blocklist,indi=NULL, type="snp", bw=1){
+
+  if(length(indi)==0){
+    indi <- indi_calc(blocklist)
+  }
+
   se <- blocklist_startend(blocklist, type=type)
   size <- blocklist_size(blocklist)/indi
   plot(0,-100, xlim=c(0, max(se[,2])), ylim=c(0, 1), ylab="Size/Coverage", xlab=type, main="Location of the blocks")

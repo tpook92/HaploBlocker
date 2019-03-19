@@ -37,15 +37,15 @@ blocklist_plot_xsize <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, ty
       tempest[1:size[index]+sofar] <- end[index]
       sofar <- sofar + size[index]
     }
-    xy <- density(tempest,bw=5, from=1, to=max(se), n=nwindow)
+    xy <- density(tempest,bw=5, from=1, to=max(se), n=max(se))
 
-    candidate <- unique(c(0,(c(0,xy$y[-nwindow])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:nwindow))[-1]
+    candidate <- unique(c(0,(c(0,xy$y[-max(se)])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:max(se)))[-1]
 
     abline(h=candidate)
   } else{
-    xy <- density(c(start,end),bw=5, from=1, to=nwindow, n=nwindow)
+    xy <- density(c(start,end),bw=5, from=1, to=nwindow, n=max(se))
 
-    candidate <- unique(c(0,(c(0,xy$y[-nwindow])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:nwindow))[-1]
+    candidate <- unique(c(0,(c(0,xy$y[-max(se)])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:max(se)))[-1]
 
     abline(h=candidate)
   }

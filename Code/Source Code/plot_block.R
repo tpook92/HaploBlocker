@@ -13,13 +13,20 @@
 #' @param max_step Maximum distance of blocks to consider in the oriantation step (default: 500)
 #' @param blocklist block-dataset
 #' @param add_sort If FALSE deactivate sorting haplotype for local similarity
+#' @param xlim X-axis boundaries of positions to include in the plot
 #' @export
 
 
-plot_block <- function(blocklist, type="snp", oriantation="snp", include=TRUE, indi=313, min_to_plot = 5,
+plot_block <- function(blocklist, type="snp", oriantation="snp", include=TRUE, indi=NULL, min_to_plot = 5,
                       intensity=0.5, add_sort=TRUE, max_step=500,
                       snp_ori=NULL,
-                      export_order=FALSE, import_order=FALSE){
+                      export_order=FALSE, import_order=FALSE,
+                      xlim=NULL){
+
+  if(length(indi)==0){
+    indi <- indi_calc(blocklist)
+  }
+
   oriantation_f <- oriantation
   se <- blocklist_startend(blocklist, type=type)
   order <- NULL
@@ -64,7 +71,6 @@ plot_block <- function(blocklist, type="snp", oriantation="snp", include=TRUE, i
       oriantation <- c(oriantation, 0)
     }
     for(index in oriantation){
-      print(index)
       pl <- length(order)
       if(index==0){
         order <- unique(c(order,1:indi))
@@ -124,22 +130,24 @@ plot_block <- function(blocklist, type="snp", oriantation="snp", include=TRUE, i
           order <- c(unlist(groups))
         }
 
-        print(unlist(groups))
-        print(order)
-
       }
     }
 
 
   }
-  plot(0,-1000,ylim=c(0,length(order)), xlim=c(1,max(se)), ylab="haplotype", xlab="SNP",
-       cex.axis=1.3, cex.lab=1.3)
+  if(length(xlim)>0){
+    plot(0,-1000,ylim=c(0,length(order)), ylab="haplotype", xlab="SNP",
+         cex.axis=1, cex.lab=1, xlim=xlim)
+  } else{
+    plot(0,-1000,ylim=c(0,length(order)), xlim=c(1,max(se)), ylab="haplotype", xlab="SNP",
+         cex.axis=1, cex.lab=1)
+  }
+
 
   activ_colors <- numeric(length(blocklist))
   for(index in 1:length(blocklist)){
     overlap <- duplicated(c(blocklist[[index]][[6]], order))[-(1:blocklist[[index]][[5]])]
     if(sum(overlap) >= min_to_plot){
-      print(index)
       taken <- base::intersect(which(se[,1]<=se[index,2]), which(se[,2]>=se[index,1]))
       block_color <- sort(unique(c(0,activ_colors[taken])))
       activ_colors[index] <- min(length(block_color),which(block_color!=(1:length(block_color)-1))-1)

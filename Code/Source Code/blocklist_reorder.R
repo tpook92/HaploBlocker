@@ -2,13 +2,13 @@
 #'
 #' Function to sort the blocks based on starting-position
 #' @param blocklist block-dataset
-#' @param minimum.blocksize minimum number of haplotypes per block (default: 5)
+#' @param node_min minimum number of haplotypes per block (default: 5)
 #' @export
 
 
-blocklist_reorder <- function(blocklist, minimum.blocksize=5){
+blocklist_reorder <- function(blocklist, node_min=5){
   size <- blocklist_size(blocklist)
-  removes <- which(size<minimum.blocksize)
+  removes <- which(size<node_min)
   if(length(removes)>0){
     for(index in sort(removes, decreasing=TRUE)){
       blocklist[[index]] <- NULL
