@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Error - BEAGLE 4.1\n\nargs <- commandArgs(TRUE)\nchromo <- as.numeric(args[1])\nnr <- as.numeric(args[2])\n\ntrue <- read.table(paste0(\"MAZE_new/Full_vcf/chromo\",chromo,\".vcf.vcf\"))\n\nerrort <- NULL\nerrorp <- NULL\nfor(type in c(\"default\", \"beagle4\", \"buildwindow250\", \"buildwindow100\", \"buildwindow50\", \"buildwindow25\", \"buildwindow10\", \"modelscale1\",\"modelscale15\", \"modelscale2\",\"modelscale25\", \"modelscale3\", \"modelscale4\", \"modelscale5\", \"buildwindow50_singlescale2\", \"ne100000\", \"ne10000\", \"ne1000\")){\n  print(type)\n  imputed <- read.table(paste0(\"MAZE_new/Imputed001_\", type, \"_vcf/chromo\",chromo,\"_\",nr,\"vcf.vcf.gz\"))\n  \n  overlap <- duplicated(c(imputed[,2],true[,2]))[-(1:nrow(imputed))]\n  \n  \n  true_reduced <- true[overlap,]\n  true_data <- true_reduced[,-(1:9)]\n  imputed_data <- imputed[,-(1:9)]\n  \n  switch <- which(as.character(true_reduced[,4])!=as.character(imputed[,4]))\n  \n  error <- 0\n  for(indi in 1:ncol(imputed_data)){\n    print(indi)\n    z1 <- as.numeric(substr(imputed_data[,indi], start=1, stop=1))\n    z2 <- as.numeric(substr(imputed_data[,indi], start=3, stop=3))\n    t <- as.numeric(substr(true_data[,indi], start=1, stop=1))\n    t[switch] <- 1 - t[switch]\n    \n    error<- error + sum((z1!=t) + (z2!=t))\n  }\n  errort <- c(errort, error)\n  errorp <- c(errorp, error/ncol(imputed_data)/nrow(imputed_data))\n  \n  name <- paste0(\"MAZE_new/Imputing_error_total/error\", chromo, \"nr\", nr,\".RData\")\n  save(file=name, list=c(\"errort\", \"errorp\"))\n  \n}\n\n",
+    "created" : 1515508658709.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3607522765",
+    "id" : "B58D9A0F",
+    "lastKnownWriteTime" : 1515676094,
+    "last_content_update" : 1515676094,
+    "path" : "C:/Users/tpook/Desktop/Error_beagle41.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled44"
+    },
+    "relative_order" : 27,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#exportPattern(\"^[^\\\\.]\")\n\n###exportPattern(\"^[[:alpha:]]+\")\nexportPattern(\"^[ABD-Za-z]\")\n\nimportFrom(\"graphics\", \"abline\", \"lines\", \"plot\", \"polygon\")\nimportFrom(\"stats\", \"density\", \"median\", \"ksmooth\")\nimportFrom(\"compiler\", \"enableJIT\")\nimportFrom(\"grDevices\", \"adjustcolor\")\nimportFrom(\"RandomFieldsUtils\", \"confirm\")\nuseDynLib(HaploBlocker, .registration = TRUE, .fixes = \"C_\")\n",
+    "created" : 1515678514609.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "681873063",
+    "id" : "EF9C440A",
+    "lastKnownWriteTime" : 1524210385,
+    "last_content_update" : 1524210385459,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/NAMESPACE",
+    "project_path" : "NAMESPACE",
+    "properties" : {
+    },
+    "relative_order" : 21,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_namespace"
+}

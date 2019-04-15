@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1553865802903.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "880DFE2B",
+    "lastKnownWriteTime" : 1553865985,
+    "last_content_update" : 1553865985517,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/renaming_combi.R",
+    "project_path" : "R/renaming_combi.R",
+    "properties" : {
+        "cursorPosition" : "13,138",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 25,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

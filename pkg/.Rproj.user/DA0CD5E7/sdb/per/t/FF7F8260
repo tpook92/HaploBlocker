@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Plink PED/MAP\ndata <- read.table(\"C:/Users/tpook/Desktop/out.Chromo1_B.txt.phased.gz\")\n\ndatas <- as.matrix(data[-1,])\n\nnindi <- 128\nnsnp <- 102351\nsnp.data <- matrix(0, ncol=nsnp*2, nrow=nindi)\n\nfor(snp in 1:nsnp){\n  snp.data[,snp*2-1] <- datas[snp,1:nindi*2+1]\n  snp.data[,snp*2] <- datas[snp, 1:nindi*2+2]\n}\n\nped <- cbind(1:nindi, 1:nindi, 0,0,0,0, snp.data)\n\nmap <- cbind(1, paste(\"snp\", 1:nsnp, sep=\"\"), 0, 1:nsnp)\n\nwrite(t(ped), \"C:/Users/tpook/Desktop/pedfile_chicken.txt\", ncol=ncol(ped))\nwrite(t(map), \"C:/Users/tpook/Desktop/mapfile_chicken.txt\", ncol=ncol(map))\n\n#tpook@asterix:~$ mv pedfile.txt pedfile.ped\n#tpook@asterix:~$ mv mapfile.txt mapfile.map\n",
+    "created" : 1505639645060.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "356375603",
+    "id" : "FF7F8260",
+    "lastKnownWriteTime" : 1528975859,
+    "last_content_update" : 1528975859705,
+    "path" : "C:/Users/tpook/Desktop/vcf-trafo-chicken.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled18"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

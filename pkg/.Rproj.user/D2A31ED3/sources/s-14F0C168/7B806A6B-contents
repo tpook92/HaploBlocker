@@ -1,0 +1,23 @@
+for(chromo in 1:10){
+  load(paste0("NRGene_MAZE_sequence/chr",chromo,"_340.RData"))
+
+  data2 <- as.matrix(data1)
+  geno <- depth <- matrix(NA,nrow=nrow(data1), ncol=340)
+  for(index in 1:340){
+    print(index)
+    test <- (strsplit(data2[,index+9],split=":"))
+    for(index2 in 1:length(test)){
+      geno[index2,index] <- substr(test[[index2]][1], start=1, stop=1)
+      if(length(test[[index2]])>2){
+        depth[index2,index] <- test[[index2]][3]
+      } else{
+        depth[index2,index] <- 0
+      }
+
+    }
+
+  }
+  #look <- which(((depth!=0) + (geno=="."))>1)
+  save(file=paste0("NRGene_MAZE_sequence/PE_info_chr",chromo,".RData"), list=c("geno", "depth"))
+}
+

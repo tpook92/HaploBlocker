@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "dhm1 <- read.table(\"C:/Users/tpook/Desktop/phased1.txt\")\n\nlibrary(HaploBlocker)\n\ndhm <- dhm1[,1:1000]\ndhm <- as.matrix(dhm)\nstorage.mode(dhm) <- \"numeric\"\n\nblockl <- block_calculation(dhm, window_size=10, min_majorblock=1000)\n\nt <- coverage_test(blockl)\nmean(t)\nse <- blocklist_startend(blockl, type=\"snp\")\nmean(se[,2]-se[,1])\n",
+    "created" : 1537169884298.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "2246935120",
+    "id" : "F985ABE3",
+    "lastKnownWriteTime" : 23081149961076847,
+    "last_content_update" : 1537173340260,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled75"
+    },
+    "relative_order" : 81,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "################################################################################\n################### Example Estimation and Prediction of the ###################\n###################      genomic variance in REM             ###################\n################################################################################\n\n\nrm(list = ls())\nlibrary(sommer)\nlibrary(BGLR) # only for exemplary data\nsource(\"GenVar_2703.R\")\n\n################################################################################\ndata(mice)\nX <- scale(mice.X[1:100,], scale=FALSE, center=TRUE) # mean-centering important for\n                                             # \"old\" estimator\nG <- tcrossprod(X) # X%*% t(X): calc of GRM\ny.true <- scale(mice.pheno$Obesity.BMI[1:100]) # only for reasons of comparison\nrm(mice.A, mice.pheno, mice.X)\n################################################################################\nlm.blup <- mmer(Y=y.true, X=NULL, Z=list(A=list(K=G)), silent=TRUE,\n                iters=20, tolpar=1e-3,\n                tolparinv=1e-6) # fit model\n# Extracting estimation output in numeric form\ng.hat <- as.vector(lm.blup$u.hat$A)\nvar.b.hat <- as.numeric(lm.blup$var.comp$A)\nvar.e.hat <- as.numeric(lm.blup$var.comp$units)\n# Variance calculation\nvar.BLUP <- var.Equi(g.hat=g.hat, G=G, var.b.hat=var.b.hat, var.e.hat=var.e.hat)\n################################################################################\n# Analysis\nvar(y.true)    # phenotypic variance equals 1 because of normalization\nvar.BLUP[[1]]  # \"old\" estimated genomic variance\nvar.BLUP[[4]]  # new predicted genomic variance\nvar.e.hat      # estimate of error variance\n\n# !!! in this example the former estimator overestimates the genomic variance\n# (0.223) and the predictor corrects for that (0.1830)\n\nvar.BLUP[[1]] + var.e.hat  # estimated gen. variance and the error variance\n                           # account for too much variance\nvar.BLUP[[4]] + var.e.hat  # predicted new gen. variance and the error\n                           # variance sum up to 1 (which equals the phenotypic\n                           # variance), as it should\n\n# Comment: in most examples the old estimator underestimates (in this example\n#          overestimates). But in general the predictor is more precise and sums\n#          with the error variance to the phenotypic variance\n\n\n################################################################################\n# Analog \"normales\" BLUP\nlm.blup2 <- mmer(Y=y.true, X=NULL, Z=list(A=list(Z=X)), silent=TRUE,\n                iters=20, tolpar=1e-3,\n                tolparinv=1e-6) # fit model\nu.hat <- as.vector(lm.blup2$u.hat$A)\nvar.b.hat <- as.numeric(lm.blup2$var.comp$A)\nvar.e.hat <- as.numeric(lm.blup2$var.comp$units)\ncov.u <- as.matrix(lm.blup2$Var.u.hat$A$T1)\n# Variance calculation\nvar.BLUP2 <- var.RE(u.hat=u.hat, X=X, var.b.hat=var.b.hat, cov.u=cov.u,\n                    var.e.hat=var.e.hat)\nvar.BLUP2\n\n\n",
+    "created" : 1528357226525.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "503341322",
+    "id" : "5A7AD69D",
+    "lastKnownWriteTime" : 1528376052,
+    "last_content_update" : 1528376052079,
+    "path" : "C:/Users/tpook/Desktop/Variance_example.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

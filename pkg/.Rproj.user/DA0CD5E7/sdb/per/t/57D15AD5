@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "args <- commandArgs(TRUE)\nrun <- as.numeric(args[1])\nnRep1 <- as.numeric(args[2])\nnRep2 <- as.numeric(args[3])\n\nsource(\"GenVar_2703.R\")\nlibrary(sommer)\n#source(\"C:/Users/tpook/Desktop/GenVar_2703.R\")\nlibrary(BGLR)\ndata(wheat)\nX=wheat.X\nn=nrow(X)\np=ncol(X)\n\n## Monte Carlo Study IID features ##############################################\nprop=c(.1,.2,.5,.7,.9)\n\nR2a=list() # Original inputs\nR2b=list() # Monte Carlo\nR2c=list() # Eigen\n\nfor(i in 1:length(prop)){\n  q=round(prop[i]*ncol(wheat.X))\n\n  R2a[[i]]=matrix(nrow=q,ncol=nRep1)\n  R2b[[i]]=matrix(nrow=nRep2,ncol=nRep1)\n  R2c[[i]]=rep(NA,nRep1)\n\n\n  for(j in 1:nRep1){\n    W=matrix(nrow=n,ncol=p,data=rnorm(n*p))\n    cols=sample(1:p,size=q)\n    W[,cols]=wheat.X[,cols]\n    W=scale(W)\n    X=wheat.X[,cols] %*% matrix(rnorm(length(cols)^2), nrow=length(cols), ncol=length(cols) )\n    Gx=tcrossprod(scale(X,center=T,scale=F));Gx=Gx/mean(diag(Gx))\n    Gw=tcrossprod(scale(W,center=T,scale=F));Gw=Gw/mean(diag(Gw))\n\n    EVDw=eigen(Gw)\n    EVDx=eigen(Gx)\n\n    # original inputs\n    for(k in 1:ncol(X)){\n      y=X[,k]\n      lm.blup <-mmer(Y=y, X=NULL, Z=list(A=list(K=Gw)), silent=TRUE,\n                     iters=20, tolpar=1e-3,\n                     tolparinv=1e-6)\n\n      g.hat <- as.vector(lm.blup$u.hat$A)\n      var.b.hat <- as.numeric(lm.blup$var.comp$A)\n      var.e.hat <- as.numeric(lm.blup$var.comp$units)\n\n      var.BLUP <- var.Equi(g.hat=g.hat, G=Gw, var.b.hat=var.b.hat, var.e.hat=var.e.hat)\n\n      R2a[[i]][k,j]= var.BLUP[[4]] / (var.BLUP[[4]] + var.e.hat)\n    }\n\n    # Monte Carlo Method\n    for(k in 1:nRep2){\n      a=rnorm(ncol(X))\n      y=X%*%a\n      lm.blup <-mmer(Y=y, X=NULL, Z=list(A=list(K=Gw)), silent=TRUE,\n                     iters=20, tolpar=1e-3,\n                     tolparinv=1e-6)\n\n      g.hat <- as.vector(lm.blup$u.hat$A)\n      var.b.hat <- as.numeric(lm.blup$var.comp$A)\n      var.e.hat <- as.numeric(lm.blup$var.comp$units)\n\n      var.BLUP <- var.Equi(g.hat=g.hat, G=Gw, var.b.hat=var.b.hat, var.e.hat=var.e.hat)\n\n      R2b[[i]][k,j]= var.BLUP[[4]] / (var.BLUP[[4]] + var.e.hat)\n    }\n\n    # Eigenvectors\n    nV=length(EVDw$values)\n    tmp=rep(NA,nV)\n    for(k in 1:nV){\n      y=EVDx$vectors[,k]\n      lm.blup <-mmer(Y=y, X=NULL, Z=list(A=list(K=Gw)), silent=TRUE,\n                     iters=20, tolpar=1e-3,\n                     tolparinv=1e-6)\n\n      g.hat <- as.vector(lm.blup$u.hat$A)\n      var.b.hat <- as.numeric(lm.blup$var.comp$A)\n      var.e.hat <- as.numeric(lm.blup$var.comp$units)\n\n      var.BLUP <- var.Equi(g.hat=g.hat, G=Gw, var.b.hat=var.b.hat, var.e.hat=var.e.hat)\n\n      tmp[k]= var.BLUP[[4]] / (var.BLUP[[4]] + var.e.hat)\n    }\n    R2c[[i]][j]=sum(tmp*EVDx$values)/sum(EVDx$values)\n    print(c(i,j))\n  }\n}\n\nR2a=matrix(nrow=nRep1,data=unlist(lapply(X=R2a,FUN=colMeans)))\nR2b=matrix(nrow=nRep1,data=unlist(lapply(X=R2b,FUN=colMeans)))\nR2c=matrix(nrow=nRep1,data=unlist(R2c))\n\nOUT <- OUT.SD <- matrix(ncol=3,nrow=length(prop))\nrownames(OUT)=prop\ncolnames(OUT)=c('REML-Inputs','MC-method','Eigen')\nOUT[,1]=colMeans(R2a)\nOUT[,2]=colMeans(R2b)\nOUT[,3]=colMeans(R2c)\n\n\nOUT.SD[,1]=apply(FUN=sd,X=R2a,MARGIN=2)\nOUT.SD[,2]=apply(FUN=sd,X=R2b,MARGIN=2)\nOUT.SD[,3]=apply(FUN=sd,X=R2c,MARGIN=2)\n\nname1 <- paste0(\"XonW_\",run,\"_3_schreck.RData\")\nsave(file=name1, list=c(\"OUT\", \"OUT.SD\", \"R2a\", \"R2b\", \"R2c\"))\n\nwarnings()\n\n\n",
+    "created" : 1529327958166.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3823047274",
+    "id" : "57D15AD5",
+    "lastKnownWriteTime" : 1529332916,
+    "last_content_update" : 1529332916652,
+    "path" : "C:/Users/tpook/Desktop/sim3_XonW_schreck.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 103,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

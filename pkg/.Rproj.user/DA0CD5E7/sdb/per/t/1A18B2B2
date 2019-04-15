@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Python Datensaetze Generation\n\ndata <- read.table(\"Deep_learning_vit/gZWSgenotypen4Goettingen.txt\", sep=\";\", stringsAsFactors = FALSE)\n\n#for(trait in c(\"SCS\", \"PKG\", \"NRc\", \"MKG\", \"FGK\")){\n#  pheno <- read.table(paste0(\"Deep_learning_vit/DPR_\",trait,\".csv\"), sep=\";\", stringsAsFactors = FALSE)\n#  order <- pheno[,1]\n#}\n\ntrait <- \"SCS\"\npheno <- read.table(paste0(\"Deep_learning_vit/DPR_\",trait,\".csv\"), sep=\";\", stringsAsFactors = FALSE)\norder <- pheno[,1]\n\n\ndataset <- matrix(0L, nrow=nchar(data[2,2]), ncol=(nrow(data)-1))\n\nfor(index in 2:nrow(data)){\n  print(index)\n  take <- which(data[,1]==order[index])\n  dataset[,index-1] <- as.integer(strsplit(data[take,2], split=\"\")[[1]])\n}\n\nwrite.table(dataset, file=\"Deep_learning_vit/Python_data_45k_SNP.txt\", quote = FALSE, row.names = FALSE, col.names = FALSE)\n\n\n",
+    "created" : 1530519453795.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1003764034",
+    "id" : "1A18B2B2",
+    "lastKnownWriteTime" : 1530630962,
+    "last_content_update" : 1530630962048,
+    "path" : "C:/Users/tpook/Desktop/Python_cattle_dataset.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled75"
+    },
+    "relative_order" : 82,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

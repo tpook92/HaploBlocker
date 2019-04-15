@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "/*\n Authors\n Martin Schlather, schlather@math.uni-mannheim.de\n\n\n Copyright (C) 2015 Martin Schlather\n\nThis program is free software; you can redistribute it and/or\nmodify it under the terms of the GNU General Public License\nas published by the Free Software Foundation; either version 3\nof the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program; if not, write to the Free Software\nFoundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n*/\n\n\n#ifndef RFxport_H\n#define RFxport_H 1\n\n#include <zzz_RandomFieldsUtils.h>\n\n#define UTILSCALLS \\\n  CALL(getErrorString);\t\t\t\t\\\n  CALL(setErrorLoc);\t\t\t\t\\\n  CALL(getUtilsParam);\t\t\t\t\\\n  CALL(attachRFoptions);\t\t\t\\\n  CALL(detachRFoptions);\t\t\t\\\n  CALL(scalarX);               \\\n  CALL(relaxUnknownRFoption)\n\n#ifdef CALL\n#undef CALL\n#endif\n#define CALL(what) extern what##_type Ext_##what\nUTILSCALLS;\n\nvoid includeXport();\nextern utilsparam* GLOBAL_UTILS;\n#endif\n",
+    "created" : 1523603235057.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2068624896",
+    "id" : "73161DAD",
+    "lastKnownWriteTime" : 1523603342,
+    "last_content_update" : 1523603342024,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/src/xport_import.h",
+    "project_path" : "src/xport_import.h",
+    "properties" : {
+    },
+    "relative_order" : 81,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "h"
+}

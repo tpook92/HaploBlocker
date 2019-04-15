@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "size_s0 <- blocklist_size_spes(blocklist, checker=1:96)\nsize_dh <- blocklist_size_spes(blocklist, checker=97:597)\nplot(size_s0, size_dh)\nsum(size_s0<1)\nsum(size_dh<1)\n\nsum(size_s0<5)\nsum(size_dh<5)\n\nwindow_sequence=NULL; window_size=20; merging_error=1; minimum.blocksize=5; gap=10;\nmindestanteil=0.975; off_lines=5; mindestaehnlichkeit=0.99; merge_closeblock=FALSE;\nmax_diff_l=1; max_diff_i=1; block_min_count=5000; bp_map=NULL; window_anchor_gens=NULL;\nconsider_knoten=TRUE; consider_trans=TRUE; trans_min=5; subgroups=NULL; min_per_subgroup=0;\nconsider_all=TRUE; save_allblock=TRUE; block_extending=TRUE;\nmax_extending_diff=1; extending_ratio=20; block_min_count_steps=4;\nsnp_extending=TRUE; max_extending_diff_snp=0; extending_ratio_snp=Inf;  major_snp_calculation=TRUE;\noff_knot_addition=FALSE; off_knot_minimum_blocklength=10; off_knot_minimum_blocksize=5;\nraster=5; at_least_one=TRUE;\nprefilter=FALSE; maf=0.00; equal_remove=FALSE;\nbig_output=FALSE; blockinfo_mode=0; c_dhm_mode=TRUE;\nintersect_func=2; fast_compiler=TRUE;\nmax_groups=0; recoding=FALSE; recoding_notneeded=FALSE;\nknoten_calc=2; consider_multi=FALSE; multi_min=5; blockinfo_mode2=3;\nactual_snp_weight = 5; na_snp_weight=2; na_seq_weight=0;\nweighting_length=1; weighting_size=1;\nrecalculate_biggest=TRUE;\ntarget_coverage=NULL;\nmax_iteration=5;\nmin_step_size=25;\ntarget_stop=0.005;\nmulti_window_mode=FALSE;\n\nlibrary(HaploBlocker)\nlibrary(CHaploBlocker)\nwindow_size <- c(5,10,20)\nmulti_window_mode <- TRUE\ndhm <- ex_maze\n\n\nmindestaehnlichkeit=mindestaehnlichkeit;\nconsider_all=consider_all; minimum.blocksize=minimum.blocksize; save_allblock=save_allblock; helper=helper;\nc_dhm=c_dhm; c_dhm_mode=c_dhm_mode; intersect_func=intersect_func;\nmin_per_subgroup=min_per_subgroup\n\ntrans_min=trans_min; subgroups=subgroups;\nconsider_knoten=consider_knoten; consider_trans=consider_trans; min_per_subgroup=min_per_subgroup;\nintersect_func=intersect_func; consider_multi=consider_multi; multi_min=multi_min\n\n\n\n\n\nwindow_sequence=NULL; window_size=20; merging_error=1; minimum.blocksize=5; gap=10;\nmindestanteil=0.975; off_lines=5; mindestaehnlichkeit=0.99; merge_closeblock=FALSE;\nmax_diff_l=1; max_diff_i=1; block_min_count=250; bp_map=NULL; window_anchor_gens=NULL;\nconsider_knoten=TRUE; consider_trans=TRUE; trans_min=5; subgroups=NULL; min_per_subgroup=0;\nconsider_all=TRUE; save_allblock=TRUE; block_extending=TRUE;\nmax_extending_diff=1; extending_ratio=20; block_min_count_steps=4;\nsnp_extending=TRUE; max_extending_diff_snp=0; extending_ratio_snp=Inf;  major_snp_calculation=TRUE;\noff_knot_addition=FALSE; off_knot_minimum_blocklength=10; off_knot_minimum_blocksize=5;\nraster=5; at_least_one=TRUE;\nprefilter=FALSE; maf=0.00; equal_remove=FALSE;\nbig_output=FALSE; blockinfo_mode=0; c_dhm_mode=TRUE;\nintersect_func=2; fast_compiler=TRUE;\nmax_groups=0; recoding=FALSE; recoding_notneeded=FALSE;\nknoten_calc=2; consider_multi=FALSE; multi_min=5; blockinfo_mode2=3;\nactual_snp_weight = 5; na_snp_weight=2; na_seq_weight=0;\nweighting_length=1; weighting_size=1;\nrecalculate_biggest=TRUE;\ntarget_coverage=NULL;\nmax_iteration=5;\nmin_step_size=25;\ntarget_stop=0.005",
+    "created" : 1519146300733.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3210128509",
+    "id" : "DDE5BB19",
+    "lastKnownWriteTime" : 23081149961076847,
+    "last_content_update" : 1523360797834,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled51"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

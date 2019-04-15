@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "load(\"C:/Users/tpook/Desktop/Genetic_Datasets/S0data_OldAndNewBatch/gpimp_geno_S0sOldNew_overlapDHS1_B73v4.RData\")\nload(\"C:/Users/tpook/Desktop/Genetic_Datasets/S0data_onlyNewBatch/gpimp_haplo_LR3_S0s_newBatch_Beagle4.1_B73v4.RData\")\n\nfor(race in c(\"KE\",\"PE\")){\nfor(chromo in 1:10){\n\n\nname <- paste0(\"C:/Users/tpook/Desktop/Genetic_Datasets/Batch3_KEPE/\",race,\"_DH_chromo\",chromo,\".RData\")\nload(name)\n\ndhm <- data\n\ntake_marker <- which(gpimp$map$chr==chromo)\ntake_indi <- which(gpimp$covar$family==race)\ns0m <- t(gpimp$geno[take_indi,take_marker])\n\noverlap <- base::intersect(rownames(dhm), rownames(s0m))\n\nuse1 <- use2 <- numeric(length(overlap))\n\nrown <- rownames(dhm)\nrow <- 1\nfor(index in 1:nrow(dhm)){\n  if(rown[index]==overlap[row]){\n    use1[row] <- index\n    row <- row +1\n  }\n}\n\nrown <- rownames(s0m)\nrow <- 1\nfor(index in 1:nrow(s0m)){\n  if(row <= length(overlap) && rown[index]==overlap[row]){\n    use2[row] <- index\n    row <- row +1\n  }\n}\n\ndh <- dhm[use1,]\ns0 <- s0m[use2,]\n\nlibrary(HaploBlocker)\nblockl <- block_calculation(dh)\n\nmax_freq_s0 <- diploid_upper2(blockl,s0)/ncol(s0)\nfreq_s0 <- haploid_upper(blockl,s0)/ncol(s0)\nfreq_dh <- blocklist_size(blockl)/ncol(dh)\n\nplot(freq_dh,freq_s0)\nabline(a=0,b=1)\n\nplot(freq_dh,max_freq_s0)\nabline(a=0,b=1)\n\nfreq_joined <- freq_dh * ncol(dh) / (ncol(dh) + ncol(s0)) + max_freq_s0 * ncol(s0) / (ncol(dh) + ncol(s0))\n\ntests <- (freq_dh - max_freq_s0) / ( freq_joined * (1-freq_joined) * sqrt(1/ncol(dh) + 1/ncol(s0)))\nhist(tests)\n\nname <- paste0(\"C:/Users/tpook/Desktop/Mayer_S0_DH/Comp\",race,\"chromo\", chromo,\".RData\")\nsave(file=name, list=c(\"blockl\", \"tests\", \"max_freq_s0\", \"freq_dh\", \"s0\", \"dh\"))\n  }}\n\n\nrace <- \"KE\"\njoined_tests <- NULL\njoined_bl <- NULL\njoined_freq_dh <- NULL\njoined_freq_s0 <- NULL\nnblock <- NULL\nfor(chromo in 1:10){\n  name <- paste0(\"C:/Users/tpook/Desktop/Mayer_S0_DH/Comp\",race,\"chromo\", chromo,\".RData\")\n  load(name)\n\n  joined_tests <- c(joined_tests, tests)\n  joined_freq_dh <- c(joined_freq_dh, freq_dh)\n  joined_freq_s0 <- c(joined_freq_s0, max_freq_s0)\n\n  for(index in 1:length(blockl)){\n    joined_bl[[length(joined_bl)+1]] <- blockl[[index]]\n  }\n  nblock <- c(nblock, max(nblock,0)+ length(blockl))\n\n}\nX11()\nhist(joined_tests)\nsavePlot(\"C:/Users/tpook/Desktop/Teststatistik.png\",type=\"png\")\nplot(joined_freq_dh, joined_freq_s0)\nabline(a=0,b=1, col=\"red\", lwd=2)\nsavePlot(\"C:/Users/tpook/Desktop/Hits.png\",type=\"png\")\n\npeaks <- which(joined_tests>20)\n\njoined_freq_dh[peaks]\njoined_freq_s0[peaks]\njoined_tests[peaks]\n\nwhich(joined_tests< -30)\n\nfor(index in peaks){\n  chromo <- max(which(c(0,nblock)<index))\n  name <- paste0(\"C:/Users/tpook/Desktop/Mayer_S0_DH/Comp\",race,\"chromo\", chromo,\".RData\")\n  load(name)\n  start <- joined_bl[[index]][[2]]$snp\n  end <- joined_bl[[index]][[3]]$snp\n  seq <- joined_bl[[index]][[7]]$snp\n  dataset <- s0[start:end,]\n  dataset2 <- dh[start:end,]\n\n  test1 <- (colSums(dataset==seq))\n  test2 <- (colSums(dataset2==seq))\n  plot(test1)\n  plot(test2)\n  sum(test1 > nrow(dataset)*0.99)\n  sum(test2 > nrow(dataset2)*0.99)\n}\n\nse <- blocklist_startend(joined_bl, type=\"snp\")\nle <- se[,2] - se[,1] + 1\nhist(le)\nsize <- blocklist_size(joined_bl)\ntake <- which(le>3000)\n\n\nhist(joined_tests[take])\npeaks <- take[which(abs(joined_tests)[take] > 30)]\n\nplot(joined_freq_dh[take], joined_freq_s0[take])\npoints(joined_freq_dh[peaks], joined_freq_s0[peaks], col=\"red\")\n",
+    "created" : 1524040811025.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2399092578",
+    "id" : "52EC47C1",
+    "lastKnownWriteTime" : 1524132968,
+    "last_content_update" : 1524132968136,
+    "path" : "C:/Users/tpook/Desktop/Mayer_S0_DH_compare.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled62"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

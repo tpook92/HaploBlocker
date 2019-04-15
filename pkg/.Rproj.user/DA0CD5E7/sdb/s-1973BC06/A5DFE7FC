@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "/*\n Authors\n Martin Schlather, schlather@math.uni-mannheim.de\n\n Copyright (C) 2017 -- 2017 Martin Schlather\n\nThis program is free software; you can redistribute it and/or\nmodify it under the terms of the GNU General Public License\nas published by the Free Software Foundation; either version 3\nof the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program; if not, write to the Free Software\nFoundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n*/\n\n\n#include <R_ext/Rdynload.h>\n#include \"chaploblocker.h\"\n#include <Basic_utils.h>\n\n#define none 0\n#define CDEF(name, n, type) {#name, (DL_FUNC) &name, n, type}\n\n\n\nstatic R_NativePrimitiveArgType\nchar2int7[] = { CHARSXP, CHARSXP, INTSXP, INTSXP, INTSXP, INTSXP, INTSXP,\n\t      INTSXP, INTSXP};\n\nstatic const R_CMethodDef cMethods[]  = {\n  CDEF(initHaploBlocker, 0, none),\n  CDEF(attachRFoptionsHaploBlocker, 0, none),\n  CDEF(detachRFoptionsHaploBlocker, 0, none),\n  //  CDEF(, 0, none),\n  {NULL, NULL, 0, none}\n};\n\n\n#define CALLDEF(name, n) {#name, (DL_FUNC) &name, n}\nstatic R_CallMethodDef callMethods[]  = {\n  // in die respectiven C-Dateien muss adoption.h eingebunden sein\n  CALLDEF(fixcoding, 1),\n  CALLDEF(codeSNPs, 4),\n  CALLDEF(decodeSNPs, 1),\n  CALLDEF(factorSNPs, 3),\n  CALLDEF(colSumsEqualSNPs, 4),\n  CALLDEF(intersect, 2),\n  //  CALLDEF(codeSNPs, 2),\n  {NULL, NULL, 0}\n};\n\n\n#define CALLABLE(FCTN) R_RegisterCCallable(\"HaploBlocker\",#FCTN,(DL_FUNC) FCTN)\nvoid R_init_HaploBlocker(DllInfo  *dll) {\n  R_registerRoutines(dll, cMethods, // .C\n\t\t     callMethods,\n\t\t     NULL, // .Fortran\n\t\t     NULL); // ext\n  R_useDynamicSymbols(dll, FALSE);\n  R_forceSymbols(dll, TRUE);\n  //  CALLABLE(codeInner);\n}\n\n\nvoid R_unload_HaploBlocker(DllInfo *info) {\n  // just to avoid warning from compiler on my computer\n#ifdef SCHLATHERS_MACHINE\n  if (info == NULL) {};\n#endif\n // Release resources.\n}\n\n",
+    "created" : 1523602420765.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3696884390",
+    "id" : "A5DFE7FC",
+    "lastKnownWriteTime" : 1523602503,
+    "last_content_update" : 1523602503095,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/src/zzz.c",
+    "project_path" : "src/zzz.c",
+    "properties" : {
+    },
+    "relative_order" : 78,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "c"
+}

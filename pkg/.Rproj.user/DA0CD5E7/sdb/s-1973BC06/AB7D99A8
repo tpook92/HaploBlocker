@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "ped <- read.table(\"C:/Users/tpook/Desktop/HaploShare-master/PEchromo10.map\")\n\nmap <- ped[,4]\n\nmap <- cbind(map, 0, 0:(nrow(ped)-1)/(nrow(ped)-1))\n\nfor(index in 1:(nrow(ped)-1)){\n  map[index,2] <- 1/(nrow(ped)-1) * (map[index+1,1]-map[index,1])\n}\n\nmap[,2:3] <- round(map[,2:3],10)\n\nmap <- rbind(c(1,0,0), map, c(150567064,0,1))\ncolnames(map) <- c(\"position\", \"COMBINED_rate (cM/Mb)\", \"Genetic_Map (cM)\")\n\nwrite.table(file=\"C:/Users/tpook/Desktop/HaploShare-master/GeneticDistance/genetic_map_chr10_b36.txt\",map, quote=FALSE, row.names = FALSE)\n\nHaploShare -file PEchromo10 -ch 10 -perm 100 -cut 1 -out test\n\njava -jar IBDGroupon.jar -i 409 -f fullibd.ibd\n\n\n\nbash phase.sh PEchromo10.ped PEchromo10.map test1\n\n\nbash dash_cc.sh my_output IBD_BEAGLE/fullibd.ibd my_output",
+    "created" : 1522224891532.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "98423277",
+    "id" : "AB7D99A8",
+    "lastKnownWriteTime" : 31244173393002613,
+    "last_content_update" : 1522229575927,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled59"
+    },
+    "relative_order" : 61,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

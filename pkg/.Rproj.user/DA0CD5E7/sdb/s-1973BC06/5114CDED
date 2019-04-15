@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Calculate transition probabilities between nodes\n#'\n#' Internal Function to calculate calculate a node-dataset\n#' @param blockinfo List with all relevant information to each window seperatly\n#' @param window_sequence sequence of predefined windows (default: NULL ;per row: start$snp, end$snp, length, length - merging_error, start$bp, end$bp)\n#' @export\n\nnodes_calculation <- function(blockinfo, window_sequence){\n  cat(\"Start_nodes_calculation\\n\")\n  nanimals <- sum(blockinfo[[1]][[1]])\n  data <- list()\n  nr <- 1\n  n <- length(blockinfo)\n  for(index in 1:n){\n    if(n<=25 || index%%round(n/25.1)==0){\n      cat(\".\")\n    }\n    for(index2 in 1:length(blockinfo[[index]][[1]])){\n      start_l <- list()\n      start_l$window <- index\n      start_l$snp <- window_sequence[index, 1]\n      start_l$bp <- blockinfo[[index]][[7]][1]\n      end_l <- list()\n      end_l$window <- index\n      end_l$snp <- window_sequence[index,2]\n      end_l$bp <- blockinfo[[index]][[7]][2]\n      data[[nr]] <- list()\n      data[[nr]]$start <- start_l\n      data[[nr]]$end <- end_l\n      data[[nr]]$n_haplo <- blockinfo[[index]][[1]][index2]\n      data[[nr]]$window_sequence <- index2\n      data[[nr]]$haplos <- blockinfo[[index]][[5]][[index2]]\n      nr <- nr + 1\n\n    }\n\n  }\n  return(data)\n}\n\n\n\n\n",
+    "created" : 1524143378309.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3413153932",
+    "id" : "5114CDED",
+    "lastKnownWriteTime" : 1524223852,
+    "last_content_update" : 1524223852242,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/nodes_calculation.R",
+    "project_path" : "R/nodes_calculation.R",
+    "properties" : {
+    },
+    "relative_order" : 101,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

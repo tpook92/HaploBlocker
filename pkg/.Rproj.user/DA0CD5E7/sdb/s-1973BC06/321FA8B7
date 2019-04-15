@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Experimental GBLUP\nargs <- commandArgs(TRUE)\n#args <- c(\"B73v4\", 1, \"KE\", 0.05)\nref <- args[1]\nmode <- as.numeric(args[2])\nfamily <- args[3]\nmaf <- as.numeric(args[4])\n\n\nlibrary(HaploBlocker)\nblockdata <- NULL\nreport <- NULL\nfor(chromo in 1:10){\n\n  name1 <- paste0(\"Block_OverlapMarkers/Ref\", ref, \"mode\", mode, family, \"chromo\", chromo, \"maf\" ,maf,\".RData\")\n  load(name1)\n\n  t <- coverage_test(blockl)\n  t2 <- coverage_test(blockl, max=Inf)\n  se <- blocklist_startend(blockl)\n  size <- blocklist_size(blockl)\n  report <- rbind(report, c(length(blockl), mean(t), mean(t2), mean(se[,2]-se[,1]+1), mean(size)))\n\n\n  chromo_block <- block_matrix_construction(blockl)\n\n  blockdata <- rbind(blockdata, chromo_block)\n}\ncolnames(report) <- c(\"Nr. of blocks\", \"Coverage\", \"Coverage+Overlap\", \"BlockLength\", \"BlockSize\")\nname1 <- paste0(\"Block_OverlapMarkers/Ref\", ref, \"mode\", mode, family, \"chromo\", chromo, \"maf\" ,maf, \"_blockmatrix.RData\")\nsave(file=name1, list=c(\"blockdata\"))\nname1 <- paste0(\"Block_OverlapMarkers/Ref\", ref, \"mode\", mode, family, \"chromo\", chromo, \"maf\" ,maf, \"_report.txt\")\nwrite.table(file=name1, report)\n",
+    "created" : 1525850272195.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3840009005",
+    "id" : "321FA8B7",
+    "lastKnownWriteTime" : 1525850531,
+    "last_content_update" : 1525850531518,
+    "path" : "C:/Users/tpook/Desktop/Mayer_blockdata2.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled71"
+    },
+    "relative_order" : 42,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

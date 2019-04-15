@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Experimental GBLUP\nargs <- commandArgs(TRUE)\n#args <- c(10,0.8,\"KE&PE_joined\", 10)\nblock_min <- as.numeric(args[1])\n\nname <- paste0(\"out.Chromo1_B.txt.phased.gz\")\ndata <- read.table(name)\ndata <- data[-1,-(1:2)]\n\nlibrary(HaploBlocker)\nlibrary(CHaploBlocker)\nblocklist <- block_calculation(data, block_min_count=block_min)\nt <- coverage_test(blocklist, indi=501, type=\"snp\")\nt2 <- coverage_test(blocklist, indi=501, type=\"snp\", max=100)\nse <- blocklist_startend(blocklist, type=\"snp\")\nl <- se[,2] - se[,1]\n\nsize <- blocklist_size(blocklist)\n\nmean(se[,2]-se[,1])\nmean(t)\nmean(t2)\n\nZ <- (data==\"A\")*2\nstorage.mode(Z) <- \"numeric\"\nnblocks <- length(blocklist)\n\n\n# Act like it's DHs\n\n\n\n\np_Z <- rowMeans(Z) / 2\n\n\nP_Z <- matrix(2*(p_Z-0.5), nrow=ncol(Z), ncol=nrow(Z), byrow=TRUE)\n\nZZ <- t(Z)-P_Z- 1\n\n## A <- Z %*% t(Z) / 2 / sum(p_i*(1-p_i))\nG_Z <- tcrossprod(ZZ)/ (2 * sum(p_Z*(1-p_Z)))\n\n\nG_Z <- G_Z/ mean(diag(G_Z))\n\n\nEVD1=eigen(G_Z)\n\n\n\n## Monte Carlo method - Information preserved\nlibrary(BGLR)\n\nnRep=50\np <- nrow(Z)\nR_preserved=rep(NA,nRep)\n\nfor(i in 1:nRep){\n  select <- sample(1:nrow(Z), nblocks)\n  B <- Z[select,]\n  p_B <- rowMeans(B) / 2\n  P_B <- matrix(2*(p_B-0.5), nrow=ncol(B), ncol=nrow(B), byrow=TRUE)\n  BB <- t(B) - P_B - 1\n  G_B <- tcrossprod(BB)/ (2 * sum(p_B*(1-p_B)))\n  G_B <- G_B / mean(diag(G_B))\n  EVD2=eigen(G_B)\n\n  nPC=sum(EVD2$values>1e-5)\n\n  PC=EVD2$vectors[,1:nPC]\n  for(i in 1:ncol(PC)){ PC[,i]=PC[,i]*sqrt(EVD2$values[i]) }\n\n\n  b=rnorm(p)\n  y=scale(t(Z)%*%b)\n\n  fm=BGLR(y=y,ETA=list(list(X=PC,model='BRR',df0=.0001)),df0=.0001,nIter=12000,burnIn=2000,saveAt=paste0(\"BGLR_trash/S\", block_min), verbose=F)\n  varU=scan(paste0(\"BGLR_trash/S\", block_min, 'ETA_1_varB.dat'))\n  varE=scan(paste0(\"BGLR_trash/S\", block_min, 'varE.dat'))\n  if(length(varU)>length(varE)){\n    varU <- varU[1:length(varE)]\n  } else{\n    varE <- varE[1:length(varU)]\n  }\n  h2=varU/(varU+varE)\n  R_preserved[i]=median(h2)\n  print(c(i, R_preserved[i]))\n}\n\n## Monte Carlo method - Information added\nlibrary(BGLR)\nnPC=sum(EVD1$values>1e-5)\nPC=EVD1$vectors[,1:nPC]\nfor(i in 1:ncol(PC)){ PC[,i]=PC[,i]*sqrt(EVD1$values[i]) }\n\nnRep=50\n\nR_added=rep(NA,nRep)\n\nfor(i in 1:nRep){\n  select <- sample(1:nrow(Z), nblocks)\n  B <- Z[select,]\n  p_B <- rowMeans(B) / 2\n  P_B <- matrix(2*(p_B-0.5), nrow=ncol(B), ncol=nrow(B), byrow=TRUE)\n  BB <- t(B) - P_B - 1\n  G_B <- tcrossprod(BB)/ (2 * sum(p_B*(1-p_B)))\n  G_B <- G_B / mean(diag(G_B))\n  EVD2=eigen(G_B)\n\n  p <- nrow(B)\n  b=rnorm(p)\n  y=scale(t(B)%*%b)\n\n  fm=BGLR(y=y,ETA=list(list(X=PC,model='BRR',df0=.0001)),df0=.0001,nIter=12000,burnIn=2000,verbose=F, saveAt=paste0(\"BGLR_trash/S\", block_min))\n  varU=scan(paste0(\"BGLR_trash/S\", block_min, 'ETA_1_varB.dat'))\n  varE=scan(paste0(\"BGLR_trash/S\", block_min, 'varE.dat'))\n  if(length(varU)>length(varE)){\n    varU <- varU[1:length(varE)]\n  } else{\n    varE <- varE[1:length(varU)]\n  }\n  h2=varU/(varU+varE)\n  h2=varU/(varU+varE)\n  R_added[i]=median(h2)\n  print(c(i, R_added[i]))\n}\n\nprint(mean(R_preserved))\nprint(mean(R_added))\n\nsave(file=paste0(\"Information_\",block_min,\"_SNP_MAZE.RData\"), list=c(\"R_preserved\", \"R_added\"))\n\n\n\n",
+    "created" : 1521191374275.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "431095359",
+    "id" : "BB73D4F0",
+    "lastKnownWriteTime" : 1521193803,
+    "last_content_update" : 1521193803449,
+    "path" : "C:/Users/tpook/Desktop/Monte4_501.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled57"
+    },
+    "relative_order" : 58,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "for(chromo in 1){\n  for(chosen_size in c(30,50,75,100,150,200,300,400)){\n    for(line in c(\"KE\", \"PE\")){\n      for(nsim in 10){\n        cov1t <- NULL\n        cov2t <- NULL\n        cov3t <- NULL\n        for(nr in 1:50){\n          exp_name <- paste0(\"C:/Users/tpook/Desktop/Small_Sample_test/Chr\", chromo, \"Choosen\", chosen_size, \"Line\", line, \"Nsim\", nsim, \"nr\",nr,\".RData\")\n          load(exp_name)\n          cov1t <- c(cov1t, cov1)\n          cov2t <- c(cov2t, cov2)\n          cov3t <- c(cov3t, cov3)\n        }\n        exp_name <- paste0(\"C:/Users/tpook/Desktop/Small_Sample_test/Chr\", chromo, \"Choosen\", chosen_size, \"Line\", line, \"Nsim\", nsim,\".RData\")\n        save(file=exp_name, list=c(\"cov1t\", \"cov2t\", \"cov3t\"))\n      }\n    }\n  }\n}\n\n\nfor(chromo in 1){\n  for(chosen_size in c(30,50,75,100,150,200,300,400)){\n    for(line in c(\"KE\", \"PE\")){\n      for(nsim in 10){\n        cov1t <- NULL\n        cov2t <- NULL\n        cov3t <- NULL\n        for(nr in 1:50){\n          exp_name <- paste0(\"C:/Users/tpook/Desktop/Small_Sample_test/Chr\", chromo, \"Choosen\", chosen_size, \"Line\", line, \"Nsim\", nsim, \"_tarcov0.9nr\",nr,\".RData\")\n          load(exp_name)\n          cov1t <- c(cov1t, cov1)\n          cov2t <- c(cov2t, cov2)\n          cov3t <- c(cov3t, cov3)\n        }\n        exp_name <- paste0(\"C:/Users/tpook/Desktop/Small_Sample_test/Chr\", chromo, \"Choosen\", chosen_size, \"Line\", line, \"Nsim\", nsim,\"_tarcov0.9.RData\")\n        save(file=exp_name, list=c(\"cov1t\", \"cov2t\", \"cov3t\"))\n      }\n    }\n  }\n}\n\n\n\n",
+    "created" : 1530257842358.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3361070708",
+    "id" : "4C33D0CC",
+    "lastKnownWriteTime" : 1530262598,
+    "last_content_update" : 1530262598668,
+    "path" : "C:/Users/tpook/Desktop/sample_sample_merge.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled76"
+    },
+    "relative_order" : 104,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

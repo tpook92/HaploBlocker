@@ -1,0 +1,39 @@
+args <- commandArgs(TRUE)
+# args <- c("PE",10,3)
+family  <- args[1]
+chromo <- as.numeric(args[2])
+stand <- as.numeric(args[3])
+
+library(HaploBlocker)
+
+
+load(paste0("Genetic_Datasets/DatasetsOverlapMarkers_DH_S0_S1/B73v4/",family,"chromo",chromo,".RData"))
+
+data_s2 <- rbind(data_s1,data_dh)
+block_s2 <- block_calculation(t(data_s2), adaptive_mode=TRUE, target_coverage=0.98)
+se3 <- blocklist_startend(block_s2)
+mean(se3[,2]-se3[,1])
+
+t3 <- coverage_test(block_s2, max=1)
+mean(t3)
+
+
+grp <- list(1:nrow(data_s1), (nrow(data_s1)+1): nrow(data_s2))
+
+
+se <- blocklist_startend(block_s2)
+candidates_s2 <- sort(unique(as.numeric(se)))
+score_s2 <- matrix(0, nrow=2, ncol=length(candidates_s2))
+
+for(m in 1:length(candidates_s2)){
+  print(m)
+  score_s2[,m] <-ehh_block(block_s2, t(data_s2), marker=candidates_s2[m], plot=FALSE, group=grp, standardization = stand)
+}
+
+
+save(file=paste0("EHH_scores/",family,"chromo", chromo,"stand",stand,"_adapt.RData"), list=c("score_s2"))
+png(file=paste0("EHH_scores/",family,"chromo", chromo,"stand",stand,"_adapt.png"), width=2250, height= 1360, res=300)
+plot(rep(candidates_s2,each=2)[-c(1,length(candidates_s2)*2)], rep(score_s2[1,-ncol(score_s2)], each=2), type="l", lwd=2, ylim=c(0, max(score_s2)), col="red", xlab="SNP", ylab="IHH_block")
+lines(rep(candidates_s2,each=2)[-c(1,length(candidates_s2)*2)], rep(score_s2[2,-ncol(score_s2)], each=2), type="l", lwd=2, ylim=c(0, max(score_s2)))
+
+dev.off()

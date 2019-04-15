@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "/*\n Authors\n Martin Schlather, schlather@math.uni-mannheim.de\n\n Simulation of a random field by Cholesky or SVD decomposition\n\n Copyright (C) 2015 -- 2017 Martin Schlather,\n\nThis program is free software; you can redistribute it and/or\nmodify it under the terms of the GNU General Public License\nas published by the Free Software Foundation; either version 3\nof the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program; if not, write to the Free Software\nFoundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n*/\n\n#include <R_ext/Rdynload.h>\n//#include \"RF.h\"\n#include \"xport_import.h\"\n\n#define pkg \"RandomFieldsUtils\"\n\n#ifdef CALL\n#undef CALL\n#endif\n#define CALL(what) what##_type Ext_##what = NULL\nUTILSCALLS;\n\n#undef CALL\n#define CALL(what) Ext_##what = (what##_type) R_GetCCallable(pkg, #what)\nvoid includeXport() {\n  UTILSCALLS;\n} // export C\n\n\n",
+    "created" : 1523603292436.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "606541523",
+    "id" : "974B6201",
+    "lastKnownWriteTime" : 1523603345,
+    "last_content_update" : 1523603345853,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/src/xport_import.cc",
+    "project_path" : "src/xport_import.cc",
+    "properties" : {
+    },
+    "relative_order" : 82,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "cpp"
+}

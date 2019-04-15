@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "Package: HaploBlocker\nType: Package\nTitle: HaploBlocker\nVersion: 1.0.0\nAuthor: Torsten Pook[aut, cre], Martin Schlather[aut]\nMaintainer: Torsten Pook <torsten.pook@uni-goettingen.de>\nDescription: Creation of Haplotype Libraries/Blocks for DHs and highly inbreed lines.\nDepends: R (>= 3.0), RandomFieldsUtils (>= 0.3.45), graphics, stats\nLinkingTo: RandomFieldsUtils\nLicense: GPL ( >= 3)\nEncoding: UTF-8\nLazyData: true\nRoxygenNote: 6.0.1\nURL: https://github.com/tpook92/HaploBlocker\nNeedsCompilation: yes\n",
+    "created" : 1501673581157.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3221415735",
+    "id" : "BE33F6B6",
+    "lastKnownWriteTime" : 1528875055,
+    "last_content_update" : 1528875055222,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "dcf"
+}

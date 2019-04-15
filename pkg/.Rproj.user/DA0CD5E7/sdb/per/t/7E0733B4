@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Fast Simple Merge nodes\n#'\n#' Faster version of simple_merge_probv2 to perform simple merge for node data\n#' @param data node-dataset\n#' @param intersect_func Used intersect-function (internally relevant for computation time)\n#' @export\n\n\nsimple_merge <- function(data, intersect_func=intersect){\n  cat(paste0(\"Start_simple_merge: \", length(data),\"\\n\"))\n  a <- start_end_block(data)\n  relevant <- (a[,1]>1)\n  relevant <- (1:nrow(a))[relevant]\n  relevant <- relevant[length(relevant):1]\n  for(check in relevant){\n\n    activ <- data[[check]]\n    possible <- (1:nrow(a))[(a[,2]==activ[[1]]$window-1)]\n    for(index in 1:length(possible)){\n      transi <- length(intersect_func(data[[possible[index]]][[5]], activ[[5]]))\n      if(transi== length(data[[possible[index]]][[5]]) && transi== length(activ[[5]])){\n        data[[possible[index]]][[2]] <- activ[[2]]\n        data[[possible[index]]][[4]] <- c(data[[possible[index]]][[4]],activ[[4]])\n        data[[check]] <- NULL\n      }\n    }\n  }\n  return(data)\n}\n",
+    "created" : 1524141008089.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2881770267",
+    "id" : "7E0733B4",
+    "lastKnownWriteTime" : 1524225539,
+    "last_content_update" : 1524225539585,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/simple_merge.R",
+    "project_path" : "R/simple_merge.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 70,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

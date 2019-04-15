@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "nodeStatistics <- read_delim(\"C:/Users/tpook/Desktop/nodeStatistics.txt\", \"\\t\", escape_double = FALSE, trim_ws = TRUE)\n\nnodeS <- as.matrix(nodeStatistics)\nlength(unique((nodeS[,2])))\n\n\nfirstl <- nodeS[1:6,]\n\ndatal <- list()\nfor(index in 1:nrow(firstl)){\n  datal[[index]] <- strsplit(as.character(firstl[index,10]), \",\")\n}\n\nvariant_names <-unlist(datal)\nboarders <- unique(as.numeric((nodeS[,2])))\nnvar <- numeric(length(variant_names))\n\ndataset <- matrix(NA, nrow=length(unique((nodeS[,2]))), ncol=length(variant_names))\n\nactiv_row <- 1\nstart_row <- 1\nfor(index in 1:nrow(dataset)){\n  print(index)\n  while(activ_row<= nrow(nodeS) && nodeS[activ_row,2]==nodeS[start_row,2] ){\n    activ_row <- activ_row + 1\n  }\n  \n  ## not correct if last block only has one variant\n  if(activ_row==nrow(nodeS)){\n    activ_row <- activ_row +1\n  }\n  activ_data <- nodeS[start_row:(activ_row-1), , drop=FALSE]\n  \n  datal <- list()\n  for(index2 in 1:nrow(activ_data)){\n    datal[[index2]] <- strsplit(as.character(activ_data[index2,10]), \",\")\n  }\n  nvar[index] <- nrow(activ_data)\n  \n  for(index2 in 1:length(datal)){\n    actives <- duplicated(c(datal[[index2]][[1]], variant_names))[-(1:length(datal[[index2]][[1]]))]\n    \n    dataset[index, actives] <- index2\n    if(as.numeric(nodeS[index2,5])>0 && as.numeric(nodeS[index2,6])==0){\n      dataset[index, actives] <- 0\n    }\n  }\n  \n  start_row <- activ_row\n}\n\nsave(file=\"C:/Users/tpook/Desktop/maze_cornell_joined.RData\", list=c(\"dataset\"))\n",
+    "created" : 1507142853845.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "614618058",
+    "id" : "3EA917BA",
+    "lastKnownWriteTime" : 1507137160,
+    "last_content_update" : 1507143316183,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled19"
+    },
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

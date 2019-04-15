@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Moore-Penrose-Trafo\n#'\n#' Interne Transformation mit Moore-Penrose\n#' @export\nalpha_to_beta <- function(alpha,G,Z) {\n  library(MASS)\n  crossprod(Z,crossprod(ginv(G),alpha))\n}\n\n#' Martini-Test-Funktion\n#'\n#' Interne Testfunktion Martini\n#' @export\n\nepi <- function(y,Z, G=NULL) {\n  library(EMMREML)\n  n <- length(y)\n  p <- ncol(Z)\n  stopifnot(n == nrow(Z))\n  if(length(G)==0){\n    G <- tcrossprod(Z)\n  }\n\n  fm <- emmreml(\n    y,\n    matrix(1,nrow=n),\n    diag(n),\n    G)\n  beta <- alpha_to_beta(drop(fm$uhat),G,Z)\n  return(drop(beta))\n}\n",
+    "created" : 1528286138130.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1890101411",
+    "id" : "3AC1CE7C",
+    "lastKnownWriteTime" : 1502193464,
+    "last_content_update" : 1502193464,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/RekomBre2_04_06_18/R/epi.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 89,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

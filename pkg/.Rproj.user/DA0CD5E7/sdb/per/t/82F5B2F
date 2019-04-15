@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "data <- phgN\n\ncums <- cumsum(phgN[,2]==0)\n\nseg_l <- cums[cums[-length(cums)]==cums[-1]]\nseg_l <- diff(unique(seg_l))\nmean(seg_l)\n",
+    "created" : 1508960882948.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1961278058",
+    "id" : "82F5B2F",
+    "lastKnownWriteTime" : 1509141337,
+    "last_content_update" : 1509141337827,
+    "path" : "C:/Users/tpook/Desktop/missing_length.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled29"
+    },
+    "relative_order" : 22,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

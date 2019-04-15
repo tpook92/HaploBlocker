@@ -1,0 +1,7 @@
+load("C:/Users/pook/Desktop/prediction_acc.RData")
+
+join <- rbind(acc_test_chip, acc_test_code, acc_test_blocker)[rep(c(1,10,19),9) + sort(rep(0:8,3)),]
+X11()
+boxplot(t(join), col=c("red", "blue", "green"))
+legend("topleft", c("SNP", "NRGene", "HaploB"), col=c("red", "blue", "green"), lty=c(1,1,1))
+savePlot("C:/Users/pook/Desktop/First_GP.png", type="png")

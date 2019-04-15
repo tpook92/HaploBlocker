@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Compute biggest block for each region\n#'\n#' Internal function to count positions where each block is major block\n#' @param blocklist block-dataset\n#' @param indi number of haplotypes in the dataset\n#' @param nwindow number of windows in the dataset\n#' @param type length measure (default: \"window\" , alt: \"snp\", \"bp\")\n#' @param min_majorblock minimum of positions in the dataset a block is the biggest covering (default: 50)\n#' @param weighting_length Weighting factor for length to determine major block (default: 1)\n#' @param weighting_size Weighting factor for number of haplotypes in block to determine major block (default: 1)\n#' @param recalculate_biggest Set to FALSE to only calculate the number of major positions for those blocks that could be removed in each iteration (number of major blocks is only increasing when removing other blocks)\n#' @param window_size size of each window in the algorithm (default: 20)\n#' @export\n\nblockinfo_biggest <- function(blocklist, nwindow, indi, type=\"window\", min_majorblock=5000, weighting_length=1, weighting_size=1,\n                              recalculate_biggest=TRUE, window_size){\n  if(length(unique(window_size))!=1){\n    type <- \"snp\"\n  } else{\n    min_majorblock <- min_majorblock / window_size[1]\n  }\n\n  se <- blocklist_startend(blocklist, type=type)\n  sel <- se[,2]-se[,1]+1\n  size <- blocklist_size(blocklist)\n  major_rating <- sel ^ weighting_length * size ^ weighting_size\n  order <- sort(major_rating, index.return=TRUE)$ix\n\n  needed_size <- max(se[,2])\n  bdataset <- matrix(0, nrow=indi, ncol=needed_size)\n\n  for(index in order){\n    if(type==\"window\"){\n      bdataset[blocklist[[index]][[6]], blocklist[[index]][[2]]$window:blocklist[[index]][[3]]$window] <- index\n    } else{\n      bdataset[blocklist[[index]][[6]], blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp] <- index\n    }\n\n  }\n\n  count <- numeric(length(blocklist))\n  for(index in 1:length(count)){\n    if(recalculate_biggest || length(blocklist[[index]])<11 || length(blocklist[[index]][[11]])==0 || blocklist[[index]][[11]] < min_majorblock){\n      if(type==\"window\"){\n        count[index] <- sum(bdataset[blocklist[[index]][[6]],blocklist[[index]][[2]]$window:blocklist[[index]][[3]]$window]==index)\n      } else{\n        count[index] <- sum(bdataset[blocklist[[index]][[6]],blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp]==index)\n      }\n\n      blocklist[[index]][[11]] <- count[index]\n    } else{\n      count[index] <- blocklist[[index]][[11]]\n    }\n\n  }\n  remove_count <- sort(which(count<min_majorblock), decreasing=TRUE)\n\n  for(index in remove_count){\n    blocklist[[index]] <- NULL\n  }\n  return(blocklist)\n}\n",
+    "created" : 1523358394681.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2642591117",
+    "id" : "32F9445E",
+    "lastKnownWriteTime" : 1524729428,
+    "last_content_update" : 1524729428408,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/blockinfo_biggest.R",
+    "project_path" : "R/blockinfo_biggest.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 69,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

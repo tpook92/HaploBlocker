@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# SNP-file\nland <- \"KE\"\ndataset <- NULL\n  for(chromo in 1:10){\n    print(chromo)\n\n      name <- paste0(\"C:/Users/tpook/Desktop/\",land,\"_DH_chromo\",chromo,\".RData\")\n      load(name)\ndataset <- rbind(dataset, data)\n    \n  }\nname1 <- paste0(\"C:/Users/tpook/Desktop/\",land,\"_SNP.RData\")\nsave(file=name1, list=c(\"dataset\"))\n",
+    "created" : 1517322721190.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "225372683",
+    "id" : "1B953488",
+    "lastKnownWriteTime" : 21673775077523567,
+    "last_content_update" : 1517323223660,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled45"
+    },
+    "relative_order" : 28,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

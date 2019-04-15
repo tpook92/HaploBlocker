@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Calculate Major SNPs\n#'\n#' Function to calculate the common allele for each SNP of a block\n#' @param dhm haploid SNP-dataset\n#' @param blocklist blocklist created by blocklist_calculcation algorithm\n#' @param recoding If TRUE change allele coding (Major allele \"A\", Minor allele \"C\")\n#' @export\n\n\nmajor_snp_calculation <- function(blocklist, dhm, recoding=FALSE){\n\n  if(recoding==TRUE){\n    major <- rep(\"A\", nrow(dhm))\n    minor <- rep(\"C\", nrow(dhm))\n  } else{\n    major <- dhm[,1]\n    minor <- major\n    for(index in 1:nrow(dhm)){\n      test <- unique(c(major[index], dhm[index,]))\n      if(length(test)>=2){\n        minor[index] <- test[2]\n      }\n    }\n  }\n\n\n  for(index in 1:length(blocklist)){\n    snp_seq <- major[blocklist[[index]][[2]]$snp: blocklist[[index]][[3]]$snp]\n    freq <- numeric(length(snp_seq))\n    count <- rowSums(dhm[blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp, blocklist[[index]][[6]]]==major[blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp])\n\n    freq <- (count/blocklist[[index]][[5]])\n    snp_seq[freq<0.5] <- minor[blocklist[[index]][[2]]$snp: blocklist[[index]][[3]]$snp][freq<0.5]\n\n    freq[freq<0.5] <-  1- freq[freq<0.5]\n    blocklist[[index]][[7]] <- list()\n    blocklist[[index]][[7]]$snp <- snp_seq\n    blocklist[[index]][[7]]$freq <- freq\n  }\n\n\n\n  return(blocklist)\n}\n",
+    "created" : 1523352551739.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2982851077",
+    "id" : "8C6C4671",
+    "lastKnownWriteTime" : 1524216568,
+    "last_content_update" : 1524216568,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/major_snp_calculation.R",
+    "project_path" : "R/major_snp_calculation.R",
+    "properties" : {
+        "tempName" : "Untitled6"
+    },
+    "relative_order" : 67,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

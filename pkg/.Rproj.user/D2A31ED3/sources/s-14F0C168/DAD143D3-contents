@@ -1,0 +1,31 @@
+library(HaploBlocker)
+
+blocklist <- block_calculation(ex_maze)
+
+plot_block(blocklist)
+
+blocklist_startend(blocklist)
+
+new_data <- block_matrix_construction(blocklist)
+rownames(new_data) <- paste0("block", 1:length(blocklist))
+colnames(new_data) <- paste0("DH_KE", 1:ncol(ex_maze))
+new_data[1:8,1:8]
+
+new_data <- block_windowdataset(blocklist)
+rownames(new_data) <- paste0("block", 1:nrow(new_data))
+colnames(new_data) <- paste0("DH_KE", 1:ncol(ex_maze))
+new_data[1:8,1:8]
+
+X11()
+
+block_plot(blocklist)
+
+blocklist_plot(blocklist, cutoff2=3)
+
+blocklist_plot_xsize(blocklist, cutoff2=3)
+
+t <- coverage_test(blocklist)
+mean(t)
+
+block_ehh(blocklist, marker=5000, plot=TRUE)
+block_ihh(blocklist, plot = TRUE)

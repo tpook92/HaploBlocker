@@ -1,0 +1,16 @@
+{
+    "args" : [
+        "-IC:/Program Files/RStudio/resources/libclang/builtin-headers/3.4",
+        "-Ic:/Rtools/mingw_64/x86_64-w64-mingw32/include",
+        "-Ic:/Rtools/mingw_64/x86_64-w64-mingw32/include/c++",
+        "-Ic:/Rtools/mingw_64/x86_64-w64-mingw32/include/c++/x86_64-w64-mingw32",
+        "-IC:/Users/tpook/Documents/R/R-3.4.1/library/RandomFieldsUtils/include",
+        "-IC:/Users/tpook/Documents/R/R-3.4.1/include",
+        "-DNDEBUG",
+        "-Id:/Compiler/gcc-4.9.3/local330/include",
+        "-fopenmp"
+    ],
+    "hash" : "15238804481524208820",
+    "is_cpp" : true,
+    "pch" : ""
+}

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "args <- commandArgs(TRUE)\n# args <- c(1,100,\"KE\", 1)\nchromo <- as.numeric(args[1])\nchosen_size <- as.numeric(args[2])\nline <- args[3]\nnsim <- as.numeric(args[4])\n\ncov1 <- cov2 <- cov3 <- numeric(nsim)\n\n\ndata <- read.table(\"out.Chromo1_B.txt.phased.gz\", stringsAsFactors = FALSE)\ndata <- data[-1,-(1:2)]\n\nlibrary(HaploBlocker)\nlibrary(CHaploBlocker)\n\n\nfor(index in 1:nsim){\n  chosen <- sample(1:ncol(data), chosen_size)\n  dhm1 <- data[,chosen]\n  blocklist <- block_calculation(dhm1)\n\n  cov1[index] <- mean(overlap_test(blocklist, data[,chosen], mindestaehnlichkeit=0.995))\n  cov2[index] <- mean(overlap_test(blocklist, data[,-chosen], mindestaehnlichkeit=0.995))\n  cov3[index] <- mean(coverage_test(blocklist, chosen_size, type=\"window\"))\n\n  exp_name <- paste0(\"Small_Sample_test_chicken/Chr\", chromo, \"Choosen\", chosen_size, \"Line\", line, \"Nsim\", nsim, \".RData\")\n  save(file=exp_name, list=c(\"cov1\", \"cov2\", \"cov3\"))\n}\n\n\n",
+    "created" : 1520594627245.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "152733346",
+    "id" : "ACD7B5E4",
+    "lastKnownWriteTime" : 1521192308,
+    "last_content_update" : 1521192308919,
+    "path" : "C:/Users/tpook/Desktop/Small_Sample_test_chicken.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled57"
+    },
+    "relative_order" : 56,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

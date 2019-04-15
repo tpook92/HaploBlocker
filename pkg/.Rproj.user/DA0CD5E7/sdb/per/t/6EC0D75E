@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Calculate transition probabilities between nodes\n#'\n#' Internal Function to calculate transition probabilities between nodes\n#' @param data node-dataset\n#' @param intersect_func Used intersect-function (internally relevant for computation time)\n#' @export\n\n\ncalculate_transition <- function(data, intersect_func=intersect){\n\n  a <- start_end_block(data)\n  relevant <- (a[,1]>1)\n  relevant <- (1:nrow(a))[relevant]\n  relevant <- relevant[length(relevant):1]\n  for(index in which(a[,2]==max(a[,2]))){\n    data[[index]][[6]] <- cbind(0,0)\n  }\n  for(check in relevant){\n    activ <- data[[check]]\n    possible <- (1:nrow(a))[(a[,2]==activ[[1]]$window-1)]\n\n    for(index in 1:length(possible)){\n      transi <- length(intersect(data[[possible[index]]][[5]], activ[[5]]))\n      if(transi>0){\n        if(length(data[[possible[index]]])==5){\n          data[[possible[index]]][[6]] <- cbind(check,transi)\n        } else{\n          data[[possible[index]]][[6]] <- rbind(data[[possible[index]]][[6]], c(check,transi) )\n        }\n\n      }\n\n\n    }\n  }\n\n\n  ## Eingaenge\n\n  relevant <- (a[,2]<max(a[,2]))\n  relevant <- (1:nrow(a))[relevant]\n\n  for(index in which(a[,1]==1)){\n    data[[index]][[7]] <- cbind(0,0)\n  }\n\n  for(check in relevant){\n    nr <- 1\n    poss <- data[[check]][[6]][,1]\n    for(index in poss){\n      if(length(data[[index]])<7){\n        data[[index]][[7]] <- matrix(c(check, data[[check]][[6]][nr,2]), nrow=1)\n      } else{\n        data[[index]][[7]] <- rbind( data[[index]][[7]], c(check, data[[check]][[6]][nr,2]))\n      }\n\n      nr <- nr +1\n    }\n  }\n  return(data)\n\n}\n\n'\n\ncalculate_transition <- function(data){\n\n  a <- start_end_block(data)\n  relevant <- (a[,1]>1)\n  relevant <- (1:nrow(a))[relevant]\n  relevant <- relevant[length(relevant):1]\n  for(check in relevant){\n    activ <- data[[check]]\n    possible <- (1:nrow(a))[(a[,2]==activ[[1]]-1)]\n\n    for(index in 1:length(possible)){\n      transi <- length(intersect(data[[possible[index]]][[5]], activ[[5]]))\n      if(transi>0){\n        if(length(data[[possible[index]]])==5){\n          data[[possible[index]]][[6]] <- rbind(c(check,transi), NULL)\n        } else{\n          data[[possible[index]]][[6]] <- rbind(data[[possible[index]]][[6]], c(check,transi) )\n        }\n\n      }\n\n\n    }\n  }\n\n\n  ## Eingaenge\n\n  relevant <- (a[,2]<max(a[,2]))\n  relevant <- (1:nrow(a))[relevant]\n\n  for(check in relevant){\n    nr <- 1\n    poss <- data[[check]][[6]][,1]\n    for(index in poss){\n      if(length(data[[index]])<7){\n        data[[index]][[7]] <- matrix(c(check, data[[check]][[6]][nr,2]), nrow=1)\n      } else{\n        data[[index]][[7]] <- rbind( data[[index]][[7]], c(check, data[[check]][[6]][nr,2]))\n      }\n\n      nr <- nr +1\n    }\n  }\n  return(data)\n\n}\n\n'\n",
+    "created" : 1507139388313.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3233377198",
+    "id" : "6EC0D75E",
+    "lastKnownWriteTime" : 1524216569,
+    "last_content_update" : 1524216569,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/calculate_transition.R",
+    "project_path" : "R/calculate_transition.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

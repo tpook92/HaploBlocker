@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "seg <- 2\nname <- paste0(\"C:/Users/tpook/Desktop/raw\", seg, \"plink.ped\")\nphg1 <- read_delim(name, \" \", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)\nlinenames_raw <- as.matrix(phg1[,1])\nphg_raw <- as.matrix(phg1[sort(linenames_raw, index.return=TRUE)$ix,])\nlinenames_raw <- sort(linenames_raw)\n\nname <- paste0(\"C:/Users/tpook/Desktop/raw\", seg, \"plink.map\")\nposition_raw <- read_delim(name, \"\\t\", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE)\nposition_raw <- as.numeric(as.matrix(position_raw)[,4])\n\n\nphg <- t(as.matrix(phg_raw[,-(1:6)]))\nphg <- (phg[1:(nrow(phg)/2)*2,])\nmissing_rate <- numeric(nrow(phg))\nvariants <- numeric(nrow(phg))\nfor(index in 1:nrow(phg)){\n  missing_rate[index] <- sum(phg[index,]==0)/306\n  variants[index] <- length(unique(phg[index,]))\n}\n\n## Rigerious SNP-Filter\ncutoff <- 1.5\nmedian_m <- median(missing_rate)\n\nphgf <- phg[missing_rate<(cutoff*median_m),]\nmissing_ratef <- numeric(nrow(phgf))\nvariantsf <- numeric(nrow(phgf))\npositionsf <- position_raw[missing_rate<(cutoff*median_m)]\n\nfor(index in 1:nrow(phgf)){\n  missing_ratef[index] <- sum(phgf[index,]==0)/306\n  variantsf[index] <- length(unique(phgf[index,]))\n}\n\nphg_old <- phgf\nphg <- phgf\nkmer <- 32\nmin_variant <- 5\nmax_na <- 10\nsnps <- numeric(ceiling(nrow(phg)/kmer))\nfor(index in 1:ceiling(nrow(phg)/kmer)){\n  snps[index] <- sum(variants[1:kmer + kmer*(index-1)]==3, na.rm=TRUE)\n}\n\nfor(index2 in 1:ceiling(nrow(phg)/kmer-1)){\n  windoww <- uniquem(t(phg[1:kmer + kmer*(index2-1),]))\n  # 44 variants\n  commons <- which(windoww[[2]]>= min_variant)\n  \n  for(index in 1:nrow(windoww[[1]])){\n    if(sum(index==commons)==0){\n      similar <- colSums((windoww[[1]][index,] == t(windoww[[1]][commons,])) + 0.99 * (windoww[[1]][index,]==0) * t(windoww[[1]][commons,] != 0))\n      if(sum(similar >= kmer - 0.01*max_na)){\n        change_to <- which.max(similar)\n        to_change <- which(colSums(phg[1:kmer+ kmer*(index2-1),]==windoww[[1]][index,])==kmer)\n        phg[1:kmer+ kmer*(index2-1),to_change] <- windoww[[1]][commons[change_to],]\n      }\n    }\n  }\n}\n\nrange <- 10\nmin_na <- 11\nphgN <- phg\n\nfor(indi in 1:306){\n  print(indi)\n  for(index in (range+1):(nrow(phg)-10)){\n    n_na <- sum(phg[(index-range):(index+range), indi]==0)\n    if(n_na>= min_na){\n      phgN[index,indi] <- 0\n    }\n  }\n}\n\nmissing_rate_NA <- numeric(nrow(phg))\nvariants_NA <- numeric(nrow(phg))\nfor(index in 1:nrow(phg)){\n  missing_rate_NA[index] <- sum(phgN[index,]==0)/306\n  variants_NA[index] <- length(unique(phgN[index,]))\n}\n\nbl7 <- block_calculation(phgN, window_size=32, block_min_count = 50, merging_error = 3, blockinfo_mode2 = 4, actual_snp_weight = 5, gap=3, minimum.blocksize = 5, na_snp_weight = 2, big_output = TRUE)\n\nphgNN <- phgN\nmin_knoten <- 1\nfor(index in 1:length(bl7[[4]])){\n  print(index)\n  to_impute <- which(bl7[[4]][[index]][[1]]<min_knoten)\n  commons <- which(bl7[[4]][[index]][[1]]>=min_knoten)\n  commonv <- NULL\n  for(index2 in commons){\n    commonv <- rbind(commonv, bl7[[4]][[index]][[6]][[index2]])\n    phgNN[1:32+32*(index-1),bl7[[4]][[index]][[5]][[index2]]] <- bl7[[4]][[index]][[6]][[index2]]\n  }\n  for(index2 in to_impute){\n    rarev <- bl7[[4]][[index]][[6]][[index2]]\n    sims <- which.max(bl7[[4]][[index]][[2]][index2, commons])\n    phgNN[1:32+32*(index-1),bl7[[4]][[index]][[5]][[index2]]] <- bl7[[4]][[index]][[6]][[commons[sims]]]\n    \n  }\n}\n\nbl8 <- block_calculation(phgNN, window_size=32, block_min_count = 50, merging_error = 3, blockinfo_mode2 = 4, actual_snp_weight = 5, gap=3, minimum.blocksize = 5, na_snp_weight = 2, big_output = TRUE)\n",
+    "created" : 1508953441236.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "489542650",
+    "id" : "A2EA5DE6",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1508954596591,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled28"
+    },
+    "relative_order" : 14,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

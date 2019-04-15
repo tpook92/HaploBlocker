@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Off-variant-identification\n#'\n#' Function to add off-variant-blocks\n#' @param blocklist blocklist created by blocklist_calculcation algorithm\n#' @param window_sequence sequence of predefined windows (default: NULL ;per row: start$snp, end$snp, length, length - merging_error, start$bp, end$bp)\n#' @param dataset dataset which variant nr. for each window\n#' @param indi number of haplotypes in the dataset\n#' @param nwindow number of windows in the dataset\n#' @param bp_map vector of positions for each SNP in bp (default: NULL - all 0)\n#' @param off_node_minimum_blocklength Minimum length of newly identified blocks (default: 10)\n#' @param off_node_minimum_blocksize Minimum number of individuals in newly identified blocks (default: 5)\n#' @param raster Raster-width in the identification step (default: 5; recommended to be lower than off_node_minimum_blocklength)\n#' @export\n\nadd_offnode <- function(blocklist, dataset, indi, nwindow, window_sequence, bp_map, off_node_minimum_blocklength=10, off_node_minimum_blocksize=5, raster=5){\n  t <- coverage_test(blocklist, indi, type=\"window\", max=1)\n  index <- 1\n  while(index+off_node_minimum_blocklength -1 <= nwindow){\n    window <- index:(index+off_node_minimum_blocklength-1)\n    center <- round(index+off_node_minimum_blocklength/2)\n    non_block_indi <- unique(c(0,(t[center,]==0) * (1:ncol(t))))[-1]\n    activ_data <- dataset[window, non_block_indi]\n    varants <- unique(t(activ_data))\n    counts <- numeric(nrow(varants))\n    for(index2 in 1:length(counts)){\n      counts[index2] <- sum(colSums(activ_data==varants[index2,])==off_node_minimum_blocklength)\n    }\n    varants <- varants[counts>=off_node_minimum_blocksize,,drop=FALSE]\n\n    if(nrow(varants)>0){\n      for(index2 in 1:nrow(varants)){\n        activ_indi <- non_block_indi[which(colSums(activ_data==varants[index2,])==off_node_minimum_blocklength)]\n        start <- index+1\n        end <- index+off_node_minimum_blocklength-1 -1\n        extents <- TRUE\n        extentb <- TRUE\n        while(extents==TRUE && start>1){\n          start <- start - 1\n          if(length(unique(dataset[start-1, activ_indi]))!=1){\n            extents <- FALSE\n          }\n        }\n        while(extentb==TRUE && end<(nwindow-1)){\n          end <- end +1\n          if(length(unique(dataset[end+1, activ_indi]))!=1){\n            extentb <- FALSE\n          }\n        }\n        end <- end + extentb # NUR TRUE wenn am ende des Datensatzes\n\n        new_block <- list()\n\n        new_block[[1]] <- \"Off-Window-Variant\"\n        new_block[[2]] <- list()\n        new_block[[2]]$window <- start\n        new_block[[2]]$snp <- window_sequence[start,1]\n\n        new_block[[3]] <- list()\n        new_block[[3]]$window <- end\n        new_block[[3]]$snp <- window_sequence[end,2]\n        if(length(bp_map)==0){\n          new_block[[2]]$bp <- 0\n          new_block[[3]]$bp <- 0\n        } else{\n          new_block[[2]]$bp <- bp_map[new_block[[2]]$snp]\n          new_block[[3]]$bp <- bp_map[new_block[[3]]$snp]\n        }\n\n        new_block[[4]] <- dataset[start:end, activ_indi[1]]\n        new_block[[5]] <- length(activ_indi)\n        new_block[[6]] <- activ_indi\n\n        blocklist[[length(blocklist)+1]] <- new_block\n      }\n    }\n\n\n\n\n    index <- index+raster\n  }\n  return(blocklist)\n}\n",
+    "created" : 1524729258574.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1316541736",
+    "id" : "6A7F1552",
+    "lastKnownWriteTime" : 1524216568,
+    "last_content_update" : 1524216568,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/add_offnode.R",
+    "project_path" : "R/add_offnode.R",
+    "properties" : {
+    },
+    "relative_order" : 79,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

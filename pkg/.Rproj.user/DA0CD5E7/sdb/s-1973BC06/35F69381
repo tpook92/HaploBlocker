@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "X <- rbind(c(1,1,1), c(1,0,0), c(1,1,0), c(1,0,1), c(0,1,1))\ny <- c(1,0,0,0,0)\n\nmodel <- lm(y~X)\nmodel$fitted.values\n",
+    "created" : 1525084220579.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3854349859",
+    "id" : "35F69381",
+    "lastKnownWriteTime" : 150207072,
+    "last_content_update" : 1525084311821,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled64"
+    },
+    "relative_order" : 110,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

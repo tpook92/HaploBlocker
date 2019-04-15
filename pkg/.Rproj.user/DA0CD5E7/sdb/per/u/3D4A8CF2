@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "setwd(\"C:/Users/tpook/Desktop/\")\n\nX11(height=24, width=50)\npar(mfrow=c(4,9))\n\ndiff1 <- diff2 <- numeric(36)\ndifn <- 1\nfor(race in c(\"KE\", \"PE\", \"KE&PE_joined\", \"PE&KE_joined\")){\n  \n\ntest <- training <-  matrix(0, nrow=9, ncol=3)\n\nindex <- 1\nfor(pheno in 2:10){\n  data <- NULL\n  data2 <- NULL\n  name <- paste0(\"GBLUP_block_21_02/\",race,\"Pheno\",pheno,\"included0.8_BLOCKSNP.RData\")\n  load(name)\n  test[index,1] <-mean(test_cor[test_cor!=0])\n  training[index,1] <- mean(training_cor[training_cor!=0])\n  \n  data2 <- cbind(data2, test_cor)\n  \n  name <- paste0(\"GBLUP_block_21_02/\",race,\"Pheno\",pheno,\"included0.8_BLOCK.RData\")\n  load(name)\n  test[index,2] <- mean(test_cor[test_cor!=0])\n  training[index,2] <- mean(training_cor[training_cor!=0])\n  \n  data2 <- cbind(data2, test_cor)\n  \n  if(race==\"KE&PE_joined\"){\n    race2 <- \"KE&PE\"\n  } else if(race==\"PE&KE_joined\"){\n    race2 <- \"PE&KE\"\n  } else{\n    race2 <- race\n  }\n  name <- paste0(\"GBLUP_block_21_02/\",race2,\"Pheno\",pheno,\"included0.8_SNP.RData\")\n  load(name)\n  test[index,3] <- mean(test_cor[test_cor!=0])\n  training[index,3] <- mean(training_cor[training_cor!=0])\n  \n  data2 <- cbind(data2, test_cor)\n  \n  colnames(data2) <- c(\"Joined\", \"Block\", \"SNP\")\n  means <- colMeans(data2)\n  \n  diff1[difn] <- means[2] - means[1]\n  diff2[difn] <- means[3] - means[1]\n  difn <- difn+1\n  colu <- numeric(3)\n  colu[which.max(means)] <- \"green\"\n  colu[which.max(-means)] <- \"red\"\n  colu[colu==0] <- \"yellow\"\n  boxplot(data2, col=colu, ylim=c(-0.2,1))\n  \n  index <- index +1\n}\n\n}\n",
+    "created" : 1524059956378.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3754104166",
+    "id" : "3D4A8CF2",
+    "lastKnownWriteTime" : 1524056118,
+    "last_content_update" : 1524125441822,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled61"
+    },
+    "relative_order" : 62,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

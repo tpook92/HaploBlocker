@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# Experimental GBLUP\nargs <- commandArgs(TRUE)\n#args <- c(7,0.8,\"KE_PE\", 10)\npheno_nr <- as.numeric(args[1])\nincluded <- as.numeric(args[2])\nland <- args[3]\niter <- as.numeric(args[4])\n\nif(land==\"KE_PE\"){\n  land <- \"KE&PE\"\n}\nif(land==\"KE_PE_joined\"){\n  land <- \"KE&PE_joined\"\n}\nif(land==\"PE_KE\"){\n  land <- \"PE&KE\"\n}\nif(land==\"PE_KE_joined\"){\n  land <- \"PE&KE_joined\"\n}\n\nif(land==\"KE&PE\" || land==\"PE&KE\"){\n  load(\"PE_DH_SNP_2.RData\")\n  dataset <- datas\n  load(\"KE_DH_SNP_2.RData\")\n  dataset <- cbind(dataset,datas)\n} else{\n  name1 <- paste0(land,\"_DH_SNP_2.RData\")\n  load(name1)\n  dataset <- datas\n}\n\n\nlibrary(BGLR)\nlibrary(miraculix)\nlibrary(RandomFieldsUtils)\n\npheno <- read.table(\"MAZE_BLUEs_acrossLocations_DHperse2017_v1.csv\", sep=\";\")\npheno <- as.matrix(pheno)\n\nrelevant_dh <- duplicated(c(pheno[,1],colnames(dataset)))[-(1:nrow(pheno))]\ndataset <- dataset[,relevant_dh]\n\nrelevant_pheno <- duplicated(c(colnames(dataset),pheno[,1]))[-(1:ncol(dataset))]\npheno <- pheno[relevant_pheno,]\n\ndataset <- dataset[,sort(colnames(dataset), index.return=TRUE)$ix]\npheno <- pheno[sort(pheno[,1], index.return=TRUE)$ix,]\n\n\nif(max(dataset)==1){\n  Zt <- dataset*2\n} else{\n  Zt <- dataset\n}\nstorage.mode(Zt) <- \"integer\"\nZ_code <- createSNPmatrix(Zt)\nA <- relationshipMatrix(Z_code, TRUE, TRUE)\n\n#p_i <- rowSums(Zt)/ncol(Zt)/2\n#Ztm <- Zt - p_i * 2\n#A <- crossprod(Ztm)/ (2 * sum(p_i*(1-p_i)))\n\nETA <- list(list(K=A, model='RKHS'))\n\ntraining_cor <- numeric(iter)\ntest_cor <- numeric(iter)\nfor(index in 1:iter){\n  y <- y_na <- as.numeric(pheno[,pheno_nr])\n  if(land==\"KE&PE\" || land==\"KE&PE_joined\"){\n    sub <- sample(1:471, 471*included)\n  } else if(land==\"PE&KE\" || land==\"PE&KE_joined\"){\n    sub <- sample(472:873, 402*included)\n  } else{\n    sub <- sample(1:ncol(dataset), ncol(dataset)*included)\n  }\n\n  y_na[-sub] <- NA\n  model <- BGLR(y=y_na, verbose=FALSE, nIter=5000, burnIn=1000, ETA=ETA,\n                saveAt=paste0(\"Trash/snp\",pheno_nr,land))\n  training_cor[index] <- cor(y[sub],model$yHat[sub])\n  if(land==\"KE\" || land==\"PE\"){\n    test_cor[index] <- cor(y[-sub],model$yHat[-sub], use=\"pairwise.complete.obs\")\n  } else if(land==\"KE&PE\" || land==\"KE&PE_joined\"){\n    test_cor[index] <- cor(y[-(1:471)],model$yHat[-(1:471)], use=\"pairwise.complete.obs\")\n  } else{\n    test_cor[index] <- cor(y[-(472:873)],model$yHat[-(472:873)], use=\"pairwise.complete.obs\")\n  }\n\n}\n\n\nname1 <- paste0(\"GBLUP_block_21_02/\", land, \"Pheno\", pheno_nr, \"included\", included, \"_SNP.RData\")\nsave(file=name1, list=c(\"training_cor\", \"test_cor\"))\n\n\n\n\n",
+    "created" : 1524053568911.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3111007382",
+    "id" : "652EA605",
+    "lastKnownWriteTime" : 1519221793,
+    "last_content_update" : 1519221793,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/GBLUP_testing_MAZE_SNP_21_02.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 86,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

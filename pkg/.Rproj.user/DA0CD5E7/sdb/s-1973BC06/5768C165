@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "psnp <- which(variants==3)\n\nsim <- matrix(nrow=306, ncol=306)\nsimNA <- matrix(nrow=306, ncol=306)\n\nfor(index in 1:306){\n  for(index2 in 1:306){\n    sim[index,index2] <- sum(phg[psnp,index]==phg[psnp,index2])\n  }\n}\n\nfor(index in 1:306){\n  for(index2 in 1:306){\n    simNA[index,index2] <- sum(((phg[psnp,index]==phg[psnp,index2])+ \n                                  (phg[psnp,index]==0) + (phg[psnp,index2]==0))>0)\n  }\n}\n\nbl <- blockinfo_calculation4(phg[psnp,], window_size=length(psnp), merging_error=10,\n                       actual_snp_weight=5, na_snp_weight=0.1)\n\nblockinfo_calculation4 <- function(dhm, window_sequence=NULL, window_size=32, merging_error=3, bp_map=NULL,\n                                   window_anchor_gens=NULL, at_least_one=TRUE, blockinfo_mode=0, actual_snp_weight = 5,\n                                   na_snp_weight=2, na_seq_weight=0)",
+    "created" : 1510153953772.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3659782127",
+    "id" : "5768C165",
+    "lastKnownWriteTime" : 4294967297,
+    "last_content_update" : 1510154680083,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled34"
+    },
+    "relative_order" : 27,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

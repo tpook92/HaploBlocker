@@ -1,0 +1,204 @@
+load("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/PE_DH_chromo10.RData")
+
+## Server stuff
+data <- read.table("NRGene_MAZE_sequence/ALL_SKIM_seq_data_SNPs_filtered_PASS_complete.vcf")
+
+
+for(index in 1:9){
+  data1 <- data[data[,1]==index,]
+  save(file=paste0("NRGene_MAZE_sequence/chr",index,"_340.RData"), list=c("data1"))
+}
+
+a <-scan("NRGene_MAZE_sequence/ALL_SKIM_seq_data_SNPs_filtered_PASS_complete.vcf", skip=307, nlines=1, what="character")
+a <- a[-(1:9)]
+save(file="NRGene_MAZE_sequence/PE_lines.RData", list=c("a"))
+
+load("NRGene_MAZE_sequence/chr10_340.RData")
+load(file="NRGene_MAZE_sequence/PE_lines.RData")
+load("Genetic_Datasets/Batch3_KEPE/PE_DH_chromo10.RData")
+allele <- read.table("MAZE_new/GenotypicData/DHs_600kData/RawData_Script_and_files_for_filtering_v1/IDs.indels_600k.array.txt")
+load("MAZE_new/GenotypicData/DHs_600kData/MAZE_DHs_imputed_refB73v4_v1.RData")
+
+load("NRGene_MAZE_sequence/PE_info.RData")
+load("MAZE_new/GenotypicData/DHs_600kData/RawData_Script_and_files_for_filtering_v1/Annot_600k_Allele.A.and.B_refv2.RData")
+
+library(HaploBlocker)
+
+keep <- which(duplicated(c(paste0("DH_",a),colnames(data)))[-(1:length(a))])
+dhm <- data[,keep]
+
+map <- read.table("BEAGLE_Tests/Full_pedmap/PEchromo10map.map")
+
+blocklist <- block_calculation(dhm, target_coverage = 0.97, bp=map[,4])
+t <- coverage_test(blocklist)
+cov <- rowMeans(t)
+
+data2 <- as.matrix(data1)
+geno <- depth <- matrix(NA,nrow=nrow(data1), ncol=340)
+for(index in 1:340){
+  print(index)
+  test <- (strsplit(data2[,index+9],split=":"))
+  for(index2 in 1:length(test)){
+    geno[index2,index] <- substr(test[[index2]][1], start=1, stop=1)
+    if(length(test[[index2]])>2){
+      depth[index2,index] <- test[[index2]][3]
+    } else{
+      depth[index2,index] <- 0
+    }
+
+  }
+
+}
+#look <- which(((depth!=0) + (geno=="."))>1)
+save(file="NRGene_MAZE_sequence/PE_info.RData", list=c("geno", "depth"))
+
+#### Pipeline:
+lines <- c("PE0083", "PE0213", "PE0278", "PE0279", "PE0312" ,"PE0345", "PE0346")
+
+for(index2 in 1:7){
+  nr <- which(a==lines[index2])
+  se <- blocklist_startend(blocklist, type="bp")
+  include <- which.block(blocklist, nr)
+  se <- se[which(include>0),]
+
+  end_block  <- sort(unique(c(0,se[,1]-1, se[,2])))[-1]
+  start_block <- c(1, end_block[1:(length(end_block)-1)]+1)
+
+  high_geno <- high_depth <- high_n <-  matrix(NA,nrow=nrow(data1), ncol=1)
+
+  loc <- data1[,2]
+  major <- data1[,4]
+  minor <- data1[,5]
+  for(index in 1:length(start_block)){
+    take <- which(((loc>start_block[index])+(loc<end_block[index]))==2)
+    indi <- which.indi(blocklist, nr, start=start_block[index], end=end_block[index])
+    if(length(indi)>0 && length(take)>0){
+      geno_temp <- geno[take,indi, drop=FALSE]
+      depth_temp <- depth[take,indi, drop=FALSE]
+      depth_temp[depth_temp=="."] <- 0
+      storage.mode(depth_temp) <- "numeric"
+      for(index2 in 1:nrow(geno_temp)){
+        a0 <- sum((geno_temp[index2,]==0)*(depth_temp[index2,]))
+        a1 <- sum((geno_temp[index2,]==1)*(depth_temp[index2,]))
+        a2 <- sum((geno_temp[index2,]==2)*(depth_temp[index2,]))
+        high_geno[take[index2],] <- which.max(c(a0,a1,a2))-1
+        high_depth[take[index2],] <- max(a0,a1,a2)
+        high_n[take[index2]] <- length(indi)
+      }
+    }
+
+  }
+  overlap1 <- which(duplicated(c(map[,4], loc))[-(1:nrow(map))])
+  overlap2 <- which(duplicated(c(loc, map[,4]))[-(1:length(loc))])
+
+  low_geno_600k <- as.numeric(geno[overlap1,nr])
+  high_geno_600k <- high_geno[overlap1,]
+  geno_600k <- data[overlap2,nr]
+
+  sum(geno_600k[!is.na(low_geno_600k)]/2 == low_geno_600k[!is.na(low_geno_600k)])
+  sum(geno_600k[!is.na(low_geno_600k)]/2 != low_geno_600k[!is.na(low_geno_600k)])
+  sum(is.na(low_geno_600k))
+
+  sum(geno_600k[!is.na(high_geno_600k)]/2 == high_geno_600k[!is.na(high_geno_600k)])
+  sum(geno_600k[!is.na(high_geno_600k)]/2 != high_geno_600k[!is.na(high_geno_600k)])
+  sum(is.na(high_geno_600k))
+
+  # FIX 0/1 CODING!
+}
+
+window_indi <- list()
+for(index2 in 1:7){
+  nr <- which(a==lines[index2])
+  se <- blocklist_startend(blocklist, type="bp")
+  include <- which.block(blocklist, nr)
+  se <- se[which(include>0),]
+
+  end_block  <- sort(unique(c(0,se[,1]-1, se[,2])))[-1]
+  start_block <- c(1, end_block[1:(length(end_block)-1)]+1)
+
+
+  loc <- data1[,2]
+  for(index in 1:length(start_block)){
+    take <- which(((loc>start_block[index])+(loc<end_block[index]))==2)
+    indi <- which.indi(blocklist, nr, start=start_block[index], end=end_block[index])
+    window_indi[[index]] <- a[indi]
+  }
+
+
+}
+
+lw <- numeric(length(window_indi))
+for(index in 1:length(window_indi)){
+  lw[index] <- length(window_indi[[index]])
+}
+
+position <- cbind(start_block, end_block)
+save(file="NRGene_MAZE_sequence/PE0083_05xtoHigh.RData", list=c("position", "window_indi"))
+
+
+
+
+map <- as.matrix(map)
+allele10 <- annot[which(duplicated(c(map[,2], annot[,1]))[-(1:nrow(map))]),]
+
+order <- numeric(nrow(allele10))
+for(index in 1:length(order)){
+  order[index] <- which(allele10[,1]==map[index,2])
+}
+
+allele10 <- allele10[order,]
+
+sum(as.character(major[overlap1])==allele10[overlap2,4])
+sum(as.character(minor[overlap1])==allele10[overlap2,4])
+check <-which(!(as.character(major[overlap1])==allele10[overlap2,6]))
+check <- which(((as.character(major[overlap1])==allele10[overlap2,4])+
+               (as.character(minor[overlap1])==allele10[overlap2,4]))<1)
+
+
+
+
+
+high_seq <- read.table("NRGene_MAZE_sequence/CHr10_7_genomes.vcf")
+
+data2 <- as.matrix(high_seq)
+geno1 <- depth1 <- matrix(NA,nrow=nrow(data2), ncol=7)
+for(index in 1:7){
+  print(index)
+  test <- (strsplit(data2[,index+9],split=":"))
+  for(index2 in 1:length(test)){
+    geno1[index2,index] <- substr(test[[index2]][1], start=1, stop=1)
+    if(length(test[[index2]])>2){
+      depth1[index2,index] <- test[[index2]][3]
+    } else{
+      depth1[index2,index] <- 0
+    }
+
+  }
+
+}
+loc1 <- as.numeric(data2[,2])
+major1 <- data2[,4]
+minor1 <- data2[,5]
+#look <- which(((depth!=0) + (geno=="."))>1)
+save(file="NRGene_MAZE_sequence/PE_info_high.RData", list=c("geno1", "depth1", "loc1", "major1", "minor1"))
+
+
+loc <- data1[,2]
+major <- data1[,4]
+minor <- data1[,5]
+
+dup1 <- which(duplicated(c(loc,loc1))[-(1:length(loc))])
+dup <- which(duplicated(c(loc1,loc))[-(1:length(loc1))])
+
+sum(as.character(major[dup]) == as.character(major1[dup1]))
+sum(as.character(major[dup]) == as.character(minor1[dup1]))
+
+which(((as.character(major[dup]) == as.character(minor1[dup1])) + (as.character(major[dup]) == as.character(major1[dup1])))==0)
+
+
+
+# Information Content Haplotype Blocks
+
+for(chromo in 1:10){
+  test <- read.table(paste0("NRGene_MAZE_sequence/haplotype_markers_chr",chromo,"_B73_cords.vcf.gz"))
+}

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Overlap Test\n#'\n#' Function to calculate the overlap of the blocks with another dataset\n#' @param blocklist block-dataset\n#' @param dhm dataset to check for overlap with the blocklist\n#' @param max maximum number in each cell (overlapping blocks; default: 1)\n#' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)\n#' #' @export\n\noverlap_test <- function(blocklist, dhm , max=1, min_similarity=0.99){\n  overlap <- matrix(0, nrow=nrow(dhm), ncol=ncol(dhm))\n  for(index in 1:length(blocklist)){\n    seq <- blocklist[[index]][[7]]$snp\n    start <- blocklist[[index]][[2]]$snp\n    end <- blocklist[[index]][[3]]$snp\n\n    sim <-colSums(dhm[start:end,]== seq)\n    included <- which(sim >= (min_similarity*(end-start+1)))\n    if(length(included)>0){\n      overlap[start:end, included] <- overlap[start:end, included] +1\n    }\n  }\n  overlap[overlap>max] <- max\n\n  return(overlap)\n}\n\n\n#blocktest <- numeric(length(blocklist))\n\n#for(index in 1:length(blocklist)){\n#  if(sum(blocklist[[index]][[6]]==9)&& blocklist[[index]][[2]]$window<=760&& blocklist[[index]][[3]]$window>760){\n##    blocktest[index] <- 1\n#  }\n#}\n",
+    "created" : 1530194752663.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1660062531",
+    "id" : "26FD6D74",
+    "lastKnownWriteTime" : 1524216569,
+    "last_content_update" : 1524216569,
+    "path" : "C:/Users/tpook/Desktop/R-Stuff/HaploBlocker/R/overlap_test.R",
+    "project_path" : "R/overlap_test.R",
+    "properties" : {
+        "tempName" : "Untitled20"
+    },
+    "relative_order" : 99,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "total_data <- NULL\nfor(chromo in 1:28){\n  name <- paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/SNP_data/out.Chromo\", chromo,\"_B.txt.phased.gz\")\n  data <- as.matrix(read.table(name)[-1,-(1:2)])\n  library(CHaploBlocker)\n  library(HaploBlocker)\n  blocklist <- block_calculation(data)\n\n  t <- coverage_test(blocklist, ncol(data), type=\"snp\")\n  mean(t)\n  se <- blocklist_startend(blocklist, type=\"snp\")\n  mean(se[,2]-se[,1]+1)\n\n  dataset <- block_matrix_construction(blocklist, indi=ncol(data))\n  total_data <- rbind(total_data, dataset)\n  name1 <- paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/Block_data/Chromo_\",chromo,\"_B_block.RData\")\n  save(file=name1, list=(\"dataset\"))\n}\nname1 <- paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/Block_data/Full_B_block.RData\")\nsave(file=name1, list=(\"total_data\"))\n\n\ndata <- read.table(\"C:/Users/tpook/Desktop/Chicken_Blockdata/SNP_data/out.Chromo1_B.txt.phased.gz\", stringsAsFactors = FALSE)\npheno <- read.table(\"C:/Users/tpook/Desktop/Chicken_Blockdata/drp_all_until_gen43.txt\", stringsAsFactors = FALSE)\n\ntiernr <- as.numeric(as.character(pheno[,1]))\ntiernr_data <- unique(as.numeric(substr(as.matrix(data[1,]), start=1, stop=7)))\n\nkeep <- which(duplicated(c(tiernr_data, tiernr))) - length(tiernr_data)\n\nsorted_pheno <- pheno[keep[-1],]\n\nnames <- sorted_pheno[,1]\nsorted_pheno[,1] <- 1:71\n\ntotal_block <- NULL\ntotal_snp <- NULL\nfor(chromo in 17:28){\n  data <- read.table(paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/SNP_data/out.Chromo\",chromo,\"_B.txt.phased.gz\"), stringsAsFactors = FALSE)\n  load(paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/Block_data/Chromo_\",chromo,\"_B_block.RData\"))\n\n  tiernr_data <- substr(as.matrix(data[1,]), start=1, stop=7)\n  data1 <- matrix(0,nrow=nrow(data)-1, ncol=nrow(sorted_pheno))\n  data2 <- matrix(0, nrow=nrow(dataset), ncol=nrow(sorted_pheno))\n  for(index in 1:nrow(sorted_pheno)){\n    take <- which(tiernr_data==names[index])[1:2]\n    data1[,index] <- (data[-1,take[1]]==\"A\") + (data[-1,take[2]]==\"A\")\n    data2[,index] <- dataset[,take[1]-2] + dataset[,take[2]-2]\n  }\n  colnames(data1) <- 1:71\n  colnames(data2) <- 1:71\n  rownames(data1) <- paste0(\"SNP\", 1:nrow(data1))\n  rownames(data2) <- paste0(\"BLOCK\", 1:nrow(data2))\n  write.table(data1, file=paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/SNP_data_mod/chromo\", chromo, \".txt\"), quote=FALSE)\n  write.table(data2, file=paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/Block_data_mod/chromo\", chromo, \".txt\"), quote=FALSE)\n  total_block <- rbind(total_block,data2)\n  total_snp <- rbind(total_snp, data1)\n}\nrownames(total_block) <- paste0(\"BLOCK\", 1:nrow(total_block))\nrownames(total_snp) <- paste0(\"SNP\", 1:nrow(total_snp))\nwrite.table(total_block, file=paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/Block_data_mod/Full_block.txt\"), quote=FALSE)\nwrite.table(total_snp, file=paste0(\"C:/Users/tpook/Desktop/Chicken_Blockdata/SNP_data_mod/Full_SNP.txt\"), quote=FALSE)\n\n\nwrite.table(sorted_pheno, file=\"C:/Users/tpook/Desktop/Chicken_Blockdata/Phenotypes.txt\", quote=FALSE,\n            row.names = FALSE, col.names = FALSE)\n",
+    "created" : 1515596990445.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3634539792",
+    "id" : "CADF2AA4",
+    "lastKnownWriteTime" : 1516292868,
+    "last_content_update" : 1516292868269,
+    "path" : "C:/Users/tpook/Desktop/Chicken_Blockdata/Generation_Blockdaten.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled44"
+    },
+    "relative_order" : 19,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

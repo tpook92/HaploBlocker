@@ -1,0 +1,14 @@
+#exportPattern("^[^\\.]")
+
+###exportPattern("^[[:alpha:]]+")
+exportPattern("^[ABD-Za-z]")
+# export( positivliste )
+
+
+
+importFrom("graphics", "abline", "lines", "plot", "polygon")
+importFrom("stats", "density", "median", "ksmooth")
+importFrom("compiler", "enableJIT")
+importFrom("grDevices", "adjustcolor")
+importFrom("RandomFieldsUtils", "confirm")
+useDynLib(HaploBlocker, .registration = TRUE, .fixes = "C_")
