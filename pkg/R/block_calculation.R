@@ -133,7 +133,34 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     ncluster <- 1
   }
 
-
+  if(length(dhm)==1){
+    data_type <- substr(dhm, start= nchar(dhm)-2, stop= nchar(dhm))
+    if(data_type=="vcf"){
+      cat("Data input identified as vcf-file - extract genomic information. \n")
+      if(requireNamespace("vcfR", quietly = TRUE)){
+        vcf_file <- vcfR::read.vcfR(dhm)
+        haplo1 <- substr(vcf_file@gt[,-1], start=1, stop=1)
+        haplo2 <- substr(vcf_file@gt[,-1], start=3, stop=3)
+        haplo <- cbind(haplo1, haplo2)
+        haplo <- haplo[,c(0,ncol(haplo1)) + rep(1:ncol(haplo1), each=2)]
+      } else{
+        stop("Data-import failed! vcfR-package not available! \n")
+      }
+    } else if(data_type=="ped"){
+      cat("Data input identified as Ped-map-file - extract genomic information. \n")
+      ped_file <- utils::read.table(dhm)
+      haplo12 <- t(ped_file[,-(1:6)])
+      haplo <- matrix(0, ncol = ncol(haplo12)*2, nrow=nrow(haplo12)/2)
+      for(index1 in 1:(nrow(haplo12)/2)){
+        haplo[,index1*2+c(-1,0)] <- matrix(haplo12[,index1], ncol=2, byrow=TRUE)
+      }
+    } else{
+      stop("Data type could not be identified. Please manually import the dataset. \n")
+    }
+    storage.mode(haplo) <- "integer"
+    dhm <- haplo
+    cat("Data import successful. \n")
+  }
   if(nrow(dhm)>parallel_window){
     dhm_list <- list()
     snp_start <- NULL

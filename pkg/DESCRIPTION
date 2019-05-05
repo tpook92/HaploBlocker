@@ -1,11 +1,12 @@
 Package: HaploBlocker
 Type: Package
 Title: HaploBlocker
-Version: 1.4.4
+Version: 1.4.5
 Author: Torsten Pook[aut, cre], Martin Schlather[aut]
 Maintainer: Torsten Pook <tpook@gwdg.de>
 Description: Creation of Haplotype Libraries/Blocks for DHs and highly inbreed lines.
 Depends: R (>= 1.0), RandomFieldsUtils (>= 0.3.54)
+Suggests: vcfR
 LinkingTo: RandomFieldsUtils
 License: GPL ( >= 3)
 Encoding: UTF-8

@@ -12,5 +12,7 @@ blocklist_startend <- function(blocklist, type="snp", first_block=1){
     be[index,1] <- blocklist[[index+first_block-1]][[2]][[type]]
     be[index,2] <- blocklist[[index+first_block-1]][[3]][[type]]
   }
+  colnames(be) <- c("start", "end")
+  rownames(be) <- paste0("block ", 1:nrow(be))
   return(be)
 }

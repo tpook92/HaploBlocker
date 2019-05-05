@@ -1,0 +1,113 @@
+# Auswertung
+args <- commandArgs(TRUE)
+sim <- as.numeric(args[1])
+heritabilitaet <- as.numeric(args[2])
+verwandtschaftsm <- args[3]
+selection_intensity <- as.numeric(args[4])
+burn_in <- as.numeric(args[5])
+effects <- args[6]
+max_auswahl <- as.numeric(args[7])
+type <- as.numeric(args[8])
+generationen <- 40
+chromosomen <- 10
+snps <- 500
+chromosom.length <- 1 ## In Morgan
+epi_same_chromo <- FALSE # BISHER NICHT IMPLEMENTIERT!
+burn_in_populationsize <- 1000
+mutation.rate <- 0
+populationsize <- 1000
+
+if(effects=="add"){
+  add_effects <- 120
+  dom_effects <- 0
+  epi1_effects <- 0
+  epi2_effects <- 0
+  dice_effects <- 0
+}
+if(effects=="epi1"){
+  add_effects <- 0
+  dom_effects <- 0
+  epi1_effects <- 60
+  epi2_effects <- 0
+  dice_effects <- 0
+}
+if(effects=="epi2"){
+  add_effects <- 0
+  dom_effects <- 0
+  epi1_effects <- 0
+  epi2_effects <- 60
+  dice_effects <- 0
+}
+if(effects=="dice"){
+  add_effects <- 0
+  dom_effects <- 0
+  epi1_effects <- 0
+  epi2_effects <- 0
+  dice_effects <- 40
+}
+
+if(verwandtschaftsm=="Pheno"){
+  phenotype_zw <- TRUE
+} else{
+  phenotype_zw <- FALSE
+}
+
+if(type==1){
+  type <- "Outputpopulation_Martini_31_8_position/"
+  type2 <- "position"
+} else if(type==2){
+  type <- "Outputpopulation_Martini_31_8_known/"
+  type2 <- "known"
+}else if(type==3){
+  type <- "Outputpopulation_Martini_31_8_density/"
+  type2 <- "density"
+}else if(type==4){
+  type <- "Outputpopulation_Martini_31_8_position_addr/"
+  type2 <- "paddr"
+}else if(type==5){
+  type <- "Outputpopulation_Martini_31_8_known_addr/"
+  type2 <- "kaddr"
+}else if(type==6){
+  type <- "Outputpopulation_Martini_31_8_phenor/"
+  type2 <- "pheno"
+}
+
+if(type2=="density"){
+  name <- paste(type, "CHR", chromosomen, "SNP", snps,"SIZE", burn_in_populationsize,"BURNIN", burn_in, "ADD", add_effects, "DOM", dom_effects, "EP1_", epi1_effects, "EP2_", epi2_effects, "DICE", dice_effects,"NR", sim , "MAX", max_auswahl,"Density", 100, "Heri", heritabilitaet, ".RData",sep="")
+
+} else{
+  name <- paste(type, "CHR", chromosomen, "SNP", snps,"SIZE", burn_in_populationsize,"BURNIN", burn_in, "ADD", add_effects, "DOM", dom_effects, "EP1_", epi1_effects, "EP2_", epi2_effects, "DICE", dice_effects,"NR", sim , "MAX", max_auswahl, "Heri", heritabilitaet, ".RData",sep="")
+
+}
+
+load(name)
+
+zw <- numeric(50)
+var <- numeric(50)
+cor <- numeric(50)
+
+for(index in 1:length(population$breeding)){
+  zw[index] <- mean(population$breeding[[index]][[7]][1,])
+  var[index] <- var(population$breeding[[index]][[7]][1,])
+  cor[index] <- cor(population$breeding[[index]][[7]][1,], population$breeding[[index]][[3]][1,])
+}
+
+zw[(index+1):50] <- zw[index]
+max <- 100
+
+if(effects=="add"){
+  for(index in 1:120){
+    max <- max + max(population$info$real.zws.add[[1]][index,3:5])
+  }
+} else if(effects=="dice"){
+  for(index in 1:40){
+    max <- max + max(population$info$real.zws.dice[[1]][[2]][[index]])
+  }
+} else{
+  for(index in 1:60){
+    max <- max + max(population$info$real.zws.mult[[1]][index,-(1:4)])
+  }
+}
+
+name2 <- paste("Outputpopulation_Martini_31_8_Auswertung/CHR", chromosomen, "SNP", snps,"SIZE", burn_in_populationsize,"BURNIN", burn_in, "ADD", add_effects, "DOM", dom_effects, "EP1_", epi1_effects, "EP2_", epi2_effects, "DICE", dice_effects,"NR", sim , "MAX", max_auswahl, "Heri", heritabilitaet,"_", type2, ".RData", sep="")
+save(file=name2, list=c("zw", "var", "max", "cor"))

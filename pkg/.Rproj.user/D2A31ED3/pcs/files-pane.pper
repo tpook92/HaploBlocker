@@ -2,7 +2,7 @@
     "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R",
     "sortOrder" : [
         {
-            "ascending" : false,
+            "ascending" : true,
             "columnIndex" : 2
         },
         {

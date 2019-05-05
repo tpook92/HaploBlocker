@@ -11,7 +11,9 @@
 
 block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FALSE, return_dataset=FALSE, non_haploblocker=FALSE){
 
-
+  if(length(data)>0 && is.matrix(data)==FALSE){
+    data <- as.matrix(data)
+  }
   if(length(blocklist)==0){
     blocklist <- block_calculation(data)
   }
@@ -30,7 +32,6 @@ block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FAL
     fixcoding(unique.dhm)
     c_dhm <- codeSNPs(dhm)
     blockinfo <- blockinfo_calculation(dhm, window_sequence = cbind(start_block, end_block), merging_error = 0, c_dhm=c_dhm)
-
     dataset <- block_dataset_construction(blockinfo[[1]],blocklist)
   } else{
     dataset <- matrix(0, nrow=length(start_block), ncol=n_indi)
@@ -112,15 +113,22 @@ block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FAL
   var_permarker <- RandomFieldsUtils::colMax(t(dataset))
   bin_dataset <- matrix(0, nrow=sum(var_permarker), ncol=n_indi)
   counter <- 1
+  row_names <- numeric(nrow(bin_dataset))
   for(index in 1:length(var_permarker)){
     for(index2 in 1:var_permarker[index]){
       bin_dataset[counter,] <- dataset[index,]==index2
+      row_names[counter] <- paste0("window:",start_block[index],"-", end_block[index], "variant", index2)
       counter <- counter + 1
+
     }
   }
   if(return_dataset){
+    rownames(dataset) <- paste0("window:",start_block,"-", end_block)
+    colnames(dataset) <- paste0("haplo", 1:ncol(dataset))
     return(dataset)
   } else{
+    rownames(bin_dataset) <- row_names
+    colnames(bin_dataset) <- paste0("haplo", 1:ncol(dataset))
     return(bin_dataset)
   }
 

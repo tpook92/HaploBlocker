@@ -1,0 +1,90 @@
+load("C:/Users/pook/Desktop/Imputed_Chr10.RData")
+
+test <- geno_imputed
+storage.mode(test) <- "integer"
+
+all <- rowMeans(test==0, na.rm=TRUE)
+all <- all[!is.na(all)]
+all <- all[all!=0]
+all <- all[all!=1]
+all[all>0.5] <- 1 - all[all>0.5]
+hist(all)
+
+full_0 <- full==0
+full_1 <- full==1
+full_2 <- is.na(full)
+full_0[is.na(full_0)] <- FALSE
+full_1[is.na(full_1)] <- FALSE
+dataset1 <- rbind(full_0,full_1)
+dataset1 <- dataset1[rep(1:nrow(full), each=2) + rep(c(0, nrow(full))),]
+
+dataset2 <- rbind(full_0, full_1, full_2)
+dataset2 <- dataset2[rep(1:nrow(full), each=3) + rep(c(0, nrow(full), 2*nrow(full))),]
+
+
+p_i <- numeric(nrow(test2))
+A <- matrix(0, nrow=340, ncol=340)
+for(index in 1:7){
+  first <- 1 + 1000000*(index-1)
+  last <- min(1000000*index, nrow(test2))
+  p_i[first:last] <- rowSums(test2[first:last,])/ncol(test2)/2
+  code <- miraculix::createSNPmatrix(test2[first:last,])
+  A <- A + miraculix::relationshipMatrix(code, centered=TRUE, normalized=FALSE)
+}
+
+A <- A / (2 * sum(p_i*(1-p_i)))
+G_seq1 <- A
+
+p_i <- numeric(nrow(test3))
+A <- matrix(0, nrow=340, ncol=340)
+for(index in 1:10){
+  first <- 1 + 1000000*(index-1)
+  last <- min(1000000*index, nrow(test3))
+  p_i[first:last] <- rowSums(test3[first:last,])/ncol(test3)/2
+  code <- miraculix::createSNPmatrix(test3[first:last,])
+  A <- A + miraculix::relationshipMatrix(code, centered=TRUE, normalized=FALSE)
+}
+
+A <- A / (2 * sum(p_i*(1-p_i)))
+G_seq2 <- A
+
+code <- createSNPmatrix(test3)
+G_seq2 <- relationshipMatrix(code, centered=TRUE, normalized=TRUE)
+
+save(file="NRGene_MAZE_sequence/Info_content2.RData", list=c("test2", "test3", "G_seq1", "G_seq2"))
+
+
+p_i <- numeric(nrow(imp_dataset))
+A <- matrix(0, nrow=340, ncol=340)
+for(index in 1:3){
+  first <- 1 + 1000000*(index-1)
+  last <- min(1000000*index, nrow(imp_dataset))
+  p_i[first:last] <- rowSums(imp_dataset[first:last,])/ncol(imp_dataset)/2
+  code <- miraculix::createSNPmatrix(imp_dataset[first:last,])
+  A <- A + miraculix::relationshipMatrix(code, centered=TRUE, normalized=FALSE)
+}
+
+A <- A / (2 * sum(p_i*(1-p_i)))
+G_seq3 <- A
+
+
+save(file="NRGene_MAZE_sequence/Info_content3.RData", list=c("imp_dataset", "G_seq3"))
+
+
+p_i <- numeric(nrow(imp_dataset))
+A <- matrix(0, nrow=340, ncol=340)
+for(index in 1:3){
+  first <- 1 + 1000000*(index-1)
+  last <- min(1000000*index, nrow(imp_dataset))
+  p_i[first:last] <- rowSums(imp_dataset[first:last,])/ncol(imp_dataset)/2
+  code <- miraculix::createSNPmatrix(imp_dataset[first:last,])
+  A <- A + miraculix::relationshipMatrix(code, centered=TRUE, normalized=FALSE)
+}
+
+A <- A / (2 * sum(p_i*(1-p_i)))
+G_seq4 <- A
+imp_dataset_ne1000 <- imp_dataset
+
+save(file="NRGene_MAZE_sequence/Info_content3.RData", list=c("imp_dataset_ne1000", "G_seq4"))
+
+

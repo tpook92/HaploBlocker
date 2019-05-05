@@ -1,0 +1,41 @@
+args <- commandArgs(TRUE)
+# args <- c("KE", 1)
+race <- args[1]
+chromo <- as.numeric(args[2])
+
+
+load("MAZE_new/GenotypicData/DHs_600kData/MAZE_DHs_imputed_refB73v4_v1.RData")
+chip <- read.table("BEAGLE_Tests/50K_SNPs.txt")
+activ_race <- which(gpimp$covar$family==race)
+activ1 <- which(gpimp$map$chr==chromo)
+activ2 <- which(duplicated(c(as.character(chip[,1]), rownames(gpimp$map) ))) - length(chip)
+activ3 <- which(duplicated(c(rownames(gpimp$map),as.character(chip[,1]) ))) - nrow(gpimp$map)
+activ <- intersect(activ1, activ2)
+nsnp <- length(activ)
+map <- cbind(chromo, colnames(gpimp$geno)[activ],0, gpimp$map$pos[activ])
+
+peddata <- matrix("A",nrow=length(activ_race), ncol= nsnp*2)
+col <- 1
+set <- gpimp$geno[activ_race, activ]
+colnames(set) <- NULL
+rownames(set) <- NULL
+for(snp in 1:nsnp){
+  replace2 <- which(set[,snp]==2)
+  if(length(replace2)>0){
+    peddata[replace2,snp*2-1] <- "C"
+  }
+  replace2 <- which(set[,snp]>=1)
+  if(length(replace2)>0){
+    peddata[replace2,snp*2] <- "C"
+  }
+  
+}
+
+ped <- cbind(1, 1:nrow(peddata),0,0,0,0,peddata)
+pedname <- paste0("BEAGLE_Tests/50k_pedmap/", race,"chromo", chromo, "ped.txt")
+write.table(file=pedname, ped, col.names = FALSE, row.names = FALSE, quote=FALSE)
+mapname <- paste0("BEAGLE_Tests/50k_pedmap/", race, "chromo", chromo, "map.txt")
+write.table(file=mapname, map, col.names = FALSE, row.names = FALSE, quote=FALSE)
+
+
+

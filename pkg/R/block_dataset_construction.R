@@ -20,6 +20,9 @@ block_dataset_construction <- function(blockinfo, blocklist=NULL, indi=NULL, nwi
       dataset[index, blockinfo[[index]][[5]][[index2]]] <- index2
     }
   }
+  rownames(dataset) <- paste0("window", 1:nrow(dataset))
+  colnames(dataset) <- paste0("haplo", 1:ncol(dataset))
+
   return(dataset)
 }
 
@@ -37,7 +40,10 @@ block_matrix_construction <- function(blocklist, indi=NULL){
   dataset <- matrix(0, nrow=length(blocklist), ncol=indi)
   for(index in 1:length(blocklist)){
     dataset[index,blocklist[[index]][[6]]] <- 1
-    }
+  }
+
+  rownames(dataset) <- paste0("block", 1:nrow(dataset))
+  colnames(dataset) <- paste0("haplo", 1:ncol(dataset))
 
   return(dataset)
 }

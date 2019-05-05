@@ -1,0 +1,34 @@
+library(HaploBlocker)
+
+colnames(ex_maze) <- paste0("Haplo ", 1:313)
+rownames(ex_maze) <- paste0("SNP ", 1:9999)
+ex_maze[1:10,1:8]
+
+blocklist <- block_calculation(ex_maze)
+
+plot_block(blocklist)
+
+blocklist_startend(blocklist)
+
+new_data <- block_matrix_construction(blocklist)
+new_data[1:8,1:8]
+
+new_data <- block_windowdataset(blocklist)
+new_data[1:8,1:8]
+
+new_data <- block_windowdataset(blocklist, data= ex_maze, non_haploblocker = TRUE)
+new_data[1:8,1:8]
+
+X11()
+
+block_plot(blocklist)
+
+blocklist_plot(blocklist, cutoff2=3)
+
+blocklist_plot_xsize(blocklist, cutoff2=3)
+
+t <- coverage_test(blocklist)
+mean(t)
+
+block_ehh(blocklist, marker=5000, plot=TRUE)
+block_ihh(blocklist, plot = TRUE)

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556202562882.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6BDB3F3E",
+    "lastKnownWriteTime" : 1556466214,
+    "last_content_update" : 1556466214809,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/Magic_Population_simulation.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "33,56",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 26,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

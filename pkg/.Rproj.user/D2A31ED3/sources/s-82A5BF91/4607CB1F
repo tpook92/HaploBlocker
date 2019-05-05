@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1553708675849.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "4607CB1F",
+    "lastKnownWriteTime" : 1557042629,
+    "last_content_update" : 1557042629099,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/block_calculation.R",
+    "project_path" : "R/block_calculation.R",
+    "properties" : {
+        "cursorPosition" : "107,50",
+        "scrollLine" : "84",
+        "tempName" : "Untitled20"
+    },
+    "relative_order" : 16,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
