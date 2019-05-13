@@ -1,0 +1,49 @@
+set.seed(7)
+nindi <- 19
+library(MoBPS) # MoBPS is available at https://github.com/tpook92/
+# Alternatively use devtools::install_github("tpook92/MoBPS", subdir="pkg") to install
+
+# Generate a base-population with 50k SNPs, 3 Morgan genome,
+# fully homozygous individuals,
+# all plants are stored as male individuals (sex=0)
+population <- creating.diploid(nindi = nindi, nsnp  =50000, sex.quota = 0,
+                               chromosome.length = 3, dataset="homorandom")
+
+# Simulate matings between all founders
+population <- breeding.diploid(population, breeding.size = c(nindi*(nindi-1)/2,0),
+                               selection.size = c(nindi,0),
+                               breeding.all.combination = TRUE,
+                               mutation.rate = 10^-4)
+
+# Simulation of 4 generations of random mating of the prior generation
+for(index in 1:4){
+  population <- breeding.diploid(population, breeding.size = c(nindi*(nindi-1)/2,0),
+                                 selection.size = c(nindi*(nindi-1)/2,0),
+                                 same.sex.activ = TRUE, same.sex.sex = 0,
+                                 mutation.rate = 10^-4)
+}
+
+# Simulation of 10 generations of self-fertilization
+# Only one offspring per plant
+for(index in 1:10){
+  population <- breeding.diploid(population, breeding.size = c(nindi*(nindi-1)/2,0),
+                                 selection.size = c(nindi*(nindi-1)/2,0),
+                                 selfing.mating = TRUE, selfing.sex = 0,
+                                 max.offspring = 1, mutation.rate = 10^-4)
+}
+
+# Derive haplotypes of last generation and founders
+# Founders are double haploid (only one haplotype by plant needed)
+haplos <- get.haplo(population, gen = 16)
+founderhaplo <- get.haplo(population, gen = 1)[,1:nindi*2]
+
+# Derivation of the haplotype library
+library(HaploBlocker)
+blockl <- block_calculation(haplos, target_coverage = 0.95)
+
+# Extract points of recombination for final generation in MoBPS:
+recombination <- get.recombi(population, gen = 16)
+# Compare founder haplotypes to haplotype blocks:
+start <- blockl[[1]][[2]]$snp
+end <- blockl[[1]][[3]]$snp
+concordance <- colMeans(founderhaplo[start:end,]==blockl[[1]][[7]]$snp)

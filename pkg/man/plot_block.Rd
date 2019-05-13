@@ -4,7 +4,7 @@
 \alias{plot_block}
 \title{Plot Block_structure}
 \usage{
-plot_block(blocklist, type = "snp", oriantation = "snp",
+plot_block(blocklist, type = "snp", orientation = "snp",
   include = TRUE, indi = NULL, min_to_plot = 5, intensity = 0.5,
   add_sort = TRUE, max_step = 500, snp_ori = NULL,
   export_order = FALSE, import_order = FALSE, xlim = NULL)
@@ -14,9 +14,9 @@ plot_block(blocklist, type = "snp", oriantation = "snp",
 
 \item{type}{length measure (default: "window" , alt: "snp", "bp")}
 
-\item{oriantation}{Position on with to sort haplotypes for similarity (default: "snp", options: "front", "mid","back")}
+\item{orientation}{Position on with to sort haplotypes for similarity (default: "snp", options: "front", "mid","back")}
 
-\item{include}{Include haplotypes in no block in the oriantation position in the graph}
+\item{include}{Include haplotypes in no block in the orientation position in the graph}
 
 \item{indi}{number of haplotypes in the dataset}
 
@@ -26,9 +26,9 @@ plot_block(blocklist, type = "snp", oriantation = "snp",
 
 \item{add_sort}{If FALSE deactivate sorting haplotype for local similarity}
 
-\item{max_step}{Maximum distance of blocks to consider in the oriantation step (default: 500)}
+\item{max_step}{Maximum distance of blocks to consider in the orientation step (default: 500)}
 
-\item{snp_ori}{Select SNP for the oriantation algorithm if oriantation=="snp"}
+\item{snp_ori}{Select SNP for the orientation algorithm if orientation=="snp"}
 
 \item{export_order}{Export the chosen haplotype order after sorting}
 
