@@ -10,6 +10,12 @@ For explanation on the usage we refer to our user manual. The wiki is currently 
 
 ## Version history
 
+### Version 1.4.8
+
+A frozen version of the current package has been added in "Genetics_submission_version"
+
+Min_majorblock is now automatically reduced in case the current parametrization would lead to a empty blocklist // haplotype library
+
 ### Version 1.4.7
 Removed typo in plot_block
 
