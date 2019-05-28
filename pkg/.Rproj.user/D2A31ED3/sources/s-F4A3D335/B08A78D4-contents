@@ -1,0 +1,33 @@
+dhm = ex_maze[1:200,1:50]; window_sequence=NULL; window_size=20; merging_error=1; node_min=5; gap=10;
+min_share=0.975; off_lines=2; min_similarity=0.99; merge_closeblock=FALSE;
+max_diff_l=1; max_diff_i=1; min_majorblock=5000; bp_map=NULL; window_anchor_gens=NULL;
+consider_nodes=TRUE; consider_edge=TRUE; edge_min=5; subgroups=NULL; min_per_subgroup=0; subgroup_exception=0;
+consider_all=TRUE; save_allblock=TRUE; block_extending=TRUE;
+max_extending_diff=1; extending_ratio=20; min_majorblock_steps=4;
+snp_extending=TRUE; max_extending_diff_snp=0; extending_ratio_snp=Inf;  major_snp_calculation=TRUE;
+off_node_addition=FALSE; off_node_minimum_blocklength=10; off_node_minimum_blocksize=5;
+raster=5; at_least_one=TRUE;
+prefilter=FALSE; maf=0.00; equal_remove=FALSE;
+big_output=FALSE; blockinfo_mode=0; c_dhm_mode=TRUE;
+intersect_func=TRUE; fast_compiler=TRUE;
+max_groups=0; recoding=FALSE; recoding_notneeded=FALSE;
+consider_multi=FALSE; multi_min=5; blockinfo_mode_na=FALSE;
+actual_snp_weight = 5; na_snp_weight=2; na_seq_weight=0;
+weighting_length=1; weighting_size=1;
+recalculate_biggest=TRUE;
+target_coverage=0.8;
+max_iteration=10;
+min_step_size=25;
+target_stop=0.001;
+multi_window_mode=FALSE;
+adaptive_mode=FALSE;
+developer_mode=FALSE;
+double_share=1;
+early_remove=FALSE;
+node_min_early=NULL;
+min_reduction_cross=-Inf;
+min_reduction_neglet=-Inf;
+parallel_window=Inf;
+window_overlap=0;
+window_cores=1
+

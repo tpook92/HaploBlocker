@@ -57,7 +57,7 @@ block_calculation(dhm, window_sequence = NULL, window_size = 20,
 
 \item{max_diff_i}{maximum number of individuals in only one of the two blocks (default: 1)}
 
-\item{min_majorblock}{minimum of positions in the dataset a block is the biggest covering (default: 50)}
+\item{min_majorblock}{minimum of cells in the dataset a block is the biggest covering (default: 5000)}
 
 \item{bp_map}{vector of positions for each SNP in bp (default: NULL - all 0)}
 

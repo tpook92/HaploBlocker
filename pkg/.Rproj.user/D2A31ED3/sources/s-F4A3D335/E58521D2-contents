@@ -1,0 +1,163 @@
+# I know this is super inefficient but was just the fastest way of writing it for me =(
+
+name <- paste0("C:/Users/tpook/Desktop/KE","_DH_chromo",1,".RData")
+name <- paste0("KE","_DH_chromo",1,".RData")
+load(name)
+library(CHaploBlocker)
+library(HaploBlocker)
+
+a_total <- NULL
+b100_total <- b095_total <- b090_total <- b085_total <- b080_total <- b075_total <- b070_total <- b065_total <- b060_total <- b055_total <- b051_total <- NULL
+blocklist <- block_calculation(data)
+for(iter in 1:50){
+
+  data1 <- data
+
+  change <- sort(sample(1:nrow(data), nrow(data)/500))
+  se <- blocklist_startend(blocklist, type="snp")
+  noted <- list()
+  noted2 <- list()
+  for(index in 1:length(change)){
+    options <- which(((se[,2]>change[index]) * (se[,1]<change[index]))==1)
+    take <- sample(which(((se[,2]>change[index]) * (se[,1]<change[index]))==1),1)
+    data1[change[index], blocklist[[take]][[6]]] <- rbinom(blocklist[[take]][[5]],1,0.5)*2
+    data1[change[index], -blocklist[[take]][[6]]] <- 0
+    noted[[index]] <- blocklist[[take]][[6]]
+    noted2[[index]] <- 124233
+    for(check in options){
+      if(length(intersect(blocklist[[check]][[6]], blocklist[[take]][[6]]))>0){
+        noted2[[index]] <- unique(c(noted2[[index]], blocklist[[check]][[6]]))
+      }
+    }
+    noted2[[index]] <- noted2[[index]][-1]
+  }
+
+  blocklist1 <- block_calculation(data1)
+
+  a <- matrix(0, nrow=length(blocklist1), ncol=3)
+
+  for(index in 1:length(blocklist1)){
+    se <- blocklist_startend(blocklist1, type="snp")
+    start <- blocklist1[[index]][[2]]$snp
+    end <- blocklist1[[index]][[3]]$snp
+    included <- which(((change<=end)+(change>=start))==2)
+    haplo1 <- NULL
+    haplo2 <- NULL
+
+    if(length(included)>0){
+      freqs <- blocklist1[[index]][[7]]$freq[change[included]-start+1]
+      a[index,] <- c(length(included), sum(freqs<1), sum(freqs<=0.8))
+
+
+    }
+
+
+  }
+
+  a_total <- rbind(a, a_total)
+  print(colSums(a_total))
+
+
+
+  b100 <- b095 <- b090 <- b085 <- b080 <- b075 <- b070 <- b065 <- b060 <- b055 <- b051 <-matrix(0, nrow=length(change), ncol=6)
+  for(index in 1:length(change)){
+    options <- which(((se[,2]>change[index]) * (se[,1]<change[index]))==1)
+
+    haplo100 <- NULL
+    haplo095 <- NULL
+    haplo090 <- NULL
+    haplo085 <- NULL
+    haplo080 <- NULL
+    haplo075 <- NULL
+    haplo070 <- NULL
+    haplo065 <- NULL
+    haplo060 <- NULL
+    haplo055 <- NULL
+    haplo051 <- NULL
+
+    for(option in options){
+      start <- blocklist1[[option]][[2]]$snp
+      end <- blocklist1[[option]][[3]]$snp
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<1){
+        haplo100 <- unique(c(haplo100, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.95){
+        haplo095 <- unique(c(haplo095, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.9){
+        haplo090 <- unique(c(haplo090, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.85){
+        haplo085 <- unique(c(haplo085, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.8){
+        haplo080 <- unique(c(haplo080, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.75){
+        haplo075 <- unique(c(haplo075, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.7){
+        haplo070 <- unique(c(haplo070, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.65){
+        haplo065 <- unique(c(haplo065, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.6){
+        haplo060 <- unique(c(haplo060, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.55){
+        haplo055 <- unique(c(haplo055, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.51){
+        haplo051 <- unique(c(haplo051, blocklist1[[option]][[6]]))
+      }
+    }
+
+    b100[index,] <- c(length(noted[[index]]), length(haplo100), length(base::intersect(haplo100,noted[[index]])),
+                      length(noted2[[index]]), length(haplo100), length(base::intersect(haplo100,noted2[[index]])))
+    b095[index,] <- c(length(noted[[index]]), length(haplo095), length(base::intersect(haplo095,noted[[index]])),
+                      length(noted2[[index]]), length(haplo095), length(base::intersect(haplo095,noted2[[index]])))
+    b090[index,] <- c(length(noted[[index]]), length(haplo090), length(base::intersect(haplo090,noted[[index]])),
+                      length(noted2[[index]]), length(haplo090), length(base::intersect(haplo090,noted2[[index]])))
+    b085[index,] <- c(length(noted[[index]]), length(haplo085), length(base::intersect(haplo085,noted[[index]])),
+                      length(noted2[[index]]), length(haplo085), length(base::intersect(haplo085,noted2[[index]])))
+    b080[index,] <- c(length(noted[[index]]), length(haplo080), length(base::intersect(haplo080,noted[[index]])),
+                      length(noted2[[index]]), length(haplo080), length(base::intersect(haplo080,noted2[[index]])))
+    b075[index,] <- c(length(noted[[index]]), length(haplo075), length(base::intersect(haplo075,noted[[index]])),
+                      length(noted2[[index]]), length(haplo075), length(base::intersect(haplo075,noted2[[index]])))
+    b070[index,] <- c(length(noted[[index]]), length(haplo070), length(base::intersect(haplo070,noted[[index]])),
+                      length(noted2[[index]]), length(haplo070), length(base::intersect(haplo070,noted2[[index]])))
+    b065[index,] <- c(length(noted[[index]]), length(haplo065), length(base::intersect(haplo065,noted[[index]])),
+                      length(noted2[[index]]), length(haplo065), length(base::intersect(haplo065,noted2[[index]])))
+    b060[index,] <- c(length(noted[[index]]), length(haplo060), length(base::intersect(haplo060,noted[[index]])),
+                      length(noted2[[index]]), length(haplo060), length(base::intersect(haplo060,noted2[[index]])))
+    b055[index,] <- c(length(noted[[index]]), length(haplo055), length(base::intersect(haplo055,noted[[index]])),
+                      length(noted2[[index]]), length(haplo055), length(base::intersect(haplo055,noted2[[index]])))
+    b051[index,] <- c(length(noted[[index]]), length(haplo051), length(base::intersect(haplo051,noted[[index]])),
+                      length(noted2[[index]]), length(haplo051), length(base::intersect(haplo051,noted2[[index]])))
+
+  }
+  b100_total <- rbind(b100, b100_total)
+  b095_total <- rbind(b095, b095_total)
+  b090_total <- rbind(b090, b090_total)
+  b085_total <- rbind(b085, b085_total)
+  b080_total <- rbind(b080, b080_total)
+  b075_total <- rbind(b075, b075_total)
+  b070_total <- rbind(b070, b070_total)
+  b065_total <- rbind(b065, b065_total)
+  b060_total <- rbind(b060, b060_total)
+  b055_total <- rbind(b055, b055_total)
+  b051_total <- rbind(b051, b051_total)
+
+}
+
+
+colSums(b100_total)
+
+
+save(file="b123.RData", list=c("a_total", "b100_total",
+                               "b095_total","b090_total",
+                               "b085_total","b080_total",
+                               "b075_total","b070_total",
+                               "b065_total","b060_total",
+                               "b055_total", "b051_total"))

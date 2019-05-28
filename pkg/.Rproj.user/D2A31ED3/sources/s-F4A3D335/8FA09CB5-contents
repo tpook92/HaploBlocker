@@ -1,0 +1,1298 @@
+# Average length of blocks:
+l <- NULL
+library(HaploBlocker)
+blockl <- NULL
+for(chromo in 10:1){
+  name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",chromo,".RData")
+  load(name)
+  blocklist <- block_calculation(data)
+  for(index in 1:length(blocklist)){
+    blockl[[length(blockl)+1]] <- blocklist[[index]]
+  }
+}
+se <- blocklist_startend(blockl, type="snp")
+size <- blocklist_size(blockl)
+t <- coverage_test(blockl, type="snp", indi=501)
+print(c(length(blockl), mean(se[,2]-se[,1]+1), median(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+# Usage of target coverage:
+name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",1,".RData")
+load(name)
+library(HaploBlocker)
+blocklist <- block_calculation(data)
+
+blocklist <- block_calculation(ex_maze)
+
+comps <- NULL
+for(share in c(1,1000,2500,5000,10000,20000,50000)){
+#for(share in c(5000,10000,20000,50000)){
+  blocklist <- block_calculation(data, min_majorblock = share, double_share = 1)
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(share, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+
+comps <- NULL
+for(share in c(5,10,20,50)){
+  #for(share in c(5000,10000,20000,50000)){
+  print(system.time(blocklist <- block_calculation(data, window_size = share)))
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(share, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+
+comps <- NULL
+for(share in c(5,10,20,50)){
+  #for(share in c(5000,10000,20000,50000)){
+  print(system.time(blocklist <- block_calculation(data, window_size = share, target_coverage = 0.95)))
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(share, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+# 2344, 2500, 3750, 5000
+
+comps[,5] <- c(2344,2500,3750,5000)
+colnames(comps) <- c("Window size", "Number of Blocks", "Average block length (# of SNPs)", "Haplotypes per Block", "Used MCMB")
+comps[,3] <- round(comps[,3])
+comps[,4] <- round(comps[,4], digits = 1)
+write.csv(file="C:/Users/pook/Desktop/Table_S2.csv", comps, row.names = FALSE)
+
+a <- rbind(c(1,0), c(1,0.5),c(1,0.2), c(1,1), c(0.5,1), c(0.2,1), c(0,1))
+comps <- NULL
+for(index in 1:nrow(a)){
+  #for(share in c(5000,10000,20000,50000)){
+  print(system.time(blocklist <- block_calculation(data, weighting_length = a[index,1], weighting_size = a[index,2])))
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(index, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+
+a <- rbind(c(1,0), c(1,0.5),c(1,0.2), c(1,1), c(0.5,1), c(0.2,1), c(0,1))
+comps <- NULL
+for(index in 1:nrow(a)){
+  #for(share in c(5000,10000,20000,50000)){
+  print(system.time(blocklist <- block_calculation(data, weighting_length = a[index,1], weighting_size = a[index,2],
+                                                   target_coverage = 0.95)))
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(index, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+
+#3750, 3750, 3750, 3750, 4375, 6250, 7813
+
+comps <- cbind(a, comps[,-1])
+comps[2:3,] <- comps[3:2,]
+comps[,6] <- c(3750, 3750, 3750, 3750, 4375, 6250, 7813)
+colnames(comps) <- c("w_l", "w_n", "Number of Blocks", "Average block length (# of SNPs)", "Haplotypes per Block", "Used MCMB")
+comps[,4] <- round(comps[,4])
+comps[,5] <- round(comps[,5], digits = 1)
+write.csv(file="C:/Users/pook/Desktop/Table_S3.csv", comps, row.names = FALSE)
+
+
+comps <- NULL
+for(share in c(0.95,0.9,0.8,0.6)){
+  #for(share in c(5000,10000,20000,50000)){
+  print(system.time(blocklist <- block_calculation(data, double_share = share)))
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(share, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+
+comps <- NULL
+for(share in c(1,0.95,0.9,0.8,0.6)){
+  #for(share in c(5000,10000,20000,50000)){
+  print(system.time(blocklist <- block_calculation(data, double_share = share,
+                                                   target_coverage = 0.95)))
+  se <- blocklist_startend(blocklist, type="snp")
+  size <- blocklist_size(blocklist)
+  t <- coverage_test(blocklist, type="snp", indi=501)
+  comps <- rbind(comps, c(share, length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+  print(comps)
+}
+
+# 3750, 4375, 5313, 5625, 6485
+
+comps[,5] <- c(3750, 4375, 5313, 5625, 6485)
+colnames(comps) <- c("t", "Number of Blocks", "Average block length (# of SNPs)", "Haplotypes per Block", "Used MCMB")
+comps[,3] <- round(comps[,3])
+comps[,4] <- round(comps[,4], digits = 1)
+write.csv(file="C:/Users/pook/Desktop/Table_S4.csv", comps, row.names = FALSE)
+
+
+comps <- cbind(c(1720,878,621,477,362,274,150),
+               c(0.9956, 0.9859, 0.9747, 0.9624, 0.9479, 0.9274, 0.8615),
+               c(0.9814, 0.9756, 0.9666, 0.9620, 0.9532, 0.9456, 0.9268),
+               c(0.9939, 0.9843, 0.9751, 0.9647, 0.9497, 0.9294, 0.8607))
+colnames(comps) <- c("Number of Blocks/SNPs", "X~Z", "Z~X", "X~Xs")
+
+write.csv(file="C:/Users/pook/Desktop/Table_S1.csv", comps, row.names = FALSE)
+
+name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",chromo,".RData")
+load(name)
+data_joined <- NULL
+data_joined <- cbind(data_joined, data)
+name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","PE","_DH_chromo",chromo,".RData")
+load(name)
+data_joined <- cbind(data_joined, data)
+
+library(HaploBlocker)
+blocklist <- block_calculation(data_joined)
+
+se <- blocklist_startend(blocklist, type="snp")
+size <- blocklist_size(blocklist)
+t <- coverage_test(blocklist, type="snp")
+print(c(length(blocklist), median(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+
+blocklist <- block_calculation(data_joined, min_per_subgroup = 5, subgroups = list(1:501, 502:910))
+se <- blocklist_startend(blocklist, type="snp")
+size <- blocklist_size(blocklist)
+t <- coverage_test(blocklist, type="snp")
+print(c(length(blocklist), mean(se[,2]-se[,1]+1), mean(size), mean(t)))
+
+library(HaploBlocker)
+data1 <- data[1:20000,]
+blocklist <- block_calculation(data1)
+
+
+X11(width=18,height = 15)
+plot_block1(blocklist, indi=501)
+savePlot(file="C:/Users/tpook/Desktop/Plot_block.png", type="png")
+
+
+block_total <- NULL
+
+race <- "KE"
+
+for(chromo in 1:10){
+  library(readr)
+  print(chromo)
+  blockset <- read_delim(paste0("C:/Users/tpook/Desktop/HaploView/Blocks",race,"chromo",chromo,"f.blocks.det"),
+                         " ", escape_double = FALSE, na = "NA",
+                         trim_ws = TRUE)
+  map <- read.table(paste0("C:/Users/tpook/Desktop/mapfiles/",race,"chromo",chromo,"map.map"))
+  a <- as.matrix(blockset)
+  a[a==""] <- NA
+  set <- matrix(0,nrow=nrow(blockset), ncol=6)
+  for(index in 1:nrow(blockset)){
+    take <- which(!is.na(a[index,]))[1:5]
+    set[index,1:5] <- as.numeric(a[index,take])
+    if(is.na(set[index,5])){
+      set[index,5] <- set[index,4]
+    }
+  }
+  for(lae in 1:nrow(blockset)){
+    start <- which(set[lae,2]==map[,4])
+    stop <- which(set[lae,3]==map[,4])
+    set[lae,6] <- stop-start+1
+  }
+
+  block_total <- rbind(block_total,set)
+}
+save(file="C:/Users/tpook/Desktop/HaploView/KEBlocks.RData", list=c("block_total"))
+
+block_total <- NULL
+
+race <- "Joined"
+
+for(chromo in 1:10){
+  library(readr)
+  print(chromo)
+  blockset <- read_delim(paste0("C:/Users/tpook/Desktop/HaploView/Blocks",race,"chromo",chromo,".blocks.det"),
+                         " ", escape_double = FALSE, na = "NA",
+                         trim_ws = TRUE)
+  map <- read.table(paste0("C:/Users/tpook/Desktop/mapfiles/","KE","chromo",chromo,"map.map"))
+  a <- as.matrix(blockset)
+  a[a==""] <- NA
+  set <- matrix(0,nrow=nrow(blockset), ncol=6)
+  for(index in 1:nrow(blockset)){
+    take <- which(!is.na(a[index,]))[1:5]
+    set[index,1:5] <- as.numeric(a[index,take])
+    if(is.na(set[index,5])){
+      set[index,5] <- set[index,4]
+    }
+  }
+  for(lae in 1:nrow(blockset)){
+    start <- which(set[lae,2]==map[,4])
+    stop <- which(set[lae,3]==map[,4])
+    set[lae,6] <- stop-start+1
+  }
+
+  block_total <- rbind(block_total,set)
+}
+save(file="C:/Users/tpook/Desktop/HaploView/JoinedBlocks.RData", list=c("block_total"))
+
+
+X11(width=26,height=9)
+par(mfrow=c(1,2))
+l <- NULL
+library(HaploBlocker)
+for(chromo in 1:10){
+  load(paste0("C:/Users/tpook/Desktop/MAZE_HaploBlocker2/KEchromo",chromo,"_blocklibrary.RData"))
+  se <- blocklist_startend(blocklist, type="snp")
+  l <- c(l,se[,2]-se[,1]+1)
+}
+lblock <- l
+hist.data = hist(log(lblock), plot=F, nclass=30)
+plot(hist.data, xaxt="n", xlab="block length in SNPs", main="HaploBlocker",
+     cex.axis=1.2, cex.lab=1.2)
+nr <- c(100,300,1000,3000,10000,30000)
+axis(1, label=nr, at=log(nr))
+
+load("C:/Users/tpook/Desktop/HaploView/KEBlocks.RData")
+lview <- block_total[,6]
+hist.data = hist(log(lview), plot=F, nclass=30)
+plot(hist.data, xaxt="n", xlab="block length in SNPs", main="HaploView",
+     cex.axis=1.2, cex.lab=1.2)
+nr <- c(3,10,30,100)
+axis(1, label=nr, at=log(nr))
+
+savePlot(file="C:/Users/tpook/Desktop/Hist_Blocklength.png", type="png")
+
+## Schiefe
+
+sdv <- sd(lview)
+sdb <- sd(lblock)
+
+1/length(lview) * sum((lview-mean(lview))^3) / sdv^(3)
+1/length(lblock) * sum((lblock-mean(lblock))^3) / sdb^(3)
+
+lview2 <- log(lview)
+lblock2 <- log(lblock)
+
+sdv <- sd(lview2)
+sdb <- sd(lblock2)
+
+1/length(lview2) * sum((lview2-mean(lview2))^3) / sdv^(3)
+1/length(lblock2) * sum((lblock2-mean(lblock2))^3) / sdb^(3)
+
+
+
+##
+X11(width=8, height=10)
+
+scov1m <- scov2m <- scov3m <- numeric(8)
+up1 <- up2 <- up3 <- down1 <- down2 <- down3 <- numeric(8)
+for(chromo in 1:10){
+  sample_range <- c(30,50,75,100,150,200,300,400)
+  scov1 <- NULL
+  scov2 <- NULL
+  scov3 <- NULL
+  sd1 <- NULL
+  sd2 <- NULL
+  sd3 <- NULL
+
+  for(sample in sample_range){
+    name <- paste0("C:/Users/tpook/Desktop/Small_Sample_test/Chr", chromo, "Choosen",sample, "LinePENsim50.RData")
+    load(name)
+    scov1 <- c(scov1, mean(cov1[cov1!=0]))
+    scov2 <- c(scov2, mean(cov2[cov2!=0]))
+    scov3 <- c(scov3, mean(cov3[cov3!=0]))
+    sd1 <- c(sd1, sd(cov1[cov1!=0]))
+    sd2 <- c(sd2, sd(cov2[cov2!=0]))
+    sd3 <- c(sd3, sd(cov3[cov3!=0]))
+  }
+  scov1m <- scov1/10 + scov1m
+  scov2m <- scov2/10 + scov2m
+  scov3m <- scov3/10 + scov3m
+  up1 <- (scov1 + sd1*1.96)/10 + up1
+  up2 <- (scov2 + sd2*1.96)/10 + up2
+  up3 <- (scov3 + sd3*1.96)/10 + up3
+  down1 <- (scov1 - sd1*1.96)/10 + down1
+  down2 <- (scov2 - sd2*1.96)/10 + down2
+  down3 <- (scov3 - sd3*1.96)/10 + down3
+
+  name1 <- paste0("Comparison Coverage: Chromosom ", chromo)
+  plot(sample_range, scov3, type="l", ylim=c(min(scov2), 1), lwd=2.5, main=name1, ylab="coverage", xlab="training set (of 501)")
+  lines(sample_range, scov2, col="red", lwd=2.5)
+  legend("bottomright", c("training set", "test set"), lty=c(1,1), col=c(1,2), lwd=c(2.5,2.5), cex=2)
+  name <- paste0("C:/Users/tpook/Desktop/Coverage_Block_Chr", chromo, "_12_03.png")
+  savePlot(name, type="png")
+
+}
+name1 <- paste0("Comparison Coverage:")
+plot(sample_range, scov3m, type="l", ylim=c(min(scov2), 1), lwd=2.5, main=name1, ylab="coverage", xlab="training set (of 501)")
+lines(sample_range, scov2m, col="red", lwd=2.5)
+legend("bottomright", c("training set", "test set"), lty=c(1,1), col=c(1,2), lwd=c(2.5,2.5), cex=2)
+name <- paste0("C:/Users/tpook/Desktop/Coverage_Block_12_03.png")
+savePlot(name, type="png")
+
+
+scov1m <- scov2m <- scov3m <- numeric(8)
+for(chromo in 1:10){
+  sample_range <- c(30,50,75,100,150,200,300,400)
+  scov1 <- NULL
+  scov2 <- NULL
+  scov3 <- NULL
+
+  for(sample in sample_range){
+    name <- paste0("C:/Users/tpook/Desktop/Small_Sample_test/Chr", chromo, "Choosen",sample, "LinePENsim50_tarcov0.9.RData")
+    load(name)
+    scov1 <- c(scov1, mean(cov1[cov1!=0]))
+    scov2 <- c(scov2, mean(cov2[cov2!=0]))
+    scov3 <- c(scov3, mean(cov3[cov3!=0]))
+  }
+  scov1m <- scov1/10 + scov1m
+  scov2m <- scov2/10 + scov2m
+  scov3m <- scov3/10 + scov3m
+
+  name1 <- paste0("Comparison Coverage: Chromosom ", chromo)
+  plot(sample_range, scov3, type="l", ylim=c(min(scov2), 1), lwd=2.5, main=name1, ylab="coverage", xlab="training set (of 501)")
+  lines(sample_range, scov2, col="red", lwd=2.5)
+  legend("bottomright", c("training set", "test set"), lty=c(1,1), col=c(1,2), lwd=c(2.5,2.5), cex=2)
+  name <- paste0("C:/Users/tpook/Desktop/Coverage_Block_Chr", chromo, "_12_03_tarcov.png")
+  savePlot(name, type="png")
+
+}
+name1 <- paste0("Comparison Coverage:")
+plot(sample_range, scov3m, type="l", ylim=c(min(scov2), 1), lwd=2.5, main=name1, ylab="coverage", xlab="training set (of 501)")
+lines(sample_range, scov2m, col="red", lwd=2.5)
+legend("bottomright", c("training set", "test set"), lty=c(1,1), col=c(1,2), lwd=c(2.5,2.5), cex=2)
+name <- paste0("C:/Users/tpook/Desktop/Coverage_Block_12_03_tarcov.png")
+savePlot(name, type="png")
+
+## JOINED PLOT
+
+
+##
+X11(width=24, height=9)
+par(mfrow=c(1,2))
+scov1m <- scov2m <- scov3m <- numeric(8)
+up1 <- up2 <- up3 <- down1 <- down2 <- down3 <- numeric(8)
+for(chromo in 1:10){
+  sample_range <- c(30,50,75,100,150,200,300,400)
+  scov1 <- NULL
+  scov2 <- NULL
+  scov3 <- NULL
+  sd1 <- NULL
+  sd2 <- NULL
+  sd3 <- NULL
+
+  for(sample in sample_range){
+    name <- paste0("C:/Users/tpook/Desktop/Small_Sample_test/Chr", chromo, "Choosen",sample, "LinePENsim50.RData")
+    load(name)
+    scov1 <- c(scov1, mean(cov1[cov1!=0]))
+    scov2 <- c(scov2, mean(cov2[cov2!=0]))
+    scov3 <- c(scov3, mean(cov3[cov3!=0]))
+    sd1 <- c(sd1, sd(cov1[cov1!=0]))
+    sd2 <- c(sd2, sd(cov2[cov2!=0]))
+    sd3 <- c(sd3, sd(cov3[cov3!=0]))
+  }
+  scov1m <- scov1/10 + scov1m
+  scov2m <- scov2/10 + scov2m
+  scov3m <- scov3/10 + scov3m
+  up1 <- (scov1 + sd1*1.96)/10 + up1
+  up2 <- (scov2 + sd2*1.96)/10 + up2
+  up3 <- (scov3 + sd3*1.96)/10 + up3
+  down1 <- (scov1 - sd1*1.96)/10 + down1
+  down2 <- (scov2 - sd2*1.96)/10 + down2
+  down3 <- (scov3 - sd3*1.96)/10 + down3
+
+
+
+}
+name1 <- paste0("Default settings:")
+plot(sample_range, scov3m, type="l", ylim=c(0.4,1), lwd=2.5, main=name1, ylab="coverage", xlab="training set (of 501)"
+     , cex.lab=1.6, cex.main=1.6, cex.axis=1.6)
+lines(sample_range, scov2m, col="red", lwd=2.5)
+
+
+
+scov1m <- scov2m <- scov3m <- numeric(8)
+up1 <- up2 <- up3 <- down1 <- down2 <- down3 <- numeric(8)
+for(chromo in 1:10){
+  sample_range <- c(30,50,75,100,150,200,300,400)
+  scov1 <- NULL
+  scov2 <- NULL
+  scov3 <- NULL
+  sd1 <- NULL
+  sd2 <- NULL
+  sd3 <- NULL
+
+  for(sample in sample_range){
+    name <- paste0("C:/Users/tpook/Desktop/Small_Sample_test/Chr", chromo, "Choosen",sample, "LinePENsim50_tarcov0.9.RData")
+    load(name)
+    scov1 <- c(scov1, mean(cov1[cov1!=0]))
+    scov2 <- c(scov2, mean(cov2[cov2!=0]))
+    scov3 <- c(scov3, mean(cov3[cov3!=0]))
+    sd1 <- c(sd1, sd(cov1[cov1!=0]))
+    sd2 <- c(sd2, sd(cov2[cov2!=0]))
+    sd3 <- c(sd3, sd(cov3[cov3!=0]))
+  }
+  scov1m <- scov1/10 + scov1m
+  scov2m <- scov2/10 + scov2m
+  scov3m <- scov3/10 + scov3m
+  up1 <- (scov1 + sd1*1.96)/10 + up1
+  up2 <- (scov2 + sd2*1.96)/10 + up2
+  up3 <- (scov3 + sd3*1.96)/10 + up3
+  down1 <- (scov1 - sd1*1.96)/10 + down1
+  down2 <- (scov2 - sd2*1.96)/10 + down2
+  down3 <- (scov3 - sd3*1.96)/10 + down3
+
+
+}
+name1 <- paste0("Fixed coverage in training set:")
+plot(sample_range, scov3m, type="l", lwd=2.5, main=name1,ylab="", xlab="training set (of 501)", ylim=c(0.4,1),
+     cex.lab=1.6, cex.main=1.6, cex.axis=1.6)
+lines(sample_range, scov2m, col="red", lwd=2.5)
+legend("bottomright", c("training set", "test set"), lty=c(1,1), col=c(1,2), lwd=c(2.5,2.5), cex=1.7)
+name <- paste0("C:/Users/tpook/Desktop/Coverage_Block_12_03_joined.png")
+savePlot(name, type="png")
+
+# Varianten-Zaehler
+
+
+race <- "KE"
+
+variants <- numeric(10)
+for(chromo in 1:10){
+  block_total <- NULL
+  library(readr)
+  print(chromo)
+  blockset <- read_delim(paste0("C:/Users/tpook/Desktop/HaploView/Blocks",race,"chromo",chromo,"f.blocks.det"),
+                         " ", escape_double = FALSE, na = "NA",
+                         trim_ws = TRUE)
+  map <- read.table(paste0("C:/Users/tpook/Desktop/mapfiles/",race,"chromo",chromo,"map.map"))
+  a <- as.matrix(blockset)
+  a[a==""] <- NA
+  set <- matrix(0,nrow=nrow(blockset), ncol=6)
+  for(index in 1:nrow(blockset)){
+    take <- which(!is.na(a[index,]))[1:5]
+    set[index,1:5] <- as.numeric(a[index,take])
+    if(is.na(set[index,5])){
+      set[index,5] <- set[index,4]
+    }
+  }
+  for(lae in 1:nrow(blockset)){
+    start <- which(set[lae,2]==map[,4])
+    stop <- which(set[lae,3]==map[,4])
+    set[lae,6] <- stop-start+1
+    set[lae,2] <- start
+    set[lae,3] <- stop
+  }
+  window_seq <- set[,2:3]
+
+  name <- paste0("C:/Users/tpook/Desktop/",race,"_DH_chromo",chromo,".RData")
+  load(name)
+  library(CHaploBlocker)
+  library(HaploBlocker)
+  dhm <- data
+  unique.dhm <- unique(as.vector(dhm))
+  fixcoding(unique.dhm)
+  c_dhm <- codeSNPs(dhm)
+
+  blockinfo_out <- blockinfo_calculation3(dhm, window_sequence= window_seq, merging_error = 0,
+                                          c_dhm=c_dhm)
+  bi <- blockinfo_out[[1]]
+
+  for(index in 1:length(bi)){
+    variants[chromo] <- variants[chromo] + length(bi[[index]][[1]])
+  }
+  print(variants)
+
+}
+
+
+race <- "KE"
+
+variants <- numeric(10)
+for(chromo in 1:10){
+  block_total <- NULL
+  library(readr)
+  print(chromo)
+  blockset <- read_delim(paste0("C:/Users/tpook/Desktop/HaploView/Blocks","Joined","chromo",chromo,".blocks.det"),
+                         " ", escape_double = FALSE, na = "NA",
+                         trim_ws = TRUE)
+  map <- read.table(paste0("C:/Users/tpook/Desktop/mapfiles/",race,"chromo",chromo,"map.map"))
+  a <- as.matrix(blockset)
+  a[a==""] <- NA
+  set <- matrix(0,nrow=nrow(blockset), ncol=6)
+  for(index in 1:nrow(blockset)){
+    take <- which(!is.na(a[index,]))[1:5]
+    set[index,1:5] <- as.numeric(a[index,take])
+    if(is.na(set[index,5])){
+      set[index,5] <- set[index,4]
+    }
+  }
+  for(lae in 1:nrow(blockset)){
+    start <- which(set[lae,2]==map[,4])
+    stop <- which(set[lae,3]==map[,4])
+    set[lae,6] <- stop-start+1
+    set[lae,2] <- start
+    set[lae,3] <- stop
+  }
+  window_seq <- set[,2:3]
+
+  name <- paste0("C:/Users/tpook/Desktop/","KE","_DH_chromo",chromo,".RData")
+  load(name)
+  data1 <- data
+  name <- paste0("C:/Users/tpook/Desktop/","PE","_DH_chromo",chromo,".RData")
+  load(name)
+  library(CHaploBlocker)
+  library(HaploBlocker)
+  dhm <- cbind(data1,data)
+  unique.dhm <- unique(as.vector(dhm))
+  fixcoding(unique.dhm)
+  c_dhm <- codeSNPs(dhm)
+
+  blockinfo_out <- blockinfo_calculation3(dhm, window_sequence= window_seq, merging_error = 0,
+                                          c_dhm=c_dhm)
+  bi <- blockinfo_out[[1]]
+
+  for(index in 1:length(bi)){
+    variants[chromo] <- variants[chromo] + length(bi[[index]][[1]])
+  }
+  print(variants)
+
+}
+
+
+
+name <- paste0("C:/Users/tpook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",1,".RData")
+load(name)
+library(HaploBlocker)
+
+data1 <- data
+data21 <- data[1:40100*2,]
+data22 <- data[1:40100*2-1,]
+data51 <- data[1:16040*5,]
+data52 <- data[1:16040*5-1,]
+data53 <- data[1:16040*5-2,]
+data54 <- data[1:16040*5-3,]
+data55 <- data[1:16040*5-4,]
+data101 <- data[1:8020*10,]
+data102 <- data[1:8020*10-1,]
+data103 <- data[1:8020*10-2,]
+data104 <- data[1:8020*10-3,]
+data105 <- data[1:8020*10-4,]
+data106 <- data[1:8020*10-5,]
+data107 <- data[1:8020*10-6,]
+data108 <- data[1:8020*10-7,]
+data109 <- data[1:8020*10-8,]
+data1010 <- data[1:8020*10-9,]
+
+data401 <- data[1:2005*40,]
+data402 <- data[1:2005*40-4,]
+data403 <- data[1:2005*40-8,]
+data404 <- data[1:2005*40-12,]
+data405 <- data[1:2005*40-16,]
+data406 <- data[1:2005*40-20,]
+data407 <- data[1:2005*40-24,]
+data408 <- data[1:2005*40-28,]
+data409 <- data[1:2005*40-32,]
+data4010 <- data[1:2005*40-36,]
+
+
+b1 <- block_calculation(data1, window_size=50, min_majorblock=5000)
+b21 <- block_calculation(data21, window_size=25, min_majorblock=2500)
+b22 <- block_calculation(data22, window_size=25, min_majorblock=2500)
+b51 <- block_calculation(data51, window_size=10, min_majorblock=1000)
+b52 <- block_calculation(data52, window_size=10, min_majorblock=1000)
+b53 <- block_calculation(data53, window_size=10, min_majorblock=1000)
+b54 <- block_calculation(data54, window_size=10, min_majorblock=1000)
+b55 <- block_calculation(data55, window_size=10, min_majorblock=1000)
+b101 <- block_calculation(data101, window_size=5, min_majorblock=500)
+b102 <- block_calculation(data102, window_size=5, min_majorblock=500)
+b103 <- block_calculation(data103, window_size=5, min_majorblock=500)
+b104 <- block_calculation(data104, window_size=5, min_majorblock=500)
+b105 <- block_calculation(data105, window_size=5, min_majorblock=500)
+b106 <- block_calculation(data106, window_size=5, min_majorblock=500)
+b107 <- block_calculation(data107, window_size=5, min_majorblock=500)
+b108 <- block_calculation(data108, window_size=5, min_majorblock=500)
+b109 <- block_calculation(data109, window_size=5, min_majorblock=500)
+b1010 <- block_calculation(data1010, window_size=5, min_majorblock=500)
+
+b401 <- block_calculation(data401, window_size=5, min_majorblock = 125)
+b402 <- block_calculation(data402, window_size=5, min_majorblock = 125)
+b403 <- block_calculation(data403, window_size=5, min_majorblock = 125)
+b404 <- block_calculation(data404, window_size=5, min_majorblock = 125)
+b405 <- block_calculation(data405, window_size=5, min_majorblock = 125)
+b406 <- block_calculation(data406, window_size=5, min_majorblock = 125)
+b407 <- block_calculation(data407, window_size=5, min_majorblock = 125)
+b408 <- block_calculation(data408, window_size=5, min_majorblock = 125)
+b409 <- block_calculation(data409, window_size=5, min_majorblock = 125)
+b4010 <- block_calculation(data4010, window_size=5, min_majorblock = 125)
+
+b401 <- block_calculation(data401, window_size=5, min_majorblock = 250)
+b402 <- block_calculation(data402, window_size=5, min_majorblock = 250)
+b403 <- block_calculation(data403, window_size=5, min_majorblock = 250)
+b404 <- block_calculation(data404, window_size=5, min_majorblock = 250)
+b405 <- block_calculation(data405, window_size=5, min_majorblock = 250)
+b406 <- block_calculation(data406, window_size=5, min_majorblock = 250)
+b407 <- block_calculation(data407, window_size=5, min_majorblock = 250)
+b408 <- block_calculation(data408, window_size=5, min_majorblock = 250)
+b409 <- block_calculation(data409, window_size=5, min_majorblock = 250)
+b4010 <- block_calculation(data4010, window_size=5, min_majorblock = 250)
+
+
+se1 <- blocklist_startend(b1)
+se21 <- blocklist_startend(b21)
+se22 <- blocklist_startend(b22)
+se51 <- blocklist_startend(b51)
+se52 <- blocklist_startend(b52)
+se53 <- blocklist_startend(b53)
+se54 <- blocklist_startend(b54)
+se55 <- blocklist_startend(b55)
+se101 <- blocklist_startend(b101)
+se102 <- blocklist_startend(b102)
+se103 <- blocklist_startend(b103)
+se104 <- blocklist_startend(b104)
+se105 <- blocklist_startend(b105)
+se106 <- blocklist_startend(b106)
+se107 <- blocklist_startend(b107)
+se108 <- blocklist_startend(b108)
+se109 <- blocklist_startend(b109)
+se1010 <- blocklist_startend(b1010)
+
+se401 <- blocklist_startend(b401)
+se402 <- blocklist_startend(b402)
+se403 <- blocklist_startend(b403)
+se404 <- blocklist_startend(b404)
+se405 <- blocklist_startend(b405)
+se406 <- blocklist_startend(b406)
+se407 <- blocklist_startend(b407)
+se408 <- blocklist_startend(b408)
+se409 <- blocklist_startend(b409)
+se4010 <- blocklist_startend(b4010)
+
+mean(c(length(b1)))
+mean(c(length(b21), length(b22)))
+mean(c(length(b51), length(b52), length(b53), length(b54), length(b55)))
+mean(c(length(b101), length(b102), length(b103), length(b104), length(b105),
+       length(b106), length(b107), length(b108), length(b109), length(b1010)))
+mean(c(length(b401), length(b402), length(b403), length(b404), length(b405),
+       length(b406), length(b407), length(b408), length(b409), length(b4010)))
+
+
+mean(c(coverage_test(b1,501)))
+mean(c(coverage_test(b22,501),coverage_test(b21,501)))
+mean(c(coverage_test(b51,501),coverage_test(b52,501),coverage_test(b53,501),coverage_test(b54,501),coverage_test(b55,501)))
+
+mean(c(coverage_test(b101,501),coverage_test(b102,501),coverage_test(b103,501),coverage_test(b104,501),coverage_test(b105,501),
+       coverage_test(b106,501),coverage_test(b107,501),coverage_test(b108,501),coverage_test(b109,501),coverage_test(b1010,501)))
+mean(c(coverage_test(b401,501),coverage_test(b402,501),coverage_test(b403,501),coverage_test(b404,501),coverage_test(b405,501),
+       coverage_test(b406,501),coverage_test(b407,501),coverage_test(b408,501),coverage_test(b409,501),coverage_test(b4010,501)))
+
+mean(c(blocklist_size(b1,501)))
+mean(c(blocklist_size(b22),blocklist_size(b21)))
+mean(c(blocklist_size(b51),blocklist_size(b52),blocklist_size(b53),blocklist_size(b54),blocklist_size(b55)))
+
+mean(c(blocklist_size(b101),blocklist_size(b102),blocklist_size(b103),blocklist_size(b104),blocklist_size(b105),
+       blocklist_size(b106),blocklist_size(b107),blocklist_size(b108),blocklist_size(b109),blocklist_size(b1010)))
+mean(c(blocklist_size(b401),blocklist_size(b402),blocklist_size(b403),blocklist_size(b404),blocklist_size(b405),
+       blocklist_size(b406),blocklist_size(b407),blocklist_size(b408),blocklist_size(b409),blocklist_size(b4010)))
+
+
+
+
+
+mean(se1[,2]-se1[,1]+1)
+mean(c(se21[,2]-se21[,1]+1,se22[,2]-se22[,1]+1 ))*2
+mean(c(se101[,2]-se101[,1]+1,se102[,2]-se102[,1]+1,
+       se103[,2]-se103[,1]+1,se104[,2]-se104[,1]+1,
+       se105[,2]-se105[,1]+1,se106[,2]-se106[,1]+1,
+       se107[,2]-se107[,1]+1,se108[,2]-se108[,1]+1,
+       se109[,2]-se109[,1]+1,se1010[,2]-se1010[,1]+1))*10
+mean(c(se51[,2]-se51[,1]+1,se52[,2]-se52[,1]+1,
+       se53[,2]-se53[,1]+1,se54[,2]-se54[,1]+1,
+       se55[,2]-se55[,1]+1))*5
+mean(c(se401[,2]-se401[,1]+1,se402[,2]-se402[,1]+1,
+       se403[,2]-se403[,1]+1,se404[,2]-se404[,1]+1,
+       se405[,2]-se405[,1]+1,se406[,2]-se406[,1]+1,
+       se407[,2]-se407[,1]+1,se408[,2]-se408[,1]+1,
+       se409[,2]-se409[,1]+1,se4010[,2]-se4010[,1]+1))*40
+
+mean(se51[,2]-se51[,1]+1)
+mean(se52[,2]-se52[,1]+1)
+mean(se53[,2]-se53[,1]+1)
+mean(se54[,2]-se54[,1]+1)
+mean(se55[,2]-se55[,1]+1)
+mean(se101[,2]-se101[,1]+1)
+mean(se102[,2]-se102[,1]+1)
+mean(se103[,2]-se103[,1]+1)
+mean(se104[,2]-se104[,1]+1)
+mean(se105[,2]-se105[,1]+1)
+mean(se106[,2]-se106[,1]+1)
+mean(se107[,2]-se107[,1]+1)
+mean(se108[,2]-se108[,1]+1)
+mean(se109[,2]-se109[,1]+1)
+mean(se1010[,2]-se1010[,1]+1)
+
+
+
+
+
+name <- paste0("KE","_DH_chromo",1,".RData")
+load(name)
+library(CHaploBlocker)
+library(HaploBlocker)
+
+a_total <- NULL
+
+for(iter in 1:50){
+  change <- sort(sample(1:nrow(data), nrow(data)/500))
+
+  tz <- rbinom(length(change)*ncol(data), 1, 0.5)
+
+  data1 <- data
+  data1[change,]  <- tz*2
+  blocklist <- block_calculation(data1)
+
+  a <- matrix(0, nrow=length(blocklist), ncol=3)
+  for(index in 1:length(blocklist)){
+    start <- blocklist[[index]][[2]]$snp
+    end <- blocklist[[index]][[3]]$snp
+    included <- which(((change<=end)+(change>=start))==2)
+
+    if(length(included)>0){
+      freqs <- blocklist[[index]][[7]]$freq[change[included]-start+1]
+      a[index,] <- c(length(included), sum(freqs<1), sum(freqs<=0.8))
+    }
+
+  }
+
+  a_total <- rbind(a, a_total)
+  print(colSums(a_total))
+}
+
+
+
+
+name <- paste0("C:/Users/tpook/Desktop/KE","_DH_chromo",1,".RData")
+name <- paste0("KE","_DH_chromo",1,".RData")
+load(name)
+library(CHaploBlocker)
+library(HaploBlocker)
+
+a_total <- NULL
+b100_total <- b095_total <- b090_total <- b085_total <- b080_total <- b075_total <- b070_total <- b065_total <- b060_total <- b055_total <- b051_total <- NULL
+blocklist <- block_calculation(data)
+for(iter in 1:50){
+
+  data1 <- data
+
+  change <- sort(sample(1:nrow(data), nrow(data)/500))
+  se <- blocklist_startend(blocklist, type="snp")
+  noted <- list()
+  noted2 <- list()
+  for(index in 1:length(change)){
+    options <- which(((se[,2]>change[index]) * (se[,1]<change[index]))==1)
+    take <- sample(which(((se[,2]>change[index]) * (se[,1]<change[index]))==1),1)
+    data1[change[index], blocklist[[take]][[6]]] <- rbinom(blocklist[[take]][[5]],1,0.5)*2
+    data1[change[index], -blocklist[[take]][[6]]] <- 0
+    noted[[index]] <- blocklist[[take]][[6]]
+    noted2[[index]] <- 124233
+    for(check in options){
+      if(length(intersect(blocklist[[check]][[6]], blocklist[[take]][[6]]))>0){
+        noted2[[index]] <- unique(c(noted2[[index]], blocklist[[check]][[6]]))
+      }
+    }
+    noted2[[index]] <- noted2[[index]][-1]
+  }
+
+  blocklist1 <- block_calculation(data1)
+
+  a <- matrix(0, nrow=length(blocklist1), ncol=3)
+
+  for(index in 1:length(blocklist1)){
+    se <- blocklist_startend(blocklist1, type="snp")
+    start <- blocklist1[[index]][[2]]$snp
+    end <- blocklist1[[index]][[3]]$snp
+    included <- which(((change<=end)+(change>=start))==2)
+    haplo1 <- NULL
+    haplo2 <- NULL
+
+    if(length(included)>0){
+      freqs <- blocklist1[[index]][[7]]$freq[change[included]-start+1]
+      a[index,] <- c(length(included), sum(freqs<1), sum(freqs<=0.8))
+
+
+    }
+
+
+  }
+
+  a_total <- rbind(a, a_total)
+  print(colSums(a_total))
+
+
+
+  b100 <- b095 <- b090 <- b085 <- b080 <- b075 <- b070 <- b065 <- b060 <- b055 <- b051 <-matrix(0, nrow=length(change), ncol=6)
+  for(index in 1:length(change)){
+    options <- which(((se[,2]>change[index]) * (se[,1]<change[index]))==1)
+
+    haplo100 <- NULL
+    haplo095 <- NULL
+    haplo090 <- NULL
+    haplo085 <- NULL
+    haplo080 <- NULL
+    haplo075 <- NULL
+    haplo070 <- NULL
+    haplo065 <- NULL
+    haplo060 <- NULL
+    haplo055 <- NULL
+    haplo051 <- NULL
+
+    for(option in options){
+      start <- blocklist1[[option]][[2]]$snp
+      end <- blocklist1[[option]][[3]]$snp
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<1){
+        haplo100 <- unique(c(haplo100, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.95){
+        haplo095 <- unique(c(haplo095, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.9){
+        haplo090 <- unique(c(haplo090, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.85){
+        haplo085 <- unique(c(haplo085, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.8){
+        haplo080 <- unique(c(haplo080, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.75){
+        haplo075 <- unique(c(haplo075, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.7){
+        haplo070 <- unique(c(haplo070, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.65){
+        haplo065 <- unique(c(haplo065, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.6){
+        haplo060 <- unique(c(haplo060, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.55){
+        haplo055 <- unique(c(haplo055, blocklist1[[option]][[6]]))
+      }
+      if((blocklist1[[option]][[7]]$freq[change[index]-start+1])<0.51){
+        haplo051 <- unique(c(haplo051, blocklist1[[option]][[6]]))
+      }
+    }
+
+    b100[index,] <- c(length(noted[[index]]), length(haplo100), length(base::intersect(haplo100,noted[[index]])),
+                      length(noted2[[index]]), length(haplo100), length(base::intersect(haplo100,noted2[[index]])))
+    b095[index,] <- c(length(noted[[index]]), length(haplo095), length(base::intersect(haplo095,noted[[index]])),
+                      length(noted2[[index]]), length(haplo095), length(base::intersect(haplo095,noted2[[index]])))
+    b090[index,] <- c(length(noted[[index]]), length(haplo090), length(base::intersect(haplo090,noted[[index]])),
+                      length(noted2[[index]]), length(haplo090), length(base::intersect(haplo090,noted2[[index]])))
+    b085[index,] <- c(length(noted[[index]]), length(haplo085), length(base::intersect(haplo085,noted[[index]])),
+                      length(noted2[[index]]), length(haplo085), length(base::intersect(haplo085,noted2[[index]])))
+    b080[index,] <- c(length(noted[[index]]), length(haplo080), length(base::intersect(haplo080,noted[[index]])),
+                      length(noted2[[index]]), length(haplo080), length(base::intersect(haplo080,noted2[[index]])))
+    b075[index,] <- c(length(noted[[index]]), length(haplo075), length(base::intersect(haplo075,noted[[index]])),
+                      length(noted2[[index]]), length(haplo075), length(base::intersect(haplo075,noted2[[index]])))
+    b070[index,] <- c(length(noted[[index]]), length(haplo070), length(base::intersect(haplo070,noted[[index]])),
+                      length(noted2[[index]]), length(haplo070), length(base::intersect(haplo070,noted2[[index]])))
+    b065[index,] <- c(length(noted[[index]]), length(haplo065), length(base::intersect(haplo065,noted[[index]])),
+                      length(noted2[[index]]), length(haplo065), length(base::intersect(haplo065,noted2[[index]])))
+    b060[index,] <- c(length(noted[[index]]), length(haplo060), length(base::intersect(haplo060,noted[[index]])),
+                      length(noted2[[index]]), length(haplo060), length(base::intersect(haplo060,noted2[[index]])))
+    b055[index,] <- c(length(noted[[index]]), length(haplo055), length(base::intersect(haplo055,noted[[index]])),
+                      length(noted2[[index]]), length(haplo055), length(base::intersect(haplo055,noted2[[index]])))
+    b051[index,] <- c(length(noted[[index]]), length(haplo051), length(base::intersect(haplo051,noted[[index]])),
+                      length(noted2[[index]]), length(haplo051), length(base::intersect(haplo051,noted2[[index]])))
+
+  }
+  b100_total <- rbind(b100, b100_total)
+  b095_total <- rbind(b095, b095_total)
+  b090_total <- rbind(b090, b090_total)
+  b085_total <- rbind(b085, b085_total)
+  b080_total <- rbind(b080, b080_total)
+  b075_total <- rbind(b075, b075_total)
+  b070_total <- rbind(b070, b070_total)
+  b065_total <- rbind(b065, b065_total)
+  b060_total <- rbind(b060, b060_total)
+  b055_total <- rbind(b055, b055_total)
+  b051_total <- rbind(b051, b051_total)
+
+}
+
+
+colSums(b100_total)
+
+
+save(file="b123.RData", list=c("a_total", "b100_total",
+                               "b095_total","b090_total",
+                               "b085_total","b080_total",
+                               "b075_total","b070_total",
+                               "b065_total","b060_total",
+                               "b055_total", "b051_total"))
+
+
+load("C:/Users/tpook/Desktop/b123.RData")
+
+ct <- c(0.51,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1)
+type1 <- type2 <- type1b <- type2b <-  numeric(length(ct))
+
+type1[1] <- 1 - (sum(b051_total[,3]) / sum(b051_total[,1]))
+type2[1] <- (sum(b051_total[,2])-sum(b051_total[,3])) / (50*160*501 - sum(b051_total[,4]))
+type1b[1] <- 1 - (sum(b051_total[,6]) / sum(b051_total[,4]))
+type2b[1] <- (sum(b051_total[,5])-sum(b051_total[,6])) / (50*160*501 - sum(b051_total[,4]))
+
+type1[2] <- 1 - (sum(b055_total[,3]) / sum(b055_total[,1]))
+type2[2] <- (sum(b055_total[,2])-sum(b055_total[,3])) / (50*160*501 - sum(b055_total[,4]))
+type1b[2] <- 1 - (sum(b055_total[,6]) / sum(b055_total[,4]))
+type2b[2] <- (sum(b055_total[,5])-sum(b055_total[,6])) / (50*160*501 - sum(b055_total[,4]))
+
+type1[3] <- 1 - (sum(b060_total[,3]) / sum(b060_total[,1]))
+type2[3] <- (sum(b060_total[,2])-sum(b060_total[,3])) / (50*160*501 - sum(b060_total[,4]))
+type1b[3] <- 1 - (sum(b060_total[,6]) / sum(b060_total[,4]))
+type2b[3] <- (sum(b060_total[,5])-sum(b060_total[,6])) / (50*160*501 - sum(b060_total[,4]))
+
+type1[4] <- 1 - (sum(b065_total[,3]) / sum(b065_total[,1]))
+type2[4] <- (sum(b065_total[,2])-sum(b065_total[,3])) / (50*160*501 - sum(b065_total[,4]))
+type1b[4] <- 1 - (sum(b065_total[,6]) / sum(b065_total[,4]))
+type2b[4] <- (sum(b065_total[,5])-sum(b065_total[,6])) / (50*160*501 - sum(b065_total[,4]))
+
+type1[5] <- 1 - (sum(b070_total[,3]) / sum(b070_total[,1]))
+type2[5] <- (sum(b070_total[,2])-sum(b070_total[,3])) / (50*160*501 - sum(b070_total[,4]))
+type1b[5] <- 1 - (sum(b070_total[,6]) / sum(b070_total[,4]))
+type2b[5] <- (sum(b070_total[,5])-sum(b070_total[,6])) / (50*160*501 - sum(b070_total[,4]))
+
+type1[6] <- 1 - (sum(b075_total[,3]) / sum(b075_total[,1]))
+type2[6] <- (sum(b075_total[,2])-sum(b075_total[,3])) / (50*160*501 - sum(b075_total[,4]))
+type1b[6] <- 1 - (sum(b075_total[,6]) / sum(b075_total[,4]))
+type2b[6] <- (sum(b075_total[,5])-sum(b075_total[,6])) / (50*160*501 - sum(b075_total[,4]))
+
+type1[7] <- 1 - (sum(b080_total[,3]) / sum(b080_total[,1]))
+type2[7] <- (sum(b080_total[,2])-sum(b080_total[,3])) / (50*160*501 - sum(b080_total[,4]))
+type1b[7] <- 1 - (sum(b080_total[,6]) / sum(b080_total[,4]))
+type2b[7] <- (sum(b080_total[,5])-sum(b080_total[,6])) / (50*160*501 - sum(b080_total[,4]))
+
+type1[8] <- 1 - (sum(b085_total[,3]) / sum(b085_total[,1]))
+type2[8] <- (sum(b085_total[,2])-sum(b085_total[,3])) / (50*160*501 - sum(b085_total[,4]))
+type1b[8] <- 1 - (sum(b085_total[,6]) / sum(b085_total[,4]))
+type2b[8] <- (sum(b085_total[,5])-sum(b085_total[,6])) / (50*160*501 - sum(b085_total[,4]))
+
+type1[9] <- 1 - (sum(b090_total[,3]) / sum(b090_total[,1]))
+type2[9] <- (sum(b090_total[,2])-sum(b090_total[,3])) / (50*160*501 - sum(b090_total[,4]))
+type1b[9] <- 1 - (sum(b090_total[,6]) / sum(b090_total[,4]))
+type2b[9] <- (sum(b090_total[,5])-sum(b090_total[,6])) / (50*160*501 - sum(b090_total[,4]))
+
+type1[10] <- 1 - (sum(b095_total[,3]) / sum(b095_total[,1]))
+type2[10] <- (sum(b095_total[,2])-sum(b095_total[,3])) / (50*160*501 - sum(b095_total[,4]))
+type1b[10] <- 1 - (sum(b095_total[,6]) / sum(b095_total[,4]))
+type2b[10] <- (sum(b095_total[,5])-sum(b095_total[,6])) / (50*160*501 - sum(b095_total[,4]))
+
+type1[11] <- 1 - (sum(b100_total[,3]) / sum(b100_total[,1]))
+type2[11] <- (sum(b100_total[,2])-sum(b100_total[,3])) / (50*160*501 - sum(b100_total[,4]))
+type1b[11] <- 1 - (sum(b100_total[,6]) / sum(b100_total[,4]))
+type2b[11] <- (sum(b100_total[,5])-sum(b100_total[,6])) / (50*160*501 - sum(b100_total[,4]))
+
+X11(width = 10, height = 8)
+plot(ct, type1, type="l", ylab="error rate", xlab="minimum minor allele frequency to report",
+     lwd=2.5, cex.axis=1.5, cex.lab=1.5)
+lines(ct, type2, col="red", lwd=2.5)
+legend("topright", c("Type I error", "Type II error"), lty=c(1,1), col=c(1,2), lwd=c(2.5,2.5), cex=1.5)
+savePlot("C:/Users/tpook/Desktop/Error_type.png", type="png")
+
+
+check <- numeric(length(blocklist))
+for(index in 1:length(blocklist)){
+  check[index] <- mean(blocklist[[index]][[7]]$freq)
+}
+
+plot(blocklist[[100]][[7]]$freq)
+
+
+name <- paste0("C:/Users/tpook/Desktop/","KE","_DH_chromo",1,".RData")
+load(name)
+library(CHaploBlocker)
+library(HaploBlocker)
+
+
+b5 <- block_calculation(data, window_size = 5)
+b10 <- block_calculation(data, window_size = 10)
+b20 <- block_calculation(data, window_size = 20)
+b50 <- block_calculation(data, window_size = 50)
+
+
+
+blocklist <- b50
+
+print(length(blocklist))
+se <- blocklist_startend(blocklist, type="snp")
+print(mean(se[,2]-se[,1]+1))
+size <- blocklist_size(blocklist)
+print(mean(size))
+t <- coverage_test(blocklist, type="snp", indi=501)
+print(mean(t))
+
+b201 <- block_calculation(data[1:20000,], window_size = 20)
+se1 <- blocklist_startend(b201, type="snp")
+plot(se1)
+
+
+
+name <- paste0("C:/Users/tpook/Desktop/","KE","_DH_chromo",1,".RData")
+load(name)
+library(CHaploBlocker)
+library(HaploBlocker)
+blocklist <- block_calculation(data, window_size=c(7,11,23,53), multi_window_mode = TRUE)
+
+z <- numeric(length(blocklist))
+for(index in 1:length(blocklist)){
+  z[index] <- blocklist[[index]][[12]]
+}
+
+
+
+
+
+
+name <- paste0("C:/Users/tpook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",1,".RData")
+load(name)
+library(HaploBlocker)
+
+data1 <- data
+data21 <- data[1:40100*2,]
+data22 <- data[1:40100*2-1,]
+data51 <- data[1:16040*5,]
+data52 <- data[1:16040*5-1,]
+data53 <- data[1:16040*5-2,]
+data54 <- data[1:16040*5-3,]
+data55 <- data[1:16040*5-4,]
+data101 <- data[1:8020*10,]
+data102 <- data[1:8020*10-1,]
+data103 <- data[1:8020*10-2,]
+data104 <- data[1:8020*10-3,]
+data105 <- data[1:8020*10-4,]
+data106 <- data[1:8020*10-5,]
+data107 <- data[1:8020*10-6,]
+data108 <- data[1:8020*10-7,]
+data109 <- data[1:8020*10-8,]
+data1010 <- data[1:8020*10-9,]
+
+data401 <- data[1:2005*40,]
+data402 <- data[1:2005*40-4,]
+data403 <- data[1:2005*40-8,]
+data404 <- data[1:2005*40-12,]
+data405 <- data[1:2005*40-16,]
+data406 <- data[1:2005*40-20,]
+data407 <- data[1:2005*40-24,]
+data408 <- data[1:2005*40-28,]
+data409 <- data[1:2005*40-32,]
+data4010 <- data[1:2005*40-36,]
+
+
+b1 <- block_calculation(data1, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b21 <- block_calculation(data21, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b22 <- block_calculation(data22, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b51 <- block_calculation(data51, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b52 <- block_calculation(data52, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b53 <- block_calculation(data53, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b54 <- block_calculation(data54, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b55 <- block_calculation(data55, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b101 <- block_calculation(data101, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b102 <- block_calculation(data102, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b103 <- block_calculation(data103, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b104 <- block_calculation(data104, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b105 <- block_calculation(data105, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b106 <- block_calculation(data106, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b107 <- block_calculation(data107, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b108 <- block_calculation(data108, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b109 <- block_calculation(data109, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b1010 <- block_calculation(data1010, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+
+b401 <- block_calculation(data401, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b402 <- block_calculation(data402, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b403 <- block_calculation(data403, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b404 <- block_calculation(data404, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b405 <- block_calculation(data405, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b406 <- block_calculation(data406, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b407 <- block_calculation(data407, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b408 <- block_calculation(data408, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b409 <- block_calculation(data409, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+b4010 <- block_calculation(data4010, adaptive_mode=TRUE, max_iteration=10, target_coverage = 0.95)
+
+
+
+se1 <- blocklist_startend(b1)
+se21 <- blocklist_startend(b21)
+se22 <- blocklist_startend(b22)
+se51 <- blocklist_startend(b51)
+se52 <- blocklist_startend(b52)
+se53 <- blocklist_startend(b53)
+se54 <- blocklist_startend(b54)
+se55 <- blocklist_startend(b55)
+se101 <- blocklist_startend(b101)
+se102 <- blocklist_startend(b102)
+se103 <- blocklist_startend(b103)
+se104 <- blocklist_startend(b104)
+se105 <- blocklist_startend(b105)
+se106 <- blocklist_startend(b106)
+se107 <- blocklist_startend(b107)
+se108 <- blocklist_startend(b108)
+se109 <- blocklist_startend(b109)
+se1010 <- blocklist_startend(b1010)
+
+se401 <- blocklist_startend(b401)
+se402 <- blocklist_startend(b402)
+se403 <- blocklist_startend(b403)
+se404 <- blocklist_startend(b404)
+se405 <- blocklist_startend(b405)
+se406 <- blocklist_startend(b406)
+se407 <- blocklist_startend(b407)
+se408 <- blocklist_startend(b408)
+se409 <- blocklist_startend(b409)
+se4010 <- blocklist_startend(b4010)
+
+mean(c(length(b1)))
+mean(c(length(b21), length(b22)))
+mean(c(length(b51), length(b52), length(b53), length(b54), length(b55)))
+mean(c(length(b101), length(b102), length(b103), length(b104), length(b105),
+       length(b106), length(b107), length(b108), length(b109), length(b1010)))
+mean(c(length(b401), length(b402), length(b403), length(b404), length(b405),
+       length(b406), length(b407), length(b408), length(b409), length(b4010)))
+
+
+mean(c(coverage_test(b1,501)))
+mean(c(coverage_test(b22,501),coverage_test(b21,501)))
+mean(c(coverage_test(b51,501),coverage_test(b52,501),coverage_test(b53,501),coverage_test(b54,501),coverage_test(b55,501)))
+
+mean(c(coverage_test(b101,501),coverage_test(b102,501),coverage_test(b103,501),coverage_test(b104,501),coverage_test(b105,501),
+       coverage_test(b106,501),coverage_test(b107,501),coverage_test(b108,501),coverage_test(b109,501),coverage_test(b1010,501)))
+mean(c(coverage_test(b401,501),coverage_test(b402,501),coverage_test(b403,501),coverage_test(b404,501),coverage_test(b405,501),
+       coverage_test(b406,501),coverage_test(b407,501),coverage_test(b408,501),coverage_test(b409,501),coverage_test(b4010,501)))
+
+
+
+mean(se1[,2]-se1[,1]+1)
+mean(c(se21[,2]-se21[,1]+1,se22[,2]-se22[,1]+1 ))*2
+mean(c(se101[,2]-se101[,1]+1,se102[,2]-se102[,1]+1,
+       se103[,2]-se103[,1]+1,se104[,2]-se104[,1]+1,
+       se105[,2]-se105[,1]+1,se106[,2]-se106[,1]+1,
+       se107[,2]-se107[,1]+1,se108[,2]-se108[,1]+1,
+       se109[,2]-se109[,1]+1,se1010[,2]-se1010[,1]+1))*10
+mean(c(se51[,2]-se51[,1]+1,se52[,2]-se52[,1]+1,
+       se53[,2]-se53[,1]+1,se54[,2]-se54[,1]+1,
+       se55[,2]-se55[,1]+1))*5
+mean(c(se401[,2]-se401[,1]+1,se402[,2]-se402[,1]+1,
+       se403[,2]-se403[,1]+1,se404[,2]-se404[,1]+1,
+       se405[,2]-se405[,1]+1,se406[,2]-se406[,1]+1,
+       se407[,2]-se407[,1]+1,se408[,2]-se408[,1]+1,
+       se409[,2]-se409[,1]+1,se4010[,2]-se4010[,1]+1))*40
+
+mean(se51[,2]-se51[,1]+1)
+mean(se52[,2]-se52[,1]+1)
+mean(se53[,2]-se53[,1]+1)
+mean(se54[,2]-se54[,1]+1)
+mean(se55[,2]-se55[,1]+1)
+mean(se101[,2]-se101[,1]+1)
+mean(se102[,2]-se102[,1]+1)
+mean(se103[,2]-se103[,1]+1)
+mean(se104[,2]-se104[,1]+1)
+mean(se105[,2]-se105[,1]+1)
+mean(se106[,2]-se106[,1]+1)
+mean(se107[,2]-se107[,1]+1)
+mean(se108[,2]-se108[,1]+1)
+mean(se109[,2]-se109[,1]+1)
+mean(se1010[,2]-se1010[,1]+1)
+
+mean(c(blocklist_size(b1)))
+mean(c(blocklist_size(b22),blocklist_size(b21)))
+mean(c(blocklist_size(b51),blocklist_size(b52),blocklist_size(b53),blocklist_size(b54),blocklist_size(b55)))
+
+mean(c(blocklist_size(b101),blocklist_size(b102),blocklist_size(b103),blocklist_size(b104),blocklist_size(b105),
+       blocklist_size(b106),blocklist_size(b107),blocklist_size(b108),blocklist_size(b109),blocklist_size(b1010)))
+mean(c(blocklist_size(b401),blocklist_size(b402),blocklist_size(b403),blocklist_size(b404),blocklist_size(b405),
+       blocklist_size(b406),blocklist_size(b407),blocklist_size(b408),blocklist_size(b409),blocklist_size(b4010)))
+
+
+
+
+
+name <- paste0("Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",1,".RData")
+load(name)
+library(HaploBlocker)
+system.time(blocklist <- block_calculation(data, parallel_window=10000,
+                               window_overlap=0,
+                               window_cores=1))
+system.time(blocklist <- block_calculation(data, parallel_window=25000,
+                               window_overlap=2500,
+                               window_cores=8))
+
+system.time(blocklist <- block_calculation(data, parallel_window=Inf,
+                                           window_overlap=0,
+                                           window_cores=6))
+
+
+l <- NULL
+library(HaploBlocker)
+blockl <- NULL
+for(chromo in 1:10){
+  name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",chromo,".RData")
+  load(name)
+  blocklist <- block_calculation(data)
+  blockl[[length(blockl)+1]] <- blocklist
+}
+
+windowdataset1 <- NULL
+for(index in 1:10){
+  windowdataset1 <- rbind(windowdataset1, block_windowdataset(blockl[[index]]))
+}
+
+windowdataset2 <- NULL
+for(index in 1:10){
+  name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","KE","_DH_chromo",index,".RData")
+  load(name)
+  windowdataset2 <- rbind(windowdataset2, block_windowdataset(blockl[[index]], data, consider_nonblock = TRUE))
+}
+
+
+dataset <- NULL
+for(index in 1:10){
+  dataset <- rbind(dataset, generate_blockmatrix(blockl[[index]]))
+}
+
+save(file="C:/Users/pook/Desktop/Block_datasets_KE.RData", list=c("dataset", "windowdataset1", "windowdataset2", "blockl"))
+
+l <- NULL
+library(HaploBlocker)
+blockl <- NULL
+for(chromo in 1:10){
+  name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","PE","_DH_chromo",chromo,".RData")
+  load(name)
+  blocklist <- block_calculation(data)
+  blockl[[length(blockl)+1]] <- blocklist
+}
+
+windowdataset1 <- NULL
+for(index in 1:10){
+  windowdataset1 <- rbind(windowdataset1, block_windowdataset(blockl[[index]]))
+}
+
+windowdataset2 <- NULL
+for(index in 1:10){
+  name <- paste0("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/","PE","_DH_chromo",index,".RData")
+  load(name)
+  windowdataset2 <- rbind(windowdataset2, block_windowdataset(blockl[[index]], data, consider_nonblock = TRUE))
+}
+
+dataset <- NULL
+for(index in 1:10){
+  dataset <- rbind(dataset, generate_blockmatrix(blockl[[index]]))
+}
+
+save(file="C:/Users/pook/Desktop/Block_datasets_PE.RData", list=c("dataset", "windowdataset1", "windowdataset2", "blockl"))

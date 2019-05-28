@@ -1,0 +1,2 @@
+library(HaploBlocker)
+a <- block_calculation(ex_maze[1:200,1:50], target_coverage = 0.9)
