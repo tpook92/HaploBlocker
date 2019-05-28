@@ -434,7 +434,6 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     coverage_results <- numeric(max_iteration)
     min_majorblock_count[1] <- min_majorblock
     blocklists <- list()
-    cap <- min_majorblock
 
   }
   stop_iteration <- FALSE
@@ -450,7 +449,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     cat("Start_Blockmerging\n")
     helper <- blocklist_startend(blocklist, type="snp")
     helper_old <- NULL
-    while(length(helper_old)==0 || (nrow(helper_old)!=nrow(helper)) || prod(helper_old==helper)==0){
+    while(iteration <= min_majorblock_steps || length(helper_old)==0 || (nrow(helper_old)!=nrow(helper)) || prod(helper_old==helper)==0){
       cat(paste("Iteration", iteration, ":", nodes, "blocks\n"))
       helper_old <- helper
       blocklist <- block_merging(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list, off_lines, min_similarity=min_similarity,
@@ -477,7 +476,6 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
           if(length(target_coverage)>0){
             blocklist <- blocklist_start
             min_majorblock_count[current_iteration] <- ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 2)
-            cap <- min_majorblock_count[current_iteration]
             min_majorblock <- min_majorblock_count[current_iteration]
 
           } else{

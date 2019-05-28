@@ -1,4 +1,4 @@
-dhm = ex_maze[1:200,1:50]; window_sequence=NULL; window_size=20; merging_error=1; node_min=5; gap=10;
+dhm = ex_maze[1:50,1:50]; window_sequence=NULL; window_size=20; merging_error=1; node_min=5; gap=10;
 min_share=0.975; off_lines=2; min_similarity=0.99; merge_closeblock=FALSE;
 max_diff_l=1; max_diff_i=1; min_majorblock=5000; bp_map=NULL; window_anchor_gens=NULL;
 consider_nodes=TRUE; consider_edge=TRUE; edge_min=5; subgroups=NULL; min_per_subgroup=0; subgroup_exception=0;
