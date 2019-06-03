@@ -2,7 +2,7 @@
 R-package: Calculation of haplotype blocks and libraries
 
 This is the github repository for your R-package HaploBlocker. 
-For a preprint we refer to biorvix (https://www.biorxiv.org/content/10.1101/339788v2). A new version of the preprint has been uploaded 18/3/2019.
+A paper on HaploBlocker has been published in Genetics (https://www.genetics.org/content/early/2019/05/31/genetics.119.302283)
 
 For further questions (torsten.pook@uni-goettingen.de)
 
@@ -11,6 +11,8 @@ For explanation on the usage we refer to our user manual. The wiki is currently 
 ## Version history
 
 ### Version 1.4.8
+
+HaploBlocker has been officially been published in Genetics (https://www.genetics.org/content/early/2019/05/31/genetics.119.302283)
 
 A frozen version of the current package has been added in "Genetics_submission_version"
 
