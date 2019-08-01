@@ -1,0 +1,287 @@
+load("C:/Users/pook/Desktop/Genetic_Datasets/Batch3_KEPE/KE_DH_chromo10.RData")
+
+## Just copy from HP to derivte example window cluster
+
+library(HaploBlocker)
+library(RandomFieldsUtils)
+dhm <- data
+min_share <- 1
+consider_all <- FALSE
+min_similarity <- 1
+# No window/snp-extensions
+
+{
+window_sequence_list <- list()
+
+if(length(window_sequence)!=ncluster){
+  for(index in 1:ncluster){
+    window_sequence_list[[index]] <- window_sequence
+  }
+} else{
+  window_sequence_list <- window_sequence
+}
+window_sequence_list[[ncluster+1]] <- "placeholder"
+
+if(intersect_func){
+  intersect_func <- HaploBlocker::intersect
+} else{
+  intersect_func <- base::intersect
+}
+if(is.data.frame(dhm)){
+  dhm <- as.matrix(dhm)
+}
+if(sum(is.na(dhm))>0){
+  dhm[is.na(dhm)] <- 9
+}
+
+if(prefilter==TRUE){
+  dhm <- dataset_filter(dhm, maf, equal_remove)
+}
+
+if(recoding==TRUE){
+  if(recoding_notneeded==TRUE){
+    recoding <- TRUE
+  } else{
+    for(index in 1:nrow(dhm)){
+      check1 <- dhm[index,]==dhm[index,1]
+      dhm[index, check1] <- "A"
+      dhm[index, -(check1)*1:indi] <- "C"
+    }
+  }
+}
+
+# Martins Erweiterung
+unique.dhm <- unique(as.vector(dhm))
+fixcoding(unique.dhm)
+c_dhm <- codeSNPs(dhm)
+
+blockinfo <- list()
+data <- list()
+dataset <- list()
+partial_blocklist <- list()
+nwindow <- rep(0, ncluster)
+
+for(index in 1:ncluster){
+  if(blockinfo_mode_na){
+    blockinfo_out <- blockinfo_calculation_na(dhm, window_sequence= window_sequence_list[[index]], window_anchor_gens = window_anchor_gens, blockinfo_mode=blockinfo_mode,
+                                              window_size = window_size[index], merging_error = merging_error[index], bp_map = bp_map, at_least_one=at_least_one,
+                                              actual_snp_weight=actual_snp_weight, na_snp_weight=na_snp_weight, na_seq_weight= na_seq_weight)
+    
+  } else{
+    blockinfo_out <- blockinfo_calculation(dhm, window_sequence= window_sequence_list[[index]], window_anchor_gens = window_anchor_gens, blockinfo_mode=blockinfo_mode,
+                                           window_size = window_size[index], merging_error = merging_error[index], bp_map = bp_map, at_least_one=at_least_one,
+                                           c_dhm=c_dhm, max_groups=max_groups)
+    
+  }
+  
+  blockinfo[[index]] <- blockinfo_out[[1]]
+  window_sequence_list[[index]] <- blockinfo_out[[2]]
+  
+  
+  if(max_groups>0){
+    cat(paste("Generated:", nrow(window_sequence_list[[index]]), "windows\n"))
+    cat(paste("With size: Max", max(window_sequence_list[[index]][,3]), "Min", min(window_sequence_list[[index]][,3]), "Avg", round(mean(window_sequence_list[[index]][,3])*100)/100),"\n")
+  }
+  
+  data[[index]] <- nodes_calculation(blockinfo[[index]], window_sequence_list[[index]])
+  
+  data[[index]] <- simple_merge(data[[index]], intersect_func=intersect_func)
+  data[[index]] <- calculate_transition(data[[index]], intersect_func=intersect_func)
+  
+  
+  
+  nwindow[index] <- nrow(window_sequence_list[[index]])
+  indi <- sum(blockinfo[[index]][[1]][[1]])
+  
+  nodes <- length(data[[index]])
+  
+  if(early_remove){
+    cat("Start_Early_remove\n")
+    cat(paste("Starting-Nodes:", nodes,"\n"))
+    if(length(node_min_early)==0){
+      node_min_early <- node_min
+    }
+    data[[index]] <- ignore_small_nodes(data[[index]], indi, nwindow[index], node_min_early, gap, intersect_func=intersect_func)
+    data[[index]] <- simple_merge_prob(data[[index]], indi, nwindow[index])
+  }
+  
+  nodes <- length(data[[index]])
+  iteration <- 1
+  cat("Start_CrossMerging_full\n")
+  a <- start_end_block(data[[index]])
+  a_old <- NULL
+  while((length(a_old)==0 || (nrow(a_old)!=nrow(a)) || prod(a_old==a)==0) && ( length(a_old)==0 || (nrow(a_old)-nrow(a))>min_reduction_cross)){
+    a_old <- a
+    cat(paste("Iteration", iteration, ":", nodes, "nodes\n"))
+    data[[index]] <- crossmerge(data[[index]], indi, nwindow[index], a, intersect_func=intersect_func)
+    data[[index]] <- simple_merge_prob(data[[index]], indi, nwindow[index])
+    a <- start_end_block(data[[index]])
+    nodes <- length(data[[index]])
+    iteration <- iteration + 1
+  }
+  
+  
+  nodes <- length(data[[index]])
+  iteration <- 1
+  cat("Start_IgnoreSmall\n")
+  while((iteration==1 || (nrow(a_old)!=nrow(a)) || prod(a_old==a)==0) && ( iteration==1 || (nrow(a_old)- nrow(a))>min_reduction_neglet)){
+    a_old <- a
+    cat(paste("Iteration", iteration, ":", nodes, "nodes\n"))
+    data[[index]] <- ignore_small_nodes(data[[index]], indi, nwindow[index], node_min, gap, intersect_func=intersect_func)
+    data[[index]] <- simple_merge_prob(data[[index]], indi, nwindow[index], intersect_func=intersect_func)
+    data[[index]] <- crossmerge(data[[index]], indi, nwindow[index], intersect_func=intersect_func)
+    data[[index]] <- simple_merge_prob(data[[index]], indi, nwindow[index], intersect_func=intersect_func)
+    a<- start_end_block(data[[index]])
+    nodes <- length(data[[index]])
+    iteration <- iteration + 1
+  }
+  
+  dataset[[index]] <- block_dataset_construction(blockinfo[[index]], indi=indi, nwindow=nwindow[index])
+  
+  partial_blocklist[[index]] <- identify_blocks(data[[index]], indi, nwindow[index], min_share[index], edge_min=edge_min, subgroups=subgroups,
+                                                consider_nodes=consider_nodes, consider_edge=consider_edge, min_per_subgroup=min_per_subgroup,
+                                                subgroup_exception=subgroup_exception,
+                                                intersect_func=intersect_func, consider_multi=consider_multi, multi_min=multi_min,
+                                                double_share=double_share, node_min=node_min)
+}
+}
+blocklist <- list()
+for(index in 1:ncluster){
+  if(length(partial_blocklist[[index]])>0){
+    for(index2 in 1:length(partial_blocklist[[index]])){
+      blocklist[[length(blocklist)+1]] <- partial_blocklist[[index]][[index2]]
+      blocklist[[length(blocklist)]][[12]] <- index
+    }
+  }
+}
+
+## Block Filtering
+current_iteration <- max_iteration
+if(length(target_coverage)>0){
+  current_iteration <- 1
+  blocklist_start <- blocklist
+  min_majorblock_count <- numeric(max_iteration)
+  coverage_results <- numeric(max_iteration)
+  min_majorblock_count[1] <- min_majorblock
+  blocklists <- list()
+  
+}
+stop_iteration <- FALSE
+
+while(current_iteration <= max_iteration && !stop_iteration){
+  
+  if(length(target_coverage)>0){
+    min_majorblock <- min_majorblock_count[current_iteration]
+    blocklist <- blocklist_start
+  }
+  
+  #
+  
+  nodes <- length(blocklist)
+  iteration <- 1
+  cat("Start_Blockmerging\n")
+  helper <- blocklist_startend(blocklist, type="snp")
+  helper_old <- NULL
+  while(iteration <= min_majorblock_steps || length(helper_old)==0 || (nrow(helper_old)!=nrow(helper)) || prod(helper_old==helper)==0){
+    cat(paste("Iteration", iteration, ":", nodes, "blocks\n"))
+    helper_old <- helper
+    blocklist <- block_merging(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list, off_lines, min_similarity=min_similarity,
+                               consider_all=consider_all, node_min=node_min, save_allblock=save_allblock, helper=helper,
+                               c_dhm=c_dhm, c_dhm_mode=c_dhm_mode, intersect_func=intersect_func,
+                               min_per_subgroup=min_per_subgroup, subgroup_exception=subgroup_exception,
+                               run=(iteration-1))
+    
+    if(merge_closeblock==TRUE){
+      blocklist <- block_closeblock_merging(blocklist, blockinfo, indi, nwindow, max_diff_l, max_diff_i, intersect_func=intersect_func,
+                                            dataset=dataset)
+    }
+    if(min_majorblock>(0)){
+      if(min_majorblock_steps>1){
+        blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock,
+                                       weighting_length=weighting_length, weighting_size=weighting_size,
+                                       recalculate_biggest=recalculate_biggest, window_size=window_size)
+      } else{
+        blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min_majorblock, weighting_length=weighting_length, weighting_size=weighting_size,
+                                       recalculate_biggest=recalculate_biggest, window_size=window_size)
+      }
+      if(length(blocklist)==0){
+        
+        if(length(target_coverage)>0){
+          blocklist <- blocklist_start
+          min_majorblock_count[current_iteration] <- ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 2)
+          min_majorblock <- min_majorblock_count[current_iteration]
+          
+        } else{
+          cat(paste0("Empty Blocklist! Min_majorblock was chosen to high. Automatically set to ", ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 5),"!\n"))
+          cat("This might still be way too high for your data!!! \n")
+          blocklist <- list()
+          for(index in 1:ncluster){
+            if(length(partial_blocklist[[index]])>0){
+              for(index2 in 1:length(partial_blocklist[[index]])){
+                blocklist[[length(blocklist)+1]] <- partial_blocklist[[index]][[index2]]
+                blocklist[[length(blocklist)]][[12]] <- index
+              }
+            }
+          }
+          min_majorblock <- ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 5)
+        }
+        if(min_majorblock<=1){
+          stop("Empty blocklist with infinitisimal min_majorblock. Check input dataset.")
+        }
+        helper_old <- NULL
+        iteration <- 0
+        
+      }
+    }
+    helper <- blocklist_startend(blocklist, type="snp")
+    nodes <- length(blocklist)
+    iteration <- iteration + 1
+  }
+  
+  
+  if(length(target_coverage)>0){
+    
+    blocklists[[current_iteration]] <- blocklist
+    t <- coverage_test(blocklist, indi, type="snp")
+    coverage_results[current_iteration] <- mean(t)
+    prev_cov <- coverage_results[coverage_results>0]
+    prev_block <- min_majorblock_count[min_majorblock_count>0]
+    if(min(prev_cov) > target_coverage){
+      min_majorblock_count[current_iteration + 1] <- max(max(prev_block)*2, max(prev_block)+min_step_size)
+    } else if(max(prev_cov) < target_coverage){
+      min_majorblock_count[current_iteration + 1] <- max(min(ceiling(min(prev_block)/2), min(prev_block) - min_step_size),1)
+    } else{
+      if(current_iteration==1){
+        stop_iteration <- TRUE
+      } else{
+        pos <- ((prev_cov-target_coverage)>0) * (1:length(prev_cov))
+        neg <- ((prev_cov-target_coverage)<0) * (1:length(prev_cov))
+        if(FALSE){
+          ordering <- sort(abs(prev_cov-target_coverage), index.return=TRUE)$ix
+          neg <- base::intersect(ordering, neg)
+          pos <- base::intersect(ordering, pos)
+          min_majorblock_count[current_iteration + 1] <- ceiling(mean(prev_block[c(pos[1], neg[1])]))
+        } else{
+          min_majorblock_count[current_iteration +1 ] <- ceiling(mean(c(min(prev_block[neg]), max(prev_block[pos]))))
+        }
+        
+        
+      }
+      
+    }
+    print(paste("Finish Target_Coverage Iteration", current_iteration))
+    print(paste("Used min_majorblock:", min_majorblock_count[current_iteration]))
+    print(paste("Achieved Coverage:", coverage_results[current_iteration]))
+    if(current_iteration<max_iteration){
+      print(paste("Start next iteration using min_majorblock:", min_majorblock_count[current_iteration+1]))
+    }
+    
+    if(abs(coverage_results[current_iteration] - target_coverage)<target_stop){
+      stop_iteration <- TRUE
+    }
+    
+    
+  }
+  current_iteration <- current_iteration + 1
+  
+}

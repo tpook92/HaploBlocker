@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563868969110.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "390903BC",
+    "lastKnownWriteTime" : 1557356133,
+    "last_content_update" : 1564644397458,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/ihh_block.R",
+    "project_path" : "R/ihh_block.R",
+    "properties" : {
+        "cursorPosition" : "0,45",
+        "scrollLine" : "0",
+        "tempName" : "Untitled22"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563350217415.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3425859301",
+    "id" : "C2C861E8",
+    "lastKnownWriteTime" : 1563350244,
+    "last_content_update" : 1563350244379,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/blocklist_size.R",
+    "project_path" : "R/blocklist_size.R",
+    "properties" : {
+        "cursorPosition" : "10,20",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 33,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

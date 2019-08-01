@@ -1,0 +1,117 @@
+library(RandomFieldsUtils)
+library(HaploBlocker)
+
+##Loading data
+load(file="C:/Users/pook/Desktop/Haploblocker/gp_DV.Rdata")
+
+## Subgrouping
+Subgroups <- list(1:873,1:471,472:873)
+
+#Error in blocklist[[index + first_block - 1]] : subscript out of bounds
+##Examples
+dhm <- t(gpimp2$geno[,139316:197199])
+Chr3 <- block_calculation(dhm ,subgroups= Subgroups,
+                          min_per_subgroup=20)
+Chr5 <- block_calculation(t(gpimp2$geno)[253800:311816,],subgroups= Subgroups,
+                          min_per_subgroup=5, window_size=5)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(5,10,20,50,100))
+Chr7 <- block_calculation(t(gpimp2$geno)[350069:391235,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(10,20,50))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###All cases in detail:
+##min_subgroup=20,40,60 for Chr 3
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                          min_per_subgroup=20)
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                           min_per_subgroup=40)
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                           min_per_subgroup=60)
+
+##min_subgroup=10,20,40,60 for Chr 6
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                          min_per_subgroup=10)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=20)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=40)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=60)
+
+
+##window_size & multi_window
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=50)
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=100)
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(5,10,20,50,100))
+Chr3 <- block_calculation(t(gpimp2$geno)[139316:197199,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(10,20,50))
+
+Chr5 <- block_calculation(t(gpimp2$geno)[253800:311816,],subgroups= Subgroups,
+                          min_per_subgroup=5, window_size=5)
+Chr5 <- block_calculation(t(gpimp2$geno)[253800:311816,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=50)
+Chr5 <- block_calculation(t(gpimp2$geno)[253800:311816,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=100)
+Chr5 <- block_calculation(t(gpimp2$geno)[253800:311816,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(5,10,20,50,100))
+Chr5 <- block_calculation(t(gpimp2$geno)[253800:311816,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(10,20,50))
+
+
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=10)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=50)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size=100)
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(5,10,20,50,100))
+Chr6 <- block_calculation(t(gpimp2$geno)[311817:350068,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(10,20,50))
+
+
+Chr7 <- block_calculation(t(gpimp2$geno)[350069:391235,],subgroups= Subgroups,
+                          min_per_subgroup=5, window_size = 5)
+Chr7 <- block_calculation(t(gpimp2$geno)[350069:391235,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size = 50)
+Chr7 <- block_calculation(t(gpimp2$geno)[350069:391235,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size = 100)
+Chr7 <- block_calculation(t(gpimp2$geno)[350069:391235,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(5,10,20,50,100))
+Chr7 <- block_calculation(t(gpimp2$geno)[350069:391235,],subgroups= Subgroups,
+                           min_per_subgroup=5, multi_window= TRUE,
+                           window_size=c(10,20,50))
+
+
+Chr10 <- block_calculation(t(gpimp2$geno)[468358:501124,],subgroups= Subgroups,
+                           min_per_subgroup=5, window_size = 5)
+Chr10 <- block_calculation(t(gpimp2$geno)[468358:501124,],subgroups= Subgroups,
+                            min_per_subgroup=5, multi_window= TRUE,
+                            window_size=c(5,10,20,50,100))
+

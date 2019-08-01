@@ -1,0 +1,5 @@
+data = data[[index]]; indi; nwindow[index]; min_share[index]; edge_min=edge_min; subgroups=subgroups;
+consider_nodes=consider_nodes; consider_edge=consider_edge; min_per_subgroup=min_per_subgroup;
+subgroup_exception=subgroup_exception;
+intersect_func=intersect_func; consider_multi=consider_multi; multi_min=multi_min;
+double_share=double_share; node_min=node_min

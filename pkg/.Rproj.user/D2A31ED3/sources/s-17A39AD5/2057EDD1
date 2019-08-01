@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562685640629.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1637096034",
+    "id" : "2057EDD1",
+    "lastKnownWriteTime" : 1524216569,
+    "last_content_update" : 1524216569,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/dataset_filter.R",
+    "project_path" : "R/dataset_filter.R",
+    "properties" : {
+    },
+    "relative_order" : 26,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

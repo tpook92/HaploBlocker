@@ -1,0 +1,1 @@
+a <- read.table("C:/Users/pook/Desktop/KE_chromo10.txt")

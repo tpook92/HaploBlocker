@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1564647406666.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "4A29A147",
+    "lastKnownWriteTime" : 1562680204,
+    "last_content_update" : 1562680204,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/block_windowdataset.R",
+    "project_path" : "R/block_windowdataset.R",
+    "properties" : {
+        "cursorPosition" : "188,2",
+        "scrollLine" : "0",
+        "tempName" : "Untitled26"
+    },
+    "relative_order" : 38,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

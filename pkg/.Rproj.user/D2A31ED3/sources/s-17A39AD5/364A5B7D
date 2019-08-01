@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557745282839.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4086839712",
+    "id" : "364A5B7D",
+    "lastKnownWriteTime" : 1557745351,
+    "last_content_update" : 1557745351376,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/plot_block.R",
+    "project_path" : "R/plot_block.R",
+    "properties" : {
+        "cursorPosition" : "19,34",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 22,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

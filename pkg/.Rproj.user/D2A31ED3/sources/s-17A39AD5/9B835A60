@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563349883200.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3758517485",
+    "id" : "9B835A60",
+    "lastKnownWriteTime" : 1552918759,
+    "last_content_update" : 1552918759,
+    "path" : "C:/Users/pook/Desktop/R-Stuff/HaploBlocker/R/identify_blocks.R",
+    "project_path" : "R/identify_blocks.R",
+    "properties" : {
+        "cursorPosition" : "47,28",
+        "scrollLine" : "19"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
