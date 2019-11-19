@@ -72,6 +72,7 @@
 #' @param min_reduction_neglet Minimum number of nodes reduction to continue NN, SM, SG, SM cycle (default: -Inf, till fixation)
 #' @param early_remove Remove Nodes with little number of haplotypes before SM, SG cycle (default: FALSE)
 #' @param node_min_early Minimum number of haplotypes per node before SM, SG cycle (default: NULL)
+#' @param overlap_remove If set to TRUE the obtained Haplotype Library will have no overlapping blocks.
 #' @export
 #'
 
@@ -107,7 +108,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                               min_reduction_neglet=-Inf,
                               parallel_window=Inf,
                               window_overlap=0,
-                              window_cores=1){
+                              window_cores=1, overlap_remove=FALSE){
 
   if(adaptive_mode==TRUE){
     multi_window_mode <- TRUE
@@ -133,6 +134,9 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     ncluster <- 1
   }
 
+  if(length(bp_map)>0){
+    bp_map <- as.numeric(bp_map)
+  }
   if(length(dhm)==1){
     data_type <- substr(dhm, start= nchar(dhm)-2, stop= nchar(dhm))
     if(data_type=="vcf"){
@@ -304,7 +308,9 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
   }
 
   if(prefilter==TRUE){
-    dhm <- dataset_filter(dhm, maf, equal_remove)
+    dhm_1 <- dataset_filter(dhm, maf, equal_remove, bp_map=bp_map)
+    dhm <- dhm_1[[1]]
+    bp_map <- dhm_1[[2]]
   }
 
   if(recoding==TRUE){
@@ -642,6 +648,19 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
       }
 
+
+    }
+
+    if(overlap_remove){
+
+      cat("Start_Overlap_removal:\n")
+      t <- coverage_test(blocklist, type="window")
+      t1 <- coverage_test(blocklist, type="window", max=100)
+      cat(paste0("Before: ", length(blocklist), " Blocks, ", round(100* mean(t), digit=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digit=2)," % Overlapping segments.\n"))
+      blocklist <- overlap_removal(blocklist, data)
+      t <- coverage_test(blocklist, type="window")
+      t1 <- coverage_test(blocklist, type="window", max=100)
+      cat(paste0("After: ", length(blocklist), " Blocks, ", round(100* mean(t), digit=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digit=2)," % Overlapping segments.\n"))
 
     }
 

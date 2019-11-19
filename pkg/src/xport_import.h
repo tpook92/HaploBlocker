@@ -32,8 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   CALL(getUtilsParam);				\
   CALL(attachRFoptions);			\
   CALL(detachRFoptions);			\
-  CALL(scalarX);               \
-  CALL(relaxUnknownRFoption)
+  CALL(scalarX)
 
 #ifdef CALL
 #undef CALL

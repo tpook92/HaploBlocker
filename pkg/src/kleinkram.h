@@ -129,7 +129,9 @@ double x_UxPz(double *x, double *U, double *z, int dim);
 double xUx(double *x, double *U, int dim);
 void matmult(double *A, double *B, double *C, int l, int m, int n);
 void matmulttransposed(double *A, double *B, double *C, int m, int l, int n);
+//void matmulttransposedInt(int *A, int *B, int *c, int m, int l, int n); 
 void matmult_2ndtransp(double *A, double *B, double *C, int m, int l, int n);
+void matmult_2ndtransp(double *A, double *B, double *C, int m, int l);
 void matmult_tt(double *A, double *B, double *C, int m, int l, int n);
 double *matrixmult(double *m1, double *m2, int dim1, int dim2, int dim3);
 
@@ -165,7 +167,7 @@ int GetName(SEXP el, char *name, const char * List[], int n,
 double scalar(double *A, double *B, int N);
 double ownround(double x);
 
-#define Mod(ZZ, modulus) ((ZZ) - FLOOR((ZZ) / (modulus)) * (modulus))
+#define Mod(Z, modulus) ((Z) - FLOOR((Z) / (modulus)) * (modulus))
 double lonmod(double x, double modulus); 
 
 /*

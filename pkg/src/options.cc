@@ -132,6 +132,3 @@ void detachRFoptionsHaploBlocker() {
   Ext_detachRFoptions(prefixlist, prefixN);
 }
 
-void RelaxUnknownRFoption(int *RELAX) {
-  Ext_relaxUnknownRFoption((bool) *RELAX);
-}

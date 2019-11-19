@@ -14,14 +14,15 @@
 #' @param blocklist block-dataset
 #' @param add_sort If FALSE deactivate sorting haplotype for local similarity
 #' @param xlim X-axis boundaries of positions to include in the plot
+#' @param n_colors Number of different colors used for visualization (without package RColorBrewer limited to 8)
 #' @export
 
 
 plot_block <- function(blocklist, type="snp", orientation="snp", include=TRUE, indi=NULL, min_to_plot = 5,
-                      intensity=0.5, add_sort=TRUE, max_step=500,
+                      intensity=0.7, add_sort=TRUE, max_step=500,
                       snp_ori=NULL,
                       export_order=FALSE, import_order=FALSE,
-                      xlim=NULL){
+                      xlim=NULL, n_colors=20){
 
   if(length(indi)==0){
     indi <- indi_calc(blocklist)
@@ -144,16 +145,31 @@ plot_block <- function(blocklist, type="snp", orientation="snp", include=TRUE, i
   }
 
 
+  if(requireNamespace("RColorBrewer")){
+    qual_col_pals = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category == 'qual',]
+    col_vector = unlist(mapply(RColorBrewer::brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+    used_color <- sample(col_vector, n_colors)
+  } else{
+    used_color <- 1:8
+    n_colors <- 8
+  }
+
+
   activ_colors <- numeric(length(blocklist))
   for(index in 1:length(blocklist)){
     overlap <- duplicated(c(blocklist[[index]][[6]], order))[-(1:blocklist[[index]][[5]])]
     if(sum(overlap) >= min_to_plot){
       taken <- base::intersect(which(se[,1]<=se[index,2]), which(se[,2]>=se[index,1]))
       block_color <- sort(unique(c(0,activ_colors[taken])))
-      activ_colors[index] <- min(length(block_color),which(block_color!=(1:length(block_color)-1))-1)
+      if(length(block_color)>1 && length(block_color)<=n_colors){
+        activ_colors[index] <- sample((1:n_colors)[-block_color],1)
+      } else{
+        activ_colors[index] <- sample((1:n_colors),1)
+      }
+
       for(index2 in which(overlap)){
         polygon(c(se[index,1], se[index,2], se[index,2], se[index,1]), index2-c(1,1,0,0),
-                col=adjustcolor(activ_colors[index],alpha.f=intensity), lty=0)
+                col=adjustcolor(used_color[activ_colors[index]],alpha.f=intensity), lty=0)
       }
     }
   }

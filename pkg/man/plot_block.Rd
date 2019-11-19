@@ -5,9 +5,10 @@
 \title{Plot Block_structure}
 \usage{
 plot_block(blocklist, type = "snp", orientation = "snp",
-  include = TRUE, indi = NULL, min_to_plot = 5, intensity = 0.5,
+  include = TRUE, indi = NULL, min_to_plot = 5, intensity = 0.7,
   add_sort = TRUE, max_step = 500, snp_ori = NULL,
-  export_order = FALSE, import_order = FALSE, xlim = NULL)
+  export_order = FALSE, import_order = FALSE, xlim = NULL,
+  n_colors = 20)
 }
 \arguments{
 \item{blocklist}{block-dataset}
@@ -35,6 +36,8 @@ plot_block(blocklist, type = "snp", orientation = "snp",
 \item{import_order}{Import a given haplotype order}
 
 \item{xlim}{X-axis boundaries of positions to include in the plot}
+
+\item{n_colors}{Number of different colors used for visualization (without package RColorBrewer limited to 8)}
 }
 \description{
 Function to create a graphical representation of the blocklist

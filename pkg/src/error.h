@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef miraculix_error_H
 #define miraculix_error_H 1
 
-
 #include <General_utils.h>
 //#include "error.h"
 

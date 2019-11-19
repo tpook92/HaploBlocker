@@ -4,9 +4,10 @@
 #' @param dhm haploid SNP-dataset
 #' @param maf Minimum minor allel frequency in prefilter (default: 0.05)
 #' @param equal_remove If TRUE filter out SNPs in perfect correlation to the next SNP (default: FALSE)
+#' @param bp_map X
 #' @export
 
-dataset_filter <- function(dhm, maf=0.05, equal_remove=FALSE){
+dataset_filter <- function(dhm, maf=0.05, equal_remove=FALSE, bp_map=NULL){
   maf1 <- numeric(nrow(dhm))
   for(index in 1:length(maf1)){
     maf1[index] <- sum(dhm[index,]==dhm[index,1])
@@ -18,6 +19,7 @@ dataset_filter <- function(dhm, maf=0.05, equal_remove=FALSE){
   if(length(removes)>0){
     dhm <- dhm[-removes,]
     maf1 <- maf1[-removes]
+    bp_map <- bp_map[-removes]
   }
   removes2 <- NULL
   if(equal_remove==TRUE){
@@ -36,6 +38,7 @@ dataset_filter <- function(dhm, maf=0.05, equal_remove=FALSE){
     }
     dhm <- dhm[-removes2,]
     maf1 <- maf1[-removes2]
+    bp_map <- bp_map[-removes2]
   }
-  return(dhm)
+  return(list(dhm, bp_map))
 }

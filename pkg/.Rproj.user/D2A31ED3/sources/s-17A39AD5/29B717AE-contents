@@ -1,1 +1,0 @@
-write.table(file="C:/Users/pook/Desktop/KE_chromo10.txt", data, row.names = FALSE, col.names = FALSE)

@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //  #define LANDSLIDE 1
 //#include "chb.h"
-#include <inttypes.h> // uintptr_t
+// #include <inttypes.h> // uintptr_t
 #include "chaploblocker.h"
 #include "zzz_CHaploblocker.h"
 #include <R_ext/Rdynload.h>
@@ -290,7 +290,6 @@ void codeInner(SEXP M, Uint nrow, Uint ncol, Uint start, Uint *code, bool sXi
 #define EQULOCAL !STRNCMP(CHAR(STRING_ELT(M, idx)), pcodes[l + n * ncodes], MaxChar) || !STRNCMP(ANY[0], pcodes[l + n * ncodes], MaxChar); //if (ncol==1 || true) { printf("nr=%d l=%d %s %s idx=%d\n", n, l, CHAR(STRING_ELT(M, idx)), pcodes[l + n * ncodes], l + n * ncodes); }
 
   if (TYPEOF(M) == REALSXP) {
-    //    printf("%lu %lu", (uintptr_t) codes, (uintptr_t) strcodes);
     ENSURE(codes);
     double *m = REAL(M);
       if (sXi) LOOP(m[idx] == codes[l], ncol, nrow, codenrow, 1, nrow, codenrow,
@@ -360,7 +359,6 @@ SEXP codeSNPs(SEXP M, SEXP Start, SEXP RedoCoding, SEXP SNPxINDIV) {
     codencol = ncol;
     if (coding_type == local && LOGICAL(RedoCoding)[0] &&
 	(strcodes == NULL || ncol > 1)) {
-      //printf("redoing %lu, %d\n", (uintptr_t) codes, ncol);
       if (TYPEOF(M) != STRSXP) ERR("'redo = TRUE' (currently) only allowd for string valued matrices. If the option 'redo = TRUE' is needed for integer values matrices please contact the author.");
       //if (ncol == 1) ERR("'redo = TRUE', but a single SNP sequence is given");
       if (start != 0) ERR("recoding must start from the beginning (start=0).");
@@ -429,7 +427,6 @@ SEXP decodeSNPs(SEXP CM) {
 					      snpxind ? codencol : size));
   else PROTECT(Ans = allocVector(type, size));
 
-  //  printf("%lu %lu\n", (uintptr_t) codes,  (uintptr_t) strcodes);
   if (coding_type == numeric) { ENSURE(codes); } else {  ENSURE(strcodes); }
 
   for (Uint nc = 0; nc < endnc; nc++) {
