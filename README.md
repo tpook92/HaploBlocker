@@ -2,13 +2,23 @@
 R-package: Calculation of haplotype blocks and libraries
 
 This is the github repository for your R-package HaploBlocker. 
-A paper on HaploBlocker has been published in Genetics (https://www.genetics.org/content/early/2019/05/31/genetics.119.302283)
+A paper on HaploBlocker has been published in Genetics (https://www.genetics.org/content/212/4/1045)
+
+The newest release 1.5.2 is mostly adding an optional modus to identify non-overlapping blocks. Outputs on defaults should be the same. The newest version of HaploBlocker is using RandomFieldsUtils 0.5.9 (This is more than what is available on CRAN!). 1.4.X and below is using RandomFieldsUtils 0.5.3.
 
 For further questions (torsten.pook@uni-goettingen.de)
 
 For explanation on the usage we refer to our user manual. The wiki is currently not equivilant (https://github.com/tpook92/HaploBlocker/wiki) - its just a couple of figure and not top priority as the user manual (Guidelines_to_HaploBlocker) should do.
 
 ## Version history
+
+### Version 1.5.2
+
+Added the option to identify non-overlapping haplotype blocks (overlap_remove = FALSE in block_calculation() )
+
+Minor improvments to block_windowdataset()
+
+Hotfixes in plot_block, block_calculation when providing base-pair info
 
 ### Version 1.4.8
 
