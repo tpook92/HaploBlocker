@@ -13,7 +13,7 @@
 #' @export
 
 blockinfo_biggest <- function(blocklist, nwindow=NULL, indi=NULL, type="window", min_majorblock=5000, weighting_length=1, weighting_size=1,
-                              recalculate_biggest=TRUE, window_size){
+                              recalculate_biggest=TRUE, window_size, deletion_count=FALSE, present_data=NULL){
   if(length(unique(window_size))!=1){
     type <- "snp"
   } else{
@@ -30,6 +30,13 @@ blockinfo_biggest <- function(blocklist, nwindow=NULL, indi=NULL, type="window",
 
   se <- blocklist_startend(blocklist, type=type)
   sel <- se[,2]-se[,1]+1
+
+  if(deletion_count){
+    for(index in 1:length(blocklist)){
+      sel[index] <- sum(blocklist[[index]][[7]]$snp!=0) / window_size[1]
+    }
+  }
+
   size <- blocklist_size(blocklist)
   major_rating <- sel ^ weighting_length * size ^ weighting_size
   order <- sort(major_rating, index.return=TRUE)$ix
@@ -50,7 +57,13 @@ blockinfo_biggest <- function(blocklist, nwindow=NULL, indi=NULL, type="window",
   for(index in 1:length(count)){
     if(recalculate_biggest || length(blocklist[[index]])<11 || length(blocklist[[index]][[11]])==0 || blocklist[[index]][[11]] < min_majorblock){
       if(type=="window"){
-        count[index] <- sum(bdataset[blocklist[[index]][[6]],blocklist[[index]][[2]]$window:blocklist[[index]][[3]]$window]==index)
+        if(deletion_count){
+          count[index] <- sum((bdataset[blocklist[[index]][[6]],blocklist[[index]][[2]]$window:blocklist[[index]][[3]]$window]==index)*
+                                present_data[blocklist[[index]][[6]], blocklist[[index]][[2]]$window:blocklist[[index]][[3]]$window])
+        } else{
+          count[index] <- sum(bdataset[blocklist[[index]][[6]],blocklist[[index]][[2]]$window:blocklist[[index]][[3]]$window]==index)
+        }
+
       } else{
         count[index] <- sum(bdataset[blocklist[[index]][[6]],blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp]==index)
       }

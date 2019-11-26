@@ -6,7 +6,8 @@
 \usage{
 blockinfo_biggest(blocklist, nwindow = NULL, indi = NULL,
   type = "window", min_majorblock = 5000, weighting_length = 1,
-  weighting_size = 1, recalculate_biggest = TRUE, window_size)
+  weighting_size = 1, recalculate_biggest = TRUE, window_size,
+  deletion_count = FALSE, present_data = NULL)
 }
 \arguments{
 \item{blocklist}{block-dataset}

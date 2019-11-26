@@ -73,6 +73,7 @@
 #' @param early_remove Remove Nodes with little number of haplotypes before SM, SG cycle (default: FALSE)
 #' @param node_min_early Minimum number of haplotypes per node before SM, SG cycle (default: NULL)
 #' @param overlap_remove If set to TRUE the obtained Haplotype Library will have no overlapping blocks.
+#' @param deletion_count If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions
 #' @export
 #'
 
@@ -108,7 +109,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                               min_reduction_neglet=-Inf,
                               parallel_window=Inf,
                               window_overlap=0,
-                              window_cores=1, overlap_remove=FALSE){
+                              window_cores=1, overlap_remove=FALSE,
+                              deletion_count=FALSE){
 
   if(adaptive_mode==TRUE){
     multi_window_mode <- TRUE
@@ -262,7 +264,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     if(window_overlap>0){
       blocklist <- blocklist_reorder(blocklist, node_min)
       blocklist <- blockinfo_biggest(blocklist, min_majorblock=min_majorblock, weighting_length=weighting_length, weighting_size=weighting_size,
-                                     recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                     recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                     deletion_count=deletion_count, present_data=present_data)
 
     }
 
@@ -420,6 +423,15 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                                                   double_share=double_share, node_min=node_min)
   }
 
+  present_data <- matrix(1, nrow=indi, ncol = nwindow)
+  if(deletion_count){
+    for(index in 1:length(blockinfo[[1]])){
+      for(index2 in 1:length(blockinfo[[1]][[index]][[6]])){
+        present_data[blockinfo[[1]][[index]][[5]][[index2]], index] <- mean(blockinfo[[1]][[index]][[6]][[index2]]!=0)
+      }
+    }
+  }
+
   blocklist <- list()
   for(index in 1:ncluster){
     if(length(partial_blocklist[[index]])>0){
@@ -429,6 +441,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       }
     }
   }
+
+
 
   # STRINGENZ ZU DATASET (ncol/nrow)
 
@@ -472,10 +486,12 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
         if(min_majorblock_steps>1){
           blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock,
                                          weighting_length=weighting_length, weighting_size=weighting_size,
-                                         recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                         recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                         deletion_count=deletion_count, present_data=present_data)
         } else{
           blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min_majorblock, weighting_length=weighting_length, weighting_size=weighting_size,
-                                         recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                         recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                         deletion_count=deletion_count, present_data=present_data)
         }
         if(length(blocklist)==0){
 
@@ -537,11 +553,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
         if(min_majorblock_steps>1){
           blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock,
                                          weighting_length=weighting_length, weighting_size=weighting_size,
-                                         recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                         recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                         deletion_count=deletion_count, present_data=present_data)
         } else{
           blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min_majorblock,
                                          weighting_length=weighting_length, weighting_size=weighting_size,
-                                         recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                         recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                         deletion_count=deletion_count, present_data=present_data)
         }
 
         helper <- blocklist_startend(blocklist, type="snp")
@@ -586,10 +604,12 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
           if(min_majorblock_steps>1){
             blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock,
                                            weighting_length=weighting_length, weighting_size=weighting_size,
-                                           recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                           recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                           deletion_count=deletion_count, present_data=present_data)
           } else{
             blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min_majorblock, weighting_length=weighting_length, weighting_size=weighting_size,
-                                           recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                           recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                           deletion_count=deletion_count, present_data=present_data)
           }
         }
         helper <- blocklist_startend(blocklist, type="snp")
@@ -624,11 +644,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
           if(min_majorblock_steps>1){
             blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock,
                                            weighting_length=weighting_length, weighting_size=weighting_size,
-                                           recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                           recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                           deletion_count=deletion_count, present_data=present_data)
           } else{
             blocklist <- blockinfo_biggest(blocklist, nwindow, indi, min_majorblock=min_majorblock,
                                            weighting_length=weighting_length, weighting_size=weighting_size,
-                                           recalculate_biggest=recalculate_biggest, window_size=window_size)
+                                           recalculate_biggest=recalculate_biggest, window_size=window_size,
+                                           deletion_count=deletion_count, present_data=present_data)
           }
 
           if(length(blocklist)==0){
@@ -650,6 +672,9 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
 
     }
+
+
+
 
     if(overlap_remove){
 
@@ -725,6 +750,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     blocklist <- major_snp_calculation(blocklist, dhm, recoding=recoding)
   }
 
+
+
   if(!developer_mode){
     if(big_output){
       long_blocklist <- blocklist
@@ -738,11 +765,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     }
   }
 
+
+
   # Leere Blöcke - wesentlich kleinere Blöcke nicht direkt entfernen sondern verkleinerte versionen behalten.
   if(big_output && developer_mode){
     return(list(blocklist, dataset, data, blockinfo, indi, nwindow))
   } else if(big_output){
-    return(list(blocklist, dataset, data, blockinfo, indi, nwindow, long_blocklist))
+    return(list(blocklist, dataset, data, blockinfo, indi, nwindow, long_blocklist, present_data))
   } else{
     return(blocklist)
   }

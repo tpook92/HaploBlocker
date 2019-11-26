@@ -30,7 +30,8 @@ block_calculation(dhm, window_sequence = NULL, window_size = 20,
   developer_mode = FALSE, double_share = 1, early_remove = FALSE,
   node_min_early = NULL, min_reduction_cross = -Inf,
   min_reduction_neglet = -Inf, parallel_window = Inf,
-  window_overlap = 0, window_cores = 1, overlap_remove = FALSE)
+  window_overlap = 0, window_cores = 1, overlap_remove = FALSE,
+  deletion_count = FALSE)
 }
 \arguments{
 \item{dhm}{haploid SNP-dataset}
@@ -176,6 +177,8 @@ block_calculation(dhm, window_sequence = NULL, window_size = 20,
 \item{window_cores}{Number of cores to use in parallel mode (default: 1)}
 
 \item{overlap_remove}{If set to TRUE the obtained Haplotype Library will have no overlapping blocks.}
+
+\item{deletion_count}{If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions}
 }
 \description{
 Function to generate haplotype blocks from haploid data
