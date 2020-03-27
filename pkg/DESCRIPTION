@@ -1,7 +1,7 @@
 Package: HaploBlocker
 Type: Package
 Title: HaploBlocker
-Version: 1.5.6
+Version: 1.5.8
 Author: Torsten Pook[aut, cre], Martin Schlather[aut]
 Maintainer: Torsten Pook <torsten.pook@uni-goettingen.de>
 Description: Creation of Haplotype Libraries/Blocks for DHs and highly inbreed lines.
@@ -14,4 +14,4 @@ LazyData: true
 RoxygenNote: 6.1.1
 URL: http://www.uni-goettingen.de/de/92842.html
 NeedsCompilation: yes
-Packaged: 2018-11-14 12:27:28 UTC; schlather
+Packaged: 2020-03-27 12:27:28 UTC
