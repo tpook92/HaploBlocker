@@ -14,7 +14,7 @@ For explanation on the usage we refer to our user manual. The wiki is currently 
 
 ### Version 1.5.2
 
-Added the option to identify non-overlapping haplotype blocks (overlap_remove = FALSE in block_calculation() )
+Added the option to identify non-overlapping haplotype blocks (overlap_remove = TRUE in block_calculation() )
 
 Minor improvments to block_windowdataset()
 
