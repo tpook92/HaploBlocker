@@ -37,6 +37,7 @@ identify_blocks <- function(data, indi, nwindow, min_share=0.95, consider_nodes=
     identify_subgroups <- subgroups
   }
   for(start in 1:length(data)){
+
     options <- list()
     if(consider_nodes==TRUE){
       if(nrow(data[[start]][[7]])>1 || (nrow(data[[start]][[7]])==1 && data[[start]][[7]][1,1]==0) || (nrow(data[[start]][[7]])==1 && nrow(data[[data[[start]][[7]][1,1]]][[6]])>=2)){

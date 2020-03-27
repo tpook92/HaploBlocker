@@ -1,0 +1,52 @@
+* installing *source* package 'HaploBlocker' ...
+** using staged installation
+** libs
+
+*** arch - i386
+C:/Rtools/mingw_32/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c chaploblocker.cc -o chaploblocker.o
+C:/Rtools/mingw_32/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c initNerror.cc -o initNerror.o
+C:/Rtools/mingw_32/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c kleinkram.cc -o kleinkram.o
+C:/Rtools/mingw_32/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c options.cc -o options.o
+C:/Rtools/mingw_32/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c xport_import.cc -o xport_import.o
+C:/Rtools/mingw_32/bin/gcc  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"        -O3 -Wall  -std=gnu99 -mtune=generic -c zzz.c -o zzz.o
+C:/Rtools/mingw_32/bin/g++ -shared -s -static-libgcc -o HaploBlocker.dll tmp.def chaploblocker.o initNerror.o kleinkram.o options.o xport_import.o zzz.o -fopenmp -LC:/Users/pook/DOCUME~1/R/R-36~1.0/bin/i386 -lRlapack -LC:/Users/pook/DOCUME~1/R/R-36~1.0/bin/i386 -lRblas -lgfortran -lm -lquadmath -LC:/Users/pook/DOCUME~1/R/R-36~1.0/bin/i386 -lR
+Warnmeldungen:
+1: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+2: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+3: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+4: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+5: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+6: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+installing to C:/Users/pook/Documents/GitHub/HaploBlocker/HaploBlocker.Rcheck/00LOCK-HAPLOB~1/00new/HaploBlocker/libs/i386
+
+*** arch - x64
+C:/Rtools/mingw_64/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c chaploblocker.cc -o chaploblocker.o
+C:/Rtools/mingw_64/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c initNerror.cc -o initNerror.o
+C:/Rtools/mingw_64/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c kleinkram.cc -o kleinkram.o
+C:/Rtools/mingw_64/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c options.cc -o options.o
+C:/Rtools/mingw_64/bin/g++  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"     -fopenmp   -O2 -Wall  -mtune=generic -c xport_import.cc -o xport_import.o
+C:/Rtools/mingw_64/bin/gcc  -I"C:/Users/pook/DOCUME~1/R/R-36~1.0/include" -DNDEBUG  -I"C:/Users/pook/Documents/R/R-3.6.0/library/RandomFieldsUtils/include"        -O2 -Wall  -std=gnu99 -mtune=generic -c zzz.c -o zzz.o
+C:/Rtools/mingw_64/bin/g++ -shared -s -static-libgcc -o HaploBlocker.dll tmp.def chaploblocker.o initNerror.o kleinkram.o options.o xport_import.o zzz.o -fopenmp -LC:/Users/pook/DOCUME~1/R/R-36~1.0/bin/x64 -lRlapack -LC:/Users/pook/DOCUME~1/R/R-36~1.0/bin/x64 -lRblas -lgfortran -lm -lquadmath -LC:/Users/pook/DOCUME~1/R/R-36~1.0/bin/x64 -lR
+Warnmeldungen:
+1: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+2: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+3: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+4: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+5: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+6: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+installing to C:/Users/pook/Documents/GitHub/HaploBlocker/HaploBlocker.Rcheck/00LOCK-HAPLOB~1/00new/HaploBlocker/libs/x64
+** R
+** data
+*** moving datasets to lazyload DB
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+*** arch - i386
+*** arch - x64
+** testing if installed package can be loaded from final location
+*** arch - i386
+*** arch - x64
+** testing if installed package keeps a record of temporary installation path
+* DONE (HaploBlocker)

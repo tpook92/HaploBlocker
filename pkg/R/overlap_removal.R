@@ -3,10 +3,11 @@
 #' Function to remove overlapping block segments
 #' @param blocklist blocklist
 #' @param data window cluster (third output in block_calculation when big_output is set to TRUE)
+#' @param node_min minimum number of haplotypes per block (default: 5)
 #' @export
 #'
 
-overlap_removal <- function(blocklist=NULL, data=NULL){
+overlap_removal <- function(blocklist=NULL, data=NULL, node_min=5){
 
   ## Remove all some SNP-extensions
   for(index in 1:length(blocklist)){
@@ -184,6 +185,11 @@ overlap_removal <- function(blocklist=NULL, data=NULL){
   blocklist <- NULL
   for(index in 1:length(old_blocklist)){
     blocklist[[index]] <- old_blocklist[[new_order[index]]]
+  }
+
+  sizeb <- blocklist_size(blocklist)
+  for(index in sort(which(sizeb<node_min), decreasing=TRUE)){
+    blocklist[[index]] <- NULL
   }
   return(blocklist)
 

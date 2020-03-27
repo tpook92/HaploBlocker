@@ -4,7 +4,7 @@
 \alias{which.indi}
 \title{Which indi}
 \usage{
-which.indi(blocklist, nr, start, end)
+which.indi(blocklist, nr, start, end, se = NULL)
 }
 \arguments{
 \item{blocklist}{block-dataset}
@@ -16,5 +16,5 @@ which.indi(blocklist, nr, start, end)
 \item{end}{Upper boundary of the considered intervall}
 }
 \description{
-Function to derivde in which haplotypes are locally in the same block as a giving haplotype
+Function to derive in which haplotypes are locally in the same block as a giving haplotype
 }

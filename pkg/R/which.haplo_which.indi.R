@@ -18,17 +18,21 @@ which.block <- function(blocklist, nr){
 
 #' Which indi
 #'
-#' Function to derivde in which haplotypes are locally in the same block as a giving haplotype
+#' Function to derive in which haplotypes are locally in the same block as a giving haplotype
 #' @param blocklist block-dataset
 #' @param nr number of haplotype to analyse
 #' @param start Lower boundary of the considered intervall
 #' @param end Upper boundary of the considered intervall
 #' @export
 
-which.indi <- function(blocklist, nr, start, end){
+which.indi <- function(blocklist, nr, start, end, se=NULL){
   indis <- NULL
-  for(index in 1:length(blocklist)){
-    if(blocklist[[index]][[2]]$bp<=start && blocklist[[index]][[3]]$bp>=end && sum(blocklist[[index]][[6]]==nr)>0){
+  if(length(se)==0){
+    se <- blocklist_startend(blocklist, type="bp")
+  }
+
+  for(index in (1:length(blocklist))[se[,1]<= start & se[,2]>= end]){
+    if(sum(blocklist[[index]][[6]]==nr)>0){
       indis <- sort(unique(c(indis, blocklist[[index]][[6]])))
     }
   }

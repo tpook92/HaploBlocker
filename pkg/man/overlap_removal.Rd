@@ -4,12 +4,14 @@
 \alias{overlap_removal}
 \title{Function to remove overlapping block segments}
 \usage{
-overlap_removal(blocklist = NULL, data = NULL)
+overlap_removal(blocklist = NULL, data = NULL, node_min = 5)
 }
 \arguments{
 \item{blocklist}{blocklist}
 
 \item{data}{window cluster (third output in block_calculation when big_output is set to TRUE)}
+
+\item{node_min}{minimum number of haplotypes per block (default: 5)}
 }
 \description{
 Function to remove overlapping block segments

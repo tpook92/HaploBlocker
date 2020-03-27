@@ -74,6 +74,7 @@
 #' @param node_min_early Minimum number of haplotypes per node before SM, SG cycle (default: NULL)
 #' @param overlap_remove If set to TRUE the obtained Haplotype Library will have no overlapping blocks.
 #' @param deletion_count If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions
+#' @param na_value Number/Character variable that is coding NA (default: -9)
 #' @export
 #'
 
@@ -110,6 +111,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                               parallel_window=Inf,
                               window_overlap=0,
                               window_cores=1, overlap_remove=FALSE,
+                              na_value=(-9),
                               deletion_count=FALSE){
 
   if(adaptive_mode==TRUE){
@@ -158,13 +160,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       ped_file <- utils::read.table(dhm)
       haplo12 <- t(ped_file[,-(1:6)])
       haplo <- matrix(0, ncol = ncol(haplo12)*2, nrow=nrow(haplo12)/2)
-      for(index1 in 1:(nrow(haplo12)/2)){
+      for(index1 in 1:ncol(haplo12)){
         haplo[,index1*2+c(-1,0)] <- matrix(haplo12[,index1], ncol=2, byrow=TRUE)
       }
     } else{
       stop("Data type could not be identified. Please manually import the dataset. \n")
     }
-    storage.mode(haplo) <- "integer"
+    #storage.mode(haplo) <- "integer"
     dhm <- haplo
     cat("Data import successful. \n")
   }
@@ -236,11 +238,26 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                         early_remove=early_remove,
                         node_min_early=node_min_early,
                         min_reduction_cross=min_reduction_cross,
-                        min_reduction_neglet=min_reduction_neglet)
+                        min_reduction_neglet=min_reduction_neglet,
+                        deletion_count = deletion_count,
+                        na_value = na_value,
+                        overlap_remove = overlap_remove
+
+                        )
       return(blockl)
     }
 
-    blocklist_list <- parallel::mclapply(dhm_list, block_calculation_par, mc.cores=window_cores)
+    if(Sys.info()[['sysname']]=="Windows"){
+      doParallel::registerDoParallel(cores=window_cores)
+      blocklist_list <- foreach::foreach(index=1:length(dhm_list), .packages = "HaploBlocker") %dopar% {
+        element <- block_calculation_par(dhm_list[[index]])
+        element
+      }
+      doParallel::stopImplicitCluster()
+    } else{
+      blocklist_list <- parallel::mclapply(dhm_list, block_calculation_par, mc.cores=window_cores)
+    }
+
 
 
     # modify Start/End
@@ -261,6 +278,24 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       blocklist <- c(blocklist, blocklist_list[[index]])
     }
 
+
+    ### PRESENT DATA NEEDS TO BE RECALCULATED HERE!
+    nwindow <- nrow(dhm) / window_size
+    present_data <- matrix(0, nrow= ncol(dhm), ncol = nwindow)
+
+    if(deletion_count){
+      dhm_p <- dhm!=na_value
+      while(nrow(dhm)< window_size * nwindow){
+        dhm_p <- rbind((dhm!= na_value),0)
+      }
+
+      for(temp1 in 1:window_size){
+        present_data <- present_data + t(dhm_p[1:nwindow*window_size-temp1+1,])
+      }
+      present_data <- present_data / window_size
+    }
+
+
     if(window_overlap>0){
       blocklist <- blocklist_reorder(blocklist, node_min)
       blocklist <- blockinfo_biggest(blocklist, min_majorblock=min_majorblock, weighting_length=weighting_length, weighting_size=weighting_size,
@@ -269,7 +304,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
     }
 
-    return(blocklist)
+    if(big_output && developer_mode){
+      return(list(blocklist, NULL, NULL, NULL, NULL, NULL))
+    } else if(big_output){
+      return(list(blocklist, NULL, NULL, NULL, NULL, NULL, NULL, present_data))
+    } else{
+      return(blocklist)
+    }
 
   }
 
@@ -297,17 +338,19 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
   }
 
-  if(intersect_func){
-    intersect_func <- HaploBlocker::intersect
-  } else{
+  if(is.logical(intersect_func) && intersect_func){
+    intersect_func <- HaploBlocker::intersect_c
+  } else if(is.logical(intersect_func) && !intersect_func){
     intersect_func <- base::intersect
+  } else{
+    intersect_func <- intersect_func
   }
 
   if(is.data.frame(dhm)){
     dhm <- as.matrix(dhm)
   }
   if(sum(is.na(dhm))>0){
-    dhm[is.na(dhm)] <- 9
+    dhm[is.na(dhm)] <- na_value
   }
 
   if(prefilter==TRUE){
@@ -323,7 +366,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       for(index in 1:nrow(dhm)){
         check1 <- dhm[index,]==dhm[index,1]
         dhm[index, check1] <- "A"
-        dhm[index, -(check1)*1:indi] <- "C"
+        dhm[index, -(check1)*1:ncol(dhm)] <- "C"
       }
     }
   }
@@ -427,7 +470,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
   if(deletion_count){
     for(index in 1:length(blockinfo[[1]])){
       for(index2 in 1:length(blockinfo[[1]][[index]][[6]])){
-        present_data[blockinfo[[1]][[index]][[5]][[index2]], index] <- mean(blockinfo[[1]][[index]][[6]][[index2]]!=0)
+        present_data[blockinfo[[1]][[index]][[5]][[index2]], index] <- mean(blockinfo[[1]][[index]][[6]][[index2]]!=na_value)
       }
     }
   }
@@ -682,7 +725,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       t <- coverage_test(blocklist, type="window")
       t1 <- coverage_test(blocklist, type="window", max=100)
       cat(paste0("Before: ", length(blocklist), " Blocks, ", round(100* mean(t), digit=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digit=2)," % Overlapping segments.\n"))
-      blocklist <- overlap_removal(blocklist, data)
+      blocklist <- overlap_removal(blocklist, data, node_min=node_min)
       t <- coverage_test(blocklist, type="window")
       t1 <- coverage_test(blocklist, type="window", max=100)
       cat(paste0("After: ", length(blocklist), " Blocks, ", round(100* mean(t), digit=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digit=2)," % Overlapping segments.\n"))

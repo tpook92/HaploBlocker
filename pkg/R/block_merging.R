@@ -45,7 +45,8 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
     index2 <- 1
     npos <- length(possible)
     while(index2 < npos && delete==1){
-      if( (length(intersect_func(blocklist[[index]][[6]], blocklist[[possible[index2]]][[6]])) + off_lines) >=blocklist[[index]][[5]]){
+      overlap_blocks <- length(intersect_func(blocklist[[index]][[6]], blocklist[[possible[index2]]][[6]]))
+      if( ( overlap_blocks+ off_lines) >=blocklist[[index]][[5]] & overlap_blocks>0){
         delete <- 0
         be[index,1] <- be[index,2] <- 0
         blocklist[[index]] <- "NULL"

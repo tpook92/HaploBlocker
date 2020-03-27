@@ -1,12 +1,12 @@
-\name{intersect}
-\alias{intersect}
+\name{intersect_c}
+\alias{intersect_c}
 \title{Intersection of sets}
 \description{
   A fast implementation of R command \command{\link[base]{intersect}}
   for interger valued, sorted vectors
 }
 \usage{
-intersect(a, b)
+intersect_c(a, b)
 }
 % hidden argument: check, verbose, mass.balancing, do.plot
 \arguments{
@@ -27,13 +27,13 @@ intersect(a, b)
 \examples{
 (a <- as.integer(sort(sample(20, 6))))
 (b <- as.integer(sort(sample(20,7))))
-confirm(intersect(a,b), base::intersect(a,b))
+confirm(intersect_c(a,b), base::intersect(a,b))
 
 a <- as.integer(sort(sample(2000, 600)))
 b <- as.integer(sort(sample(2000,700)))
-confirm(intersect(a,b), base::intersect(a,b))
+confirm(intersect_c(a,b), base::intersect(a,b))
 print(system.time(for (i in 1:10^5) base::intersect(a,b)))
-print(system.time(for (i in 1:10^5) intersect(a,b))) ## factor 10 faster
+print(system.time(for (i in 1:10^5) intersect_c(a,b))) ## factor 10 faster
 
 }
 
