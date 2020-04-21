@@ -12,12 +12,13 @@
 #' @param actual_snp_weight Set weight for difference between two alleles in a SNP (more than 1 possible base pair)
 #' @param na_snp_weight Set weight for difference between NA and allele in a SNP (more than 1 possible base pair)
 #' @param na_seq_weight Set weight for difference between NA and allele a loci with 1 possible base pair
-#' @export
-
-
+#' @param verbose Set to FALSE to not display any prints
+#' @return [[1]] window-based haplotype information [[2]] window sequence
+#'
+#'
 blockinfo_calculation_na <- function(dhm, window_sequence=NULL, window_size=32, merging_error=3, bp_map=NULL,
                                   window_anchor_gens=NULL, at_least_one=TRUE, blockinfo_mode=0, actual_snp_weight = 5,
-                                  na_snp_weight=2, na_seq_weight=0){
+                                  na_snp_weight=2, na_seq_weight=0, verbose =TRUE){
 
   if(length(window_anchor_gens)>0 && length(window_sequence)==0 && length(bp_map)>0){
     window_sequence <- matrix(0, ncol=2, nrow=nrow(window_anchor_gens)*2+1)
@@ -47,7 +48,7 @@ blockinfo_calculation_na <- function(dhm, window_sequence=NULL, window_size=32, 
     window_sequence[window_sequence[,4]==0, 4] <- 1
   }
 
-  cat("Start_blockinfo_calculation\n")
+  if(verbose) cat("Start_blockinfo_calculation\n")
   blockinfo <- list()
   indi <- ncol(dhm)
   ite <- nrow(window_sequence)
@@ -58,7 +59,7 @@ blockinfo_calculation_na <- function(dhm, window_sequence=NULL, window_size=32, 
   for(index in 1:ite){
     blockinfo[[index]] <- list()
     if(ite<=25 || index%%round(ite/25.1)==0){
-      cat(".")
+      if(verbose) cat(".")
     }
     activ <- dhm[window_sequence[index,1]:window_sequence[index,2],]
     if(is.matrix(activ)==FALSE){

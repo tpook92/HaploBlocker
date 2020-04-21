@@ -7,7 +7,7 @@
 #' @param add_e additional possible previous nodes
 #' @param add_a additional possible following nodes
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
-#' @export
+#' @return window cluster node with updated transition probabilities
 
 calculate_new_transition <- function(data, nodes, nwindow, add_e= NULL, add_a= NULL, intersect_func=intersect){
   new.nodes <- data[[nodes]]

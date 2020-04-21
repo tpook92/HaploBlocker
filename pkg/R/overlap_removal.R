@@ -4,7 +4,12 @@
 #' @param blocklist blocklist
 #' @param data window cluster (third output in block_calculation when big_output is set to TRUE)
 #' @param node_min minimum number of haplotypes per block (default: 5)
+#' @examples
+#' data(ex_maze)
+#' temp1 <- block_calculation(ex_maze, big_output=TRUE)
+#' blocklist <- overlap_removal(temp1[[1]], temp1[[3]])
 #' @export
+#' @return haplotype library with no overlapping blocks
 #'
 
 overlap_removal <- function(blocklist=NULL, data=NULL, node_min=5){

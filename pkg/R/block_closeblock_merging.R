@@ -9,8 +9,9 @@
 #' @param max_diff_l maximum number of windows with different haplotypes inbetween (default: 1)
 #' @param max_diff_i maximum number of individuals in only one of the two blocks (default: 1)
 #' @param dataset dataset which variant nr. for each window
-#' @export
-
+#' @return haplotype library
+#'
+#'
 block_closeblock_merging <- function(blocklist, blockinfo,  indi, nwindow, max_diff_l, max_diff_i, intersect_func=intersect, dataset){
   same <- matrix(0, ncol=length(blocklist), nrow=length(blocklist))
 

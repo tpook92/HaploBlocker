@@ -3,7 +3,7 @@
 #' Internal Function to remove empty nodes and rename after merging
 #' @param data node-dataset
 #' @param nwindow number of windows in the dataset
-#' @export
+#' @return Updated window cluster
 
 renaming_combi <- function(data, nwindow){
   b <- nodes_size(data)

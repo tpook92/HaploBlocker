@@ -9,6 +9,13 @@ indi_calc(blocklist)
 \arguments{
 \item{blocklist}{block-dataset}
 }
+\value{
+Number of individuals considered in the haplotype library
+}
 \description{
 Function to determine number of individuals in a blocklist
+}
+\examples{
+data(blocklist_ex_maze)
+indi_calc(blocklist_ex_maze)
 }

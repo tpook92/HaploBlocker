@@ -25,6 +25,15 @@ blocklist_comparison(blocklist1, blocklist2, indi = NULL, type = "snp",
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+similarity score/matrix between the two blocklist
+}
 \description{
 Function compair different blocklists
+}
+\examples{
+data(ex_maze)
+data(blocklist_ex_maze)
+blocklist2 <- block_calculation(ex_maze, min_majorblock = 1000)
+temp1 <- blocklist_comparison(blocklist_ex_maze, blocklist2)
 }

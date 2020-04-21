@@ -16,6 +16,14 @@ block_dataset_construction(blockinfo, blocklist = NULL, indi = NULL,
 
 \item{nwindow}{number of windows in the dataset}
 }
+\value{
+Window-based dataset
+}
 \description{
 Internal Function to generate a dataset containing which variant in present in with window
+}
+\examples{
+data(ex_maze)
+temp1 <- block_calculation(ex_maze, big_output=TRUE)
+block_dataset <- block_dataset_construction(temp1[[4]][[1]], temp1[[1]])
 }

@@ -22,6 +22,9 @@ extend_block(blocklist, indi, nwindow, max_extending_diff = 1,
 
 \item{window_sequence_list}{sequence of predefined windows (default: NULL ;per row: start$snp, end$snp, length, length - merging_error, start$bp, end$bp)}
 }
+\value{
+haplotype library
+}
 \description{
 Function to add additional windows to each block
 }

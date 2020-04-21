@@ -2,7 +2,7 @@
 #'
 #' Function to determine number of differnt haplotypes per window
 #' @param blockinfo List with all relevant information to each window seperatly
-#' @export
+#' @return Number of variants in each window
 
 blockinfo_size <- function(blockinfo){
   size <- numeric(length(blockinfo))
@@ -16,7 +16,8 @@ blockinfo_size <- function(blockinfo){
 #'
 #' Function to determine number of differnt haplotypes per window (before error reduction)
 #' @param blockinfo List with all relevant information to each window seperatly
-#' @export
+#' @return Number of variants (before merging) in each window
+
 blockinfo_size0 <- function(blockinfo){
   size <- numeric(length(blockinfo))
   for(index in 1:length(blockinfo)){
@@ -31,7 +32,8 @@ blockinfo_size0 <- function(blockinfo){
 #'
 #' Function to determine the number of the same haplotype in each window
 #' @param blockinfo List with all relevant information to each window seperatly
-#' @export
+#' @return Maximum number of same variants in each window
+
 blockinfo_max <- function(blockinfo){
   size <- numeric(length(blockinfo))
   for(index in 1:length(blockinfo)){

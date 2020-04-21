@@ -4,8 +4,7 @@
 #' @param dhm haploid SNP-dataset
 #' @param blocklist blocklist created by blocklist_calculcation algorithm
 #' @param recoding If TRUE change allele coding (Major allele "A", Minor allele "C")
-#' @export
-
+#' @return haplotype library with entered allele variants / frequencies
 
 major_snp_calculation <- function(blocklist, dhm, recoding=FALSE){
 

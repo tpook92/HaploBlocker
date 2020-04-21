@@ -43,6 +43,9 @@ identify_blocks(data, indi, nwindow, min_share = 0.95,
 
 \item{node_min}{minimum number of haplotypes per block (default: 5)}
 }
+\value{
+haplotype library
+}
 \description{
 Function to identify possible blocks base on the node-dataset
 }

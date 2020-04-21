@@ -15,7 +15,11 @@
 #' @param add_sort If FALSE deactivate sorting haplotype for local similarity
 #' @param xlim X-axis boundaries of positions to include in the plot
 #' @param n_colors Number of different colors used for visualization (without package RColorBrewer limited to 8)
+#' @examples
+#' data(blocklist_ex_maze)
+#' plot_block(blocklist_ex_maze)
 #' @export
+#' @return Visualization of the haplotype library
 
 
 plot_block <- function(blocklist, type="snp", orientation="snp", include=TRUE, indi=NULL, min_to_plot = 5,

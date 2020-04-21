@@ -22,7 +22,10 @@ extend_snp(blocklist, indi, nwindow, dhm, window_sequence_list, bp_map,
 
 \item{max_extending_diff_snp}{Maximum number of SNPs with variants in SNP-extending-algorithm (step V; default: 0)}
 
-\item{extending_ratio_snp}{Minimum ratio of SNPs with only one allele to those with variants (default: Inf)#' @param off_node_addition If TRUE use off-variant-identification (default: FALSE)}
+\item{extending_ratio_snp}{Minimum ratio of SNPs with only one allele to those with variants (default: Inf)}
+}
+\value{
+haplotype library
 }
 \description{
 Function to add single SNPs to each block

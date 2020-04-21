@@ -24,6 +24,9 @@ block_closeblock_merging(blocklist, blockinfo, indi, nwindow, max_diff_l,
 
 \item{dataset}{dataset which variant nr. for each window}
 }
+\value{
+haplotype library
+}
 \description{
 Function to merging neighbouring block with similar haplotypes/allels
 }

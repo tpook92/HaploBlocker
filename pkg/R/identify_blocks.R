@@ -17,7 +17,7 @@
 #' @param multi_min minimum number of haplotypes per multi transition to use in consider_multi (default: 5)
 #' @param double_share Extended-block-identification share t
 #' @param node_min minimum number of haplotypes per block (default: 5)
-#' @export
+#' @return haplotype library
 
 identify_blocks <- function(data, indi, nwindow, min_share=0.95, consider_nodes=TRUE, consider_edge=TRUE,
                             edge_min=5, subgroups=NULL, min_per_subgroup= 0, intersect_func=intersect,

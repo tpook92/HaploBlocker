@@ -9,6 +9,9 @@ nodes_size(data)
 \arguments{
 \item{data}{node-dataset}
 }
+\value{
+size of each node in the window cluster
+}
 \description{
 Function to calculate the number of haplotypes in each node
 }

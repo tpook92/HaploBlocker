@@ -2,8 +2,7 @@
 #'
 #' Function to calculate start and end points of a node dataset
 #' @param data node-dataset
-#' @export
-
+#' @return Start/end points of window cluster nodes
 
 start_end_block <- function(data){
   n <- length(data)

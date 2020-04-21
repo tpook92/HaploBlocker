@@ -16,6 +16,13 @@ blocklist_plot_xsize(blocklist, cutoff2 = 5, bound_weighted = TRUE,
 
 \item{type}{length measure (default: "window" , alt: "snp", "bp")}
 }
+\value{
+Visualization of the haplotype block length according to frequency
+}
 \description{
 Function to plot a blocklist. Width of blocks is adjusted according to nr. of haplotypes in the block
+}
+\examples{
+data(blocklist_ex_maze)
+blocklist_plot_xsize(blocklist_ex_maze)
 }

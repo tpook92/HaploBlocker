@@ -1,9 +1,9 @@
 \name{factorSNPs}
 \alias{factorSNPs}
-\title{Determines which codes are used in a given part of a SNP sequence}
-\description{
-  tba
-}
+
+\title{Factorization of the columns of a matrix}
+\description{The functions determines which code in a given part of a SNP sequence is present in other individuals}
+
 \usage{
 factorSNPs(CM, start=1, end=attr(CM, "position")[2] + 1)
 }

@@ -4,12 +4,17 @@
 \alias{nodes_calculation}
 \title{Calculate transition probabilities between nodes}
 \usage{
-nodes_calculation(blockinfo, window_sequence)
+nodes_calculation(blockinfo, window_sequence, verbose = TRUE)
 }
 \arguments{
 \item{blockinfo}{List with all relevant information to each window seperatly}
 
 \item{window_sequence}{sequence of predefined windows (default: NULL ;per row: start$snp, end$snp, length, length - merging_error, start$bp, end$bp)}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+window cluster without transition probabilities
 }
 \description{
 Internal Function to calculate calculate a node-dataset

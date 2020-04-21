@@ -7,7 +7,7 @@
 blockinfo_calculation(dhm, window_sequence = NULL, window_size = 20,
   merging_error = 1, bp_map = NULL, window_anchor_gens = NULL,
   at_least_one = TRUE, max_groups = 0, blockinfo_mode = 0,
-  c_dhm = NULL)
+  c_dhm = NULL, verbose = TRUE)
 }
 \arguments{
 \item{dhm}{haploid SNP-dataset}
@@ -29,6 +29,11 @@ blockinfo_calculation(dhm, window_sequence = NULL, window_size = 20,
 \item{blockinfo_mode}{Structure of the groups in step I (default: 0 - Common haplos as major variants, 1- minimum number of groups)}
 
 \item{c_dhm}{Bit-wise coded SNP-dataset}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+[[1]] window-based haplotype information [[2]] window sequence
 }
 \description{
 Function to generate haplotype blocks from haploid data

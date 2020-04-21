@@ -3,7 +3,7 @@
 #' Internal Function to calculate transition probabilities between nodes
 #' @param data node-dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
-#' @export
+#' @return window cluster
 
 
 calculate_transition <- function(data, intersect_func=intersect){

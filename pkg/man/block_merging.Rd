@@ -54,6 +54,9 @@ block_merging(blocklist, blockinfo, dataset, dhm, indi, nwindow,
 
 \item{run}{Internal parameter storing the step number}
 }
+\value{
+haplotype library
+}
 \description{
 Function to merge/remove/modify blocks
 }

@@ -16,6 +16,13 @@ blocklist_plot(blocklist, cutoff2 = 5, bound_weighted = TRUE,
 
 \item{type}{length measure (default: "window" , alt: "snp", "bp")}
 }
+\value{
+Visualization of the haplotype block length
+}
 \description{
 Function to plot a blocklist
+}
+\examples{
+data(blocklist_ex_maze)
+blocklist_plot(blocklist_ex_maze)
 }

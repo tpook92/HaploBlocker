@@ -3,8 +3,9 @@
 #' Calculate upper limited of present in a blocklist (ignore possible phasing errors)
 #' @param blocklist block-dataset
 #' @param s0m dataset of diploid individuals to check
-#' @param min_similarity XXX
-#' @export
+#' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)
+#' @return Frequency estimated for each haplotype block
+#'
 
 diploid_upper <- function(blocklist, s0m, min_similarity=0.99){
   n_block <- length(blocklist)
@@ -30,9 +31,9 @@ diploid_upper <- function(blocklist, s0m, min_similarity=0.99){
 #' Calculate upper limited of present in a blocklist (ignore possible phasing errors)
 #' @param blocklist block-dataset
 #' @param s0m dataset of diploid individuals to check
-#' @param min_similarity XXX
-#' @export
-
+#' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)
+#' @return Frequency estimated for each haplotype block
+#'
 diploid_upper2 <- function(blocklist, s0m, min_similarity=0.99){
   n_block <- length(blocklist)
   max_size <- numeric(n_block)
@@ -62,8 +63,9 @@ diploid_upper2 <- function(blocklist, s0m, min_similarity=0.99){
 #' Calculate upper limited of present in a blocklist (not-ignore possible phasing errors)
 #' @param blocklist block-dataset
 #' @param s0m dataset of diploid individuals to check
-#' @param min_similarity XXX
-#' @export
+#' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)
+#' @return Frequency estimated for each haplotype block
+
 
 haploid_upper <- function(blocklist, s0m, min_similarity=0.99){
   n_block <- length(blocklist)

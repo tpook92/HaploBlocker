@@ -3,17 +3,18 @@
 #' Faster version of simple_merge_probv2 to perform simple merge for node data
 #' @param data node-dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
-#' @export
+#' @param verbose Set to FALSE to not display any prints
+#' @return window cluster
 
 
-simple_merge <- function(data, intersect_func=intersect){
-  cat(paste0("Start_simple_merge: ", length(data),"\n"))
+simple_merge <- function(data, intersect_func=intersect, verbose = TRUE){
+  if(verbose) cat(paste0("Start_simple_merge: ", length(data),"\n"))
   a <- start_end_block(data)
   relevant <- (a[,1]>1)
   relevant <- (1:nrow(a))[relevant]
   relevant <- relevant[length(relevant):1]
   prev <- Inf
-  size <- data_size(data)
+  size <- nodes_size(data)
   for(check in relevant){
     activ <- data[[check]]
     if(prev!=activ[[1]]$window){

@@ -6,7 +6,7 @@
 #' @param nwindow number of windows in the dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @param a Internal helper for a efficient abort criterion
-#' @export
+#' @return window cluster after simple-merge
 
 crossmerge <- function(data, indi, nwindow, a=NULL, intersect_func=intersect){
 

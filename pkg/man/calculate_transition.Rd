@@ -11,6 +11,9 @@ calculate_transition(data, intersect_func = intersect)
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+window cluster
+}
 \description{
 Internal Function to calculate transition probabilities between nodes
 }

@@ -7,10 +7,15 @@
 #' @param position1 Position in bp (default: 1,2,3,...)
 #' @param standardization Standardization by allele freq (0), allele freq of individuals in blocks (1), block (2), non (3)
 #' @param group List containing all individuals assign in each group to derive different scores for subgroups
+#' @param verbose Set to FALSE to not display any prints
+#' @examples
+#' data(blocklist_ex_maze)
+#' ihh_scores <- block_ihh(blocklist_ex_maze, plot=TRUE)
 #' @export
+#' @return Block-based IHH scores
 
-
-block_ihh <- function(blocklist=NULL, data=NULL, plot=FALSE, position1=NULL, standardization=3, group=NULL){
+block_ihh <- function(blocklist=NULL, data=NULL, plot=FALSE, position1=NULL, standardization=3,
+                      group=NULL, verbose = TRUE){
 
   if(length(group)==0){
     group <- list()
@@ -18,7 +23,7 @@ block_ihh <- function(blocklist=NULL, data=NULL, plot=FALSE, position1=NULL, sta
   }
   if(length(blocklist)==0){
     library(HaploBlocker)
-    blocklist <- block_calculation(data)
+    blocklist <- block_calculation(data, verbose = verbose)
   }
   if(length(position1)==0){
     position1 <- 1:max(blocklist_startend(blocklist))

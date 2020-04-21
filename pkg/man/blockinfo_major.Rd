@@ -13,6 +13,9 @@ blockinfo_major(blockinfo, dhm, window_size)
 
 \item{window_size}{size of each window in the algorithm (default: 20)}
 }
+\value{
+window-based haplotype information
+}
 \description{
 Old internal function to identify the major version of each haplotype in each window
 }

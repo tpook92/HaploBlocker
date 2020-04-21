@@ -4,7 +4,7 @@
 \alias{which.indi}
 \title{Which indi}
 \usage{
-which.indi(blocklist, nr, start, end, se = NULL)
+which.indi(blocklist, nr, start, end, se = NULL, type = "bp")
 }
 \arguments{
 \item{blocklist}{block-dataset}
@@ -14,7 +14,18 @@ which.indi(blocklist, nr, start, end, se = NULL)
 \item{start}{Lower boundary of the considered intervall}
 
 \item{end}{Upper boundary of the considered intervall}
+
+\item{se}{start/end points of blocks (blocklist_start_end() output)}
+
+\item{type}{length measure (default: "bp" , alt: "snp", "window")}
+}
+\value{
+List of haplotype that share same local haplotype blocks
 }
 \description{
 Function to derive in which haplotypes are locally in the same block as a giving haplotype
+}
+\examples{
+data(blocklist_ex_maze)
+which.indi(blocklist_ex_maze, 1, 1,1, type="window")
 }

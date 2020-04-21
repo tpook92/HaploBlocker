@@ -10,8 +10,10 @@
 #' @param weighting_size Weighting factor for number of haplotypes in block to determine major block (default: 1)
 #' @param recalculate_biggest Set to FALSE to only calculate the number of major positions for those blocks that could be removed in each iteration (number of major blocks is only increasing when removing other blocks)
 #' @param window_size size of each window in the algorithm (default: 20)
-#' @export
-
+#' @param present_data present/absense coding matrix
+#' @param deletion_count If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions
+#' @return haplotype library
+#'
 blockinfo_biggest <- function(blocklist, nwindow=NULL, indi=NULL, type="window", min_majorblock=5000, weighting_length=1, weighting_size=1,
                               recalculate_biggest=TRUE, window_size, deletion_count=FALSE, present_data=NULL){
   if(length(unique(window_size))!=1){

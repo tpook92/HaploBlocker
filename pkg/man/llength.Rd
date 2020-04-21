@@ -9,6 +9,13 @@ llength(list)
 \arguments{
 \item{list}{List}
 }
+\value{
+Length of each list element
+}
 \description{
 Function to derive the length of lists
+}
+\examples{
+data(blocklist_ex_maze)
+llength(blocklist_ex_maze)
 }

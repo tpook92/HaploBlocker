@@ -13,6 +13,14 @@ overlap_removal(blocklist = NULL, data = NULL, node_min = 5)
 
 \item{node_min}{minimum number of haplotypes per block (default: 5)}
 }
+\value{
+haplotype library with no overlapping blocks
+}
 \description{
 Function to remove overlapping block segments
+}
+\examples{
+data(ex_maze)
+temp1 <- block_calculation(ex_maze, big_output=TRUE)
+blocklist <- overlap_removal(temp1[[1]], temp1[[3]])
 }

@@ -11,6 +11,9 @@ renaming_combi(data, nwindow)
 
 \item{nwindow}{number of windows in the dataset}
 }
+\value{
+Updated window cluster
+}
 \description{
 Internal Function to remove empty nodes and rename after merging
 }

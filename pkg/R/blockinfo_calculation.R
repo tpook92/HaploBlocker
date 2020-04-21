@@ -11,12 +11,12 @@
 #' @param at_least_one If TRUE no allowed merging errors in windows of size 1
 #' @param blockinfo_mode Structure of the groups in step I (default: 0 - Common haplos as major variants, 1- minimum number of groups)
 #' @param max_groups Maximum number of groups per window (adaptive window-size, default: 0 - use fixed window size)
-#' @export
-
+#' @param verbose Set to FALSE to not display any prints
+#' @return [[1]] window-based haplotype information [[2]] window sequence
 
 blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging_error=1, bp_map=NULL,
                                   window_anchor_gens=NULL, at_least_one=TRUE, max_groups=0, blockinfo_mode=0,
-                                  c_dhm=NULL){
+                                  c_dhm=NULL, verbose=TRUE){
 
   if(length(window_anchor_gens)>0 && length(window_sequence)==0 && length(bp_map)>0){
     window_sequence <- matrix(0, ncol=2, nrow=nrow(window_anchor_gens)*2+1)
@@ -46,7 +46,7 @@ blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, mer
     window_sequence[window_sequence[,4]==0, 4] <- 1
   }
 
-  cat("Start_blockinfo_calculation\n")
+  if(verbose) cat("Start_blockinfo_calculation\n")
   blockinfo <- list()
   indi <- ncol(dhm)
   if(max_groups==0){
@@ -66,7 +66,7 @@ blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, mer
 
       blockinfo[[index]] <- list()
       if(ite<=25 || index%%round(ite/25.1)==0){
-        cat(".")
+        if(verbose) cat(".")
       }
       factor <- factorSNPs(c_dhm, window_sequence[index,1],
                            window_sequence[index,2])
@@ -165,7 +165,7 @@ blockinfo_calculation <- function(dhm, window_sequence=NULL, window_size=20, mer
     while(activ_end <= nrow(dhm)){
       possiblock <- list()
       if(ite<=25 || current_window%%round(ite/25.1)==0){
-        cat(".")
+        if(verbose) cat(".")
       }
 
 

@@ -15,6 +15,13 @@ block_plot(blocklist, indi = NULL, type = "snp", bw = 1)
 
 \item{bw}{bandwidth for the smoothing of the coverage (default: bw=1 - no smoothing)}
 }
+\value{
+Visualization of local coverages/block variation
+}
 \description{
 Function to plot the location and size of block and the resulting coverage
+}
+\examples{
+data(blocklist_ex_maze)
+block_plot(blocklist_ex_maze)
 }

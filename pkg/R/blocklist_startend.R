@@ -4,7 +4,11 @@
 #' @param blocklist block-dataset
 #' @param type length measure (default: "window" , alt: "snp", "bp")
 #' @param first_block First block to consider in the computation (default: 1)
+#' @examples
+#' data(blocklist_ex_maze)
+#' blocklist_startend(blocklist_ex_maze)
 #' @export
+#' @return start/end points of haplotype blocks
 
 blocklist_startend <- function(blocklist, type="snp", first_block=1){
   if(length(blocklist)==0){

@@ -20,6 +20,9 @@ calculate_new_transition(data, nodes, nwindow, add_e = NULL,
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+window cluster node with updated transition probabilities
+}
 \description{
 Internal Function to calculate transition probabilities for a single node
 }

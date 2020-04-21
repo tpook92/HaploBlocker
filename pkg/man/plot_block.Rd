@@ -39,6 +39,13 @@ plot_block(blocklist, type = "snp", orientation = "snp",
 
 \item{n_colors}{Number of different colors used for visualization (without package RColorBrewer limited to 8)}
 }
+\value{
+Visualization of the haplotype library
+}
 \description{
 Function to create a graphical representation of the blocklist
+}
+\examples{
+data(blocklist_ex_maze)
+plot_block(blocklist_ex_maze)
 }

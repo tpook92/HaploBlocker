@@ -27,6 +27,13 @@ blockinfo_biggest(blocklist, nwindow = NULL, indi = NULL,
 \item{recalculate_biggest}{Set to FALSE to only calculate the number of major positions for those blocks that could be removed in each iteration (number of major blocks is only increasing when removing other blocks)}
 
 \item{window_size}{size of each window in the algorithm (default: 20)}
+
+\item{deletion_count}{If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions}
+
+\item{present_data}{present/absense coding matrix}
+}
+\value{
+haplotype library
 }
 \description{
 Internal function to count positions where each block is major block

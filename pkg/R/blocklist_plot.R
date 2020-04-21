@@ -5,7 +5,11 @@
 #' @param cutoff2 minimum number of blocks to start/end to mark a recombination hotspot (default:5)
 #' @param bound_weighted weighted blocks in the detection of recombination hotspots according to size (default: TRUE)
 #' @param type length measure (default: "window" , alt: "snp", "bp")
+#' @examples
+#' data(blocklist_ex_maze)
+#' blocklist_plot(blocklist_ex_maze)
 #' @export
+#' @return Visualization of the haplotype block length
 
 
 blocklist_plot <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, type="snp" ){

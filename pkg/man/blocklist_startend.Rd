@@ -13,6 +13,13 @@ blocklist_startend(blocklist, type = "snp", first_block = 1)
 
 \item{first_block}{First block to consider in the computation (default: 1)}
 }
+\value{
+start/end points of haplotype blocks
+}
 \description{
 Function to merge/remove/modify blocks
+}
+\examples{
+data(blocklist_ex_maze)
+blocklist_startend(blocklist_ex_maze)
 }

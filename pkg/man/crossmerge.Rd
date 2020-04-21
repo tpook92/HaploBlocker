@@ -17,6 +17,9 @@ crossmerge(data, indi, nwindow, a = NULL, intersect_func = intersect)
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+window cluster after simple-merge
+}
 \description{
 Internal Function perform a cross merge for node data
 }

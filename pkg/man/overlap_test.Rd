@@ -14,7 +14,12 @@ overlap_test(blocklist, dhm, max = 1, min_similarity = 0.99)
 \item{max}{maximum number in each cell (overlapping blocks; default: 1)}
 
 \item{min_similarity}{minimum rate of the same SNPs to be added to the block (default: 0.99)
-#' @export}
+data(ex_maze)
+data(blocklist_ex_maze)
+overlap <- overlap_test(blocklist_ex_maze, ex_maze)}
+}
+\value{
+Overlap matrix
 }
 \description{
 Function to calculate the overlap of the blocks with another dataset

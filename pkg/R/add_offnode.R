@@ -10,8 +10,8 @@
 #' @param off_node_minimum_blocklength Minimum length of newly identified blocks (default: 10)
 #' @param off_node_minimum_blocksize Minimum number of individuals in newly identified blocks (default: 5)
 #' @param raster Raster-width in the identification step (default: 5; recommended to be lower than off_node_minimum_blocklength)
-#' @export
-
+#' @return haplotype library
+#'
 add_offnode <- function(blocklist, dataset, indi, nwindow, window_sequence, bp_map, off_node_minimum_blocklength=10, off_node_minimum_blocksize=5, raster=5){
   t <- coverage_test(blocklist, indi, type="window", max=1)
   index <- 1

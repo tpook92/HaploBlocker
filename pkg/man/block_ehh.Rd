@@ -6,7 +6,7 @@
 \usage{
 block_ehh(blocklist = NULL, data = NULL, marker, plot = FALSE,
   position1 = NULL, standardization = 3, group = NULL,
-  return_ehh = TRUE)
+  return_ehh = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{blocklist}{blocklist}
@@ -24,7 +24,16 @@ block_ehh(blocklist = NULL, data = NULL, marker, plot = FALSE,
 \item{group}{List containing all individuals assign in each group to derive different scores for subgroups}
 
 \item{return_ehh}{Return single ehh values}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+Block-based EHH scores
 }
 \description{
 Function to generate haplotype blocks from haploid data
+}
+\examples{
+data(blocklist_ex_maze)
+ehh_scores <- block_ehh(blocklist_ex_maze, marker = 5000, plot=TRUE)
 }

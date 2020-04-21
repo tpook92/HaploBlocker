@@ -3,10 +3,11 @@
 #' Internal Function to calculate calculate a node-dataset
 #' @param blockinfo List with all relevant information to each window seperatly
 #' @param window_sequence sequence of predefined windows (default: NULL ;per row: start$snp, end$snp, length, length - merging_error, start$bp, end$bp)
-#' @export
+#' @param verbose Set to FALSE to not display any prints
+#' @return window cluster without transition probabilities
 
-nodes_calculation <- function(blockinfo, window_sequence){
-  cat("Start_nodes_calculation\n")
+nodes_calculation <- function(blockinfo, window_sequence, verbose = TRUE){
+  if(verbose) cat("Start_nodes_calculation\n")
   nanimals <- sum(blockinfo[[1]][[1]])
   data <- list()
   nr <- 1

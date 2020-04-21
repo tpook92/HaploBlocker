@@ -9,6 +9,13 @@ uniquem(mat)
 \arguments{
 \item{mat}{Matrix}
 }
+\value{
+[[1]] present variants [[2]] frequency
+}
 \description{
 Internal Function for easy unique function on matrixes
+}
+\examples{
+dataset <- rbind(c(1,1,1), c(1,2,1), c(1,2,1), c(2,2,2))
+uniquem(dataset)
 }

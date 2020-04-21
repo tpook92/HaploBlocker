@@ -15,6 +15,13 @@ dataset_filter(dhm, maf = 0.05, equal_remove = FALSE, bp_map = NULL)
 
 \item{bp_map}{X}
 }
+\value{
+[[1]] filtered haplotype data matrix [[2]] filtered map-file
+}
 \description{
 Function peform filtering step on the dataset before applying block detection
+}
+\examples{
+data(ex_maze)
+ex_maze_maf <- dataset_filter(as.matrix(ex_maze), maf=0.05)[[1]]
 }

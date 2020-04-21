@@ -9,9 +9,16 @@
 #' @param indi number of haplotypes in the dataset
 #' @param compair_region Region to compair (default: Every overlapping SNP)
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
+#' @examples
+#' data(ex_maze)
+#' data(blocklist_ex_maze)
+#' blocklist2 <- block_calculation(ex_maze, min_majorblock = 1000)
+#' temp1 <- blocklist_comparison(blocklist_ex_maze, blocklist2)
 #' @export
+#' @return similarity score/matrix between the two blocklist
 
-blocklist_comparison<- function(blocklist1, blocklist2, indi=NULL, type="snp", compair_region=NULL, shift=0, turn.around=FALSE, intersect_func=intersect){
+blocklist_comparison<- function(blocklist1, blocklist2, indi=NULL, type="snp", compair_region=NULL, shift=0,
+                                turn.around=FALSE, intersect_func=intersect){
 
   if(length(indi)==0){
     indi <- indi_calc(blocklist1)

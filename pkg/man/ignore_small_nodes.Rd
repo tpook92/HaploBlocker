@@ -20,6 +20,9 @@ ignore_small_nodes(data, indi, nwindow, node_min = 5, gap = 10,
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+window cluster
+}
 \description{
 Internal Function remove windows which transition to less frequent haplotypes in adjecent windows
 }

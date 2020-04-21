@@ -13,6 +13,13 @@ blocklist_size(blocklist, intersect_func = intersect, first_block = 1)
 
 \item{first_block}{First block to consider in the computation (default: 1)}
 }
+\value{
+Number of haplotypes in each block
+}
 \description{
 Function to calculate the size of each block
+}
+\examples{
+data(blocklist_ex_maze)
+blocklist_size(blocklist_ex_maze)
 }

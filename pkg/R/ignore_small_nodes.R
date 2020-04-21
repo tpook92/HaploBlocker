@@ -7,7 +7,7 @@
 #' @param node_min minimum number of haplotypes per block (default: 5)
 #' @param gap remove haplotypes in nodes adjacent to nodes with less than minimim_blocksize haplotypes in it (default: 10 windows)
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
-#' @export
+#' @return window cluster
 
 ignore_small_nodes <- function(data, indi , nwindow, node_min=5, gap=10, intersect_func=intersect){
   resttiere <- matrix(0, nrow=indi, ncol=nwindow)

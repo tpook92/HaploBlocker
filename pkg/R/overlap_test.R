@@ -5,7 +5,11 @@
 #' @param dhm dataset to check for overlap with the blocklist
 #' @param max maximum number in each cell (overlapping blocks; default: 1)
 #' @param min_similarity minimum rate of the same SNPs to be added to the block (default: 0.99)
-#' #' @export
+#' data(ex_maze)
+#' data(blocklist_ex_maze)
+#' overlap <- overlap_test(blocklist_ex_maze, ex_maze)
+#' @export
+#' @return Overlap matrix
 
 overlap_test <- function(blocklist, dhm , max=1, min_similarity=0.99){
   overlap <- matrix(0, nrow=nrow(dhm), ncol=ncol(dhm))
@@ -24,12 +28,3 @@ overlap_test <- function(blocklist, dhm , max=1, min_similarity=0.99){
 
   return(overlap)
 }
-
-
-#blocktest <- numeric(length(blocklist))
-
-#for(index in 1:length(blocklist)){
-#  if(sum(blocklist[[index]][[6]]==9)&& blocklist[[index]][[2]]$window<=760&& blocklist[[index]][[3]]$window>760){
-##    blocktest[index] <- 1
-#  }
-#}

@@ -27,6 +27,9 @@ add_offnode(blocklist, dataset, indi, nwindow, window_sequence, bp_map,
 
 \item{raster}{Raster-width in the identification step (default: 5; recommended to be lower than off_node_minimum_blocklength)}
 }
+\value{
+haplotype library
+}
 \description{
 Function to add off-variant-blocks
 }

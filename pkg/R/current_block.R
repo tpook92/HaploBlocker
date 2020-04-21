@@ -4,7 +4,7 @@
 #' @param data node-dataset
 #' @param haplo_nr Which haplotype to check to node sequence
 #' @param nwindow number of windows in the dataset
-#' @export
+#' @return Path of selected individual through the window cluster
 
 current_block <- function(data, haplo_nr, nwindow){
   n <- length(data)

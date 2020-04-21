@@ -3,7 +3,7 @@
 #' Function to sort the blocks based on starting-position
 #' @param blocklist block-dataset
 #' @param node_min minimum number of haplotypes per block (default: 5)
-#' @export
+#' @return haplotype library
 
 
 blocklist_reorder <- function(blocklist, node_min=5){

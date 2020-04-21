@@ -8,8 +8,8 @@
 #' @param nwindow number of windows in the dataset
 #' @param max_extending_diff Maximum number of windows with different realisation in the block-extending-algorithm
 #' @param extending_ratio Minimum Ratio between windows with one different realisation to multiple in block-extending-algorithm
-#' @export
-
+#' @return haplotype library
+#'
 extend_block <- function(blocklist, indi, nwindow, max_extending_diff=1, extending_ratio=10, dataset, window_sequence_list){
   prev <- numeric(max(nwindow))
   extensions_done <- 0

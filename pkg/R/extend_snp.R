@@ -8,9 +8,8 @@
 #' @param nwindow number of windows in the dataset
 #' @param bp_map vector of positions for each SNP in bp (default: NULL - all 0)
 #' @param max_extending_diff_snp Maximum number of SNPs with variants in SNP-extending-algorithm (step V; default: 0)
-#' @param extending_ratio_snp Minimum ratio of SNPs with only one allele to those with variants (default: Inf)#' @param off_node_addition If TRUE use off-variant-identification (default: FALSE)
-#' @export
-
+#' @param extending_ratio_snp Minimum ratio of SNPs with only one allele to those with variants (default: Inf)
+#' @return haplotype library
 
 extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_map, max_extending_diff_snp=0, extending_ratio_snp=Inf){
   max_l <- 0
@@ -35,7 +34,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
       position_diff <- NULL
       position <- activ[[2]]$snp -1
       while(diff <= max_extending_diff_snp && position>0){
-        count <- sum(dhm[position, activ[[6]]]==dhm[position, 1])
+        count <- sum(dhm[position, activ[[6]]]==dhm[position, activ[[6]][1]])
         if(count==activ[[5]] || count==0){
           same <- same +1
           prev[same+diff] <- dhm[position, activ[[6]][1]]
@@ -52,7 +51,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
 
       if(max_diff >= extending_ratio_snp){
         if(extension_length==max_l){
-          cat("SNP-extension over full window. That is not supposed to happen\n")
+          warning("SNP-extension over full window. That is not supposed to happen\n")
         }
         extensions_done <- extensions_done +1
         activ[[2]]$snp <- activ[[2]]$snp - extension_length
@@ -77,7 +76,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
       position_diff <- NULL
       position <- activ[[3]]$snp +1
       while(diff <= max_extending_diff_snp && position<= max(window_sequence_list[[activ[[12]]]][,2])){
-        count <- sum(dhm[position, activ[[6]]]==dhm[position, 1])
+        count <- sum(dhm[position, activ[[6]]]==dhm[position, activ[[6]][1]])
         if(count==activ[[5]] || count==0){
           same <- same +1
           prev[same+diff] <- dhm[position, activ[[6]][1]]
@@ -95,7 +94,7 @@ extend_snp <- function(blocklist, indi, nwindow, dhm, window_sequence_list, bp_m
 
       if(max_diff >= extending_ratio_snp){
         if(extension_length==max_l){
-          cat("SNP-extension over full window. That is not supposed to happen\n")
+          warning("SNP-extension over full window. That is not supposed to happen\n")
         }
         extensions_done <- extensions_done +1
         activ[[3]]$snp <- activ[[3]]$snp + extension_length

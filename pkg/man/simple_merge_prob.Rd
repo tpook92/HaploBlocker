@@ -15,6 +15,9 @@ simple_merge_prob(data, indi, nwindow, intersect_func = intersect)
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+window cluster
+}
 \description{
 Internal Function perform a simple merge for node data
 }

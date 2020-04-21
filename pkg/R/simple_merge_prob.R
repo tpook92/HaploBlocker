@@ -5,9 +5,8 @@
 #' @param indi number of haplotypes in the dataset
 #' @param nwindow number of windows in the dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
-#' @export
-
-
+#' @return window cluster
+#'
 simple_merge_prob <- function(data, indi, nwindow, intersect_func=intersect){
 
   a <- start_end_block(data)

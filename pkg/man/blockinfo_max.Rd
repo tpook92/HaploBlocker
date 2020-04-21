@@ -9,6 +9,9 @@ blockinfo_max(blockinfo)
 \arguments{
 \item{blockinfo}{List with all relevant information to each window seperatly}
 }
+\value{
+Maximum number of same variants in each window
+}
 \description{
 Function to determine the number of the same haplotype in each window
 }

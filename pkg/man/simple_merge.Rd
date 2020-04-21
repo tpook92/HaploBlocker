@@ -4,12 +4,17 @@
 \alias{simple_merge}
 \title{Fast Simple Merge nodes}
 \usage{
-simple_merge(data, intersect_func = intersect)
+simple_merge(data, intersect_func = intersect, verbose = TRUE)
 }
 \arguments{
 \item{data}{node-dataset}
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+window cluster
 }
 \description{
 Faster version of simple_merge_probv2 to perform simple merge for node data

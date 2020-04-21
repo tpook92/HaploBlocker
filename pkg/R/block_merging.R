@@ -22,8 +22,7 @@
 #' @param c_dhm Bit-wise coded SNP-dataset
 #' @param c_dhm_mode If TRUE use high speed calculation with C in block_merging (default: TRUE)
 #' @param run Internal parameter storing the step number
-#' @export
-
+#' @return haplotype library
 
 block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list,  off_lines=5, min_similarity=0.99, consider_all=TRUE,
                           save_allblock=TRUE, node_min=0, subgroups=NULL, min_per_subgroup= 0, anteil_filter=TRUE, helper=NULL,

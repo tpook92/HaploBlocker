@@ -7,7 +7,7 @@
 blockinfo_calculation_na(dhm, window_sequence = NULL, window_size = 32,
   merging_error = 3, bp_map = NULL, window_anchor_gens = NULL,
   at_least_one = TRUE, blockinfo_mode = 0, actual_snp_weight = 5,
-  na_snp_weight = 2, na_seq_weight = 0)
+  na_snp_weight = 2, na_seq_weight = 0, verbose = TRUE)
 }
 \arguments{
 \item{dhm}{haploid SNP-dataset}
@@ -31,6 +31,11 @@ blockinfo_calculation_na(dhm, window_sequence = NULL, window_size = 32,
 \item{na_snp_weight}{Set weight for difference between NA and allele in a SNP (more than 1 possible base pair)}
 
 \item{na_seq_weight}{Set weight for difference between NA and allele a loci with 1 possible base pair}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+[[1]] window-based haplotype information [[2]] window sequence
 }
 \description{
 Function to generate haplotype blocks from haploid data

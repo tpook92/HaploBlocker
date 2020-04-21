@@ -11,6 +11,13 @@ block_matrix_construction(blocklist, indi = NULL)
 
 \item{indi}{number of haplotypes in the dataset}
 }
+\value{
+Haplotype block-based dataset
+}
 \description{
 Internal Function to generate a dataset containing which variant in present in with window
+}
+\examples{
+data(blocklist_ex_maze)
+block_dataset <- block_matrix_construction(blocklist_ex_maze)
 }

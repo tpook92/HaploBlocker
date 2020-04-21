@@ -5,7 +5,8 @@
 \title{Mainfunction to calculate haplotype blocks}
 \usage{
 block_ihh(blocklist = NULL, data = NULL, plot = FALSE,
-  position1 = NULL, standardization = 3, group = NULL)
+  position1 = NULL, standardization = 3, group = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{blocklist}{blocklist}
@@ -19,7 +20,16 @@ block_ihh(blocklist = NULL, data = NULL, plot = FALSE,
 \item{standardization}{Standardization by allele freq (0), allele freq of individuals in blocks (1), block (2), non (3)}
 
 \item{group}{List containing all individuals assign in each group to derive different scores for subgroups}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+Block-based IHH scores
 }
 \description{
 Function to generate haplotype blocks from haploid data
+}
+\examples{
+data(blocklist_ex_maze)
+ihh_scores <- block_ihh(blocklist_ex_maze, plot=TRUE)
 }

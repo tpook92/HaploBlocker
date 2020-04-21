@@ -13,6 +13,9 @@ current_block(data, haplo_nr, nwindow)
 
 \item{nwindow}{number of windows in the dataset}
 }
+\value{
+Path of selected individual through the window cluster
+}
 \description{
 Determine in which node a single haplotype is in over the chromosom
 }

@@ -9,6 +9,9 @@ blockinfo_size(blockinfo)
 \arguments{
 \item{blockinfo}{List with all relevant information to each window seperatly}
 }
+\value{
+Number of variants in each window
+}
 \description{
 Function to determine number of differnt haplotypes per window
 }

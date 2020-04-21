@@ -15,6 +15,13 @@ coverage_test(blocklist, indi = NULL, type = "snp", max = 1)
 
 \item{max}{maximum number in each cell (overlapping blocks; default: 1)}
 }
+\value{
+coverage matrix
+}
 \description{
 Function to calculate the coverage of the blocks over the whole dataset
+}
+\examples{
+data(blocklist_ex_maze)
+t <- coverage_test(blocklist_ex_maze)
 }

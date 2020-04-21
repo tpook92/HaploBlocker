@@ -11,7 +11,10 @@ diploid_upper2(blocklist, s0m, min_similarity = 0.99)
 
 \item{s0m}{dataset of diploid individuals to check}
 
-\item{min_similarity}{XXX}
+\item{min_similarity}{minimum rate of the same SNPs to be added to the block (default: 0.99)}
+}
+\value{
+Frequency estimated for each haplotype block
 }
 \description{
 Calculate upper limited of present in a blocklist (ignore possible phasing errors)

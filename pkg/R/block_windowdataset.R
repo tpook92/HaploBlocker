@@ -9,17 +9,22 @@
 #' @param non_haploblocker_merging_error Set the number of markers with potential variations from the main variant (default: 0)
 #' @param min_freq_boundary Set the minimum frequency of a block in the population (default: 0)
 #' @param min_length_window Set the minimum length of each window (default: 1)
+#' @param verbose Set to FALSE to not display any prints
+#' @examples
+#' data(blocklist_ex_maze)
+#' windowdataset <- block_windowdataset(blocklist_ex_maze)
 #' @export
+#' @return Windowblock based dataset
 
 
 block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FALSE, return_dataset=FALSE, non_haploblocker=FALSE,
-                                non_haploblocker_merging_error=0, min_freq_boundary=0, min_length_window=1){
+                                non_haploblocker_merging_error=0, min_freq_boundary=0, min_length_window=1, verbose= TRUE){
 
   if(length(data)>0 && is.matrix(data)==FALSE){
     data <- as.matrix(data)
   }
   if(length(blocklist)==0){
-    blocklist <- block_calculation(data)
+    blocklist <- block_calculation(data, verbose= verbose)
   }
   n_indi <- indi_calc(blocklist)
 
@@ -106,7 +111,8 @@ block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FAL
     unique.dhm <- unique(as.vector(dhm))
     fixcoding(unique.dhm)
     c_dhm <- codeSNPs(dhm)
-    blockinfo <- blockinfo_calculation(dhm, window_sequence = cbind(start_block, end_block), merging_error = non_haploblocker_merging_error, c_dhm=c_dhm)
+    blockinfo <- blockinfo_calculation(dhm, window_sequence = cbind(start_block, end_block), merging_error = non_haploblocker_merging_error, c_dhm=c_dhm,
+                                       verbose=verbose)
     dataset <- block_dataset_construction(blockinfo[[1]],blocklist)
   } else{
     dataset <- matrix(0, nrow=length(start_block), ncol=n_indi)

@@ -5,7 +5,11 @@
 #' @param maf Minimum minor allel frequency in prefilter (default: 0.05)
 #' @param equal_remove If TRUE filter out SNPs in perfect correlation to the next SNP (default: FALSE)
 #' @param bp_map X
+#' @examples
+#' data(ex_maze)
+#' ex_maze_maf <- dataset_filter(as.matrix(ex_maze), maf=0.05)[[1]]
 #' @export
+#' @return [[1]] filtered haplotype data matrix [[2]] filtered map-file
 
 dataset_filter <- function(dhm, maf=0.05, equal_remove=FALSE, bp_map=NULL){
   maf1 <- numeric(nrow(dhm))

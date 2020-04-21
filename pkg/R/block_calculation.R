@@ -75,7 +75,12 @@
 #' @param overlap_remove If set to TRUE the obtained Haplotype Library will have no overlapping blocks.
 #' @param deletion_count If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions
 #' @param na_value Number/Character variable that is coding NA (default: -9)
+#' @param verbose Set to FALSE to not display any prints
+#' @examples
+#' data(ex_maze)
+#' blocklist <- block_calculation(ex_maze)
 #' @export
+#' @return haplotype library
 #'
 
 
@@ -112,7 +117,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                               window_overlap=0,
                               window_cores=1, overlap_remove=FALSE,
                               na_value=(-9),
-                              deletion_count=FALSE){
+                              deletion_count=FALSE,
+                              verbose=TRUE){
 
   if(adaptive_mode==TRUE){
     multi_window_mode <- TRUE
@@ -123,8 +129,17 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       target_coverage <- 0.9
     }
   }
+
+  {
+    # foreach variables
+    indexb <- NULL
+    if (requireNamespace("foreach", quietly = TRUE)) {
+      `%dopar%` <- foreach::`%dopar%`
+    }
+
+  }
   if(multi_window_mode==FALSE && (length(window_size)>1 || length(merging_error)>1 || length(min_share)>1)){
-    cat("Active multi_window_mode")
+    if(verbose) cat("Active multi_window_mode\n")
     multi_window_mode <- TRUE
   }
 
@@ -144,7 +159,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
   if(length(dhm)==1){
     data_type <- substr(dhm, start= nchar(dhm)-2, stop= nchar(dhm))
     if(data_type=="vcf"){
-      cat("Data input identified as vcf-file - extract genomic information. \n")
+      if(verbose) cat("Data input identified as vcf-file - extract genomic information. \n")
       if(requireNamespace("vcfR", quietly = TRUE)){
         vcf_file <- vcfR::read.vcfR(dhm)
         haplo1 <- substr(vcf_file@gt[,-1], start=1, stop=1)
@@ -152,11 +167,11 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
         haplo <- cbind(haplo1, haplo2)
         haplo <- haplo[,c(0,ncol(haplo1)) + rep(1:ncol(haplo1), each=2)]
       } else{
-        stop("Data-import failed! vcfR-package not available! \n")
+        stop("Data-import failed! vcfR-package not available!")
       }
     } else if(data_type=="ped"){
-      cat("Data input identified as Ped-map-file - extract genomic information. \n")
-      cat("Haplotype phase is assumed to be by colum - No internal phasing performed! \n")
+      if(verbose) cat("Data input identified as Ped-map-file - extract genomic information. \n")
+      if(verbose) cat("Haplotype phase is assumed to be by colum - No internal phasing performed! \n")
       ped_file <- utils::read.table(dhm)
       haplo12 <- t(ped_file[,-(1:6)])
       haplo <- matrix(0, ncol = ncol(haplo12)*2, nrow=nrow(haplo12)/2)
@@ -168,7 +183,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     }
     #storage.mode(haplo) <- "integer"
     dhm <- haplo
-    cat("Data import successful. \n")
+    if(verbose) cat("Data import successful. \n")
   }
   if(nrow(dhm)>parallel_window){
     dhm_list <- list()
@@ -241,7 +256,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                         min_reduction_neglet=min_reduction_neglet,
                         deletion_count = deletion_count,
                         na_value = na_value,
-                        overlap_remove = overlap_remove
+                        overlap_remove = overlap_remove,
+                        verbose = verbose
 
                         )
       return(blockl)
@@ -249,8 +265,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
     if(Sys.info()[['sysname']]=="Windows"){
       doParallel::registerDoParallel(cores=window_cores)
-      blocklist_list <- foreach::foreach(index=1:length(dhm_list), .packages = "HaploBlocker") %dopar% {
-        element <- block_calculation_par(dhm_list[[index]])
+      blocklist_list <- foreach::foreach(indexb=1:length(dhm_list), .packages = "HaploBlocker") %dopar% {
+        element <- block_calculation_par(dhm_list[[indexb]])
         element
       }
       doParallel::stopImplicitCluster()
@@ -316,7 +332,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
   if(merge_closeblock==TRUE && length(unique(window_size))){
     merge_closeblock <- FALSE
-    cat("Closeblock-Merging only for single window size\n")
+    if(verbose) cat("Closeblock-Merging only for single window size\n")
   }
 
   window_sequence_list <- list()
@@ -386,12 +402,14 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     if(blockinfo_mode_na){
       blockinfo_out <- blockinfo_calculation_na(dhm, window_sequence= window_sequence_list[[index]], window_anchor_gens = window_anchor_gens, blockinfo_mode=blockinfo_mode,
                                                 window_size = window_size[index], merging_error = merging_error[index], bp_map = bp_map, at_least_one=at_least_one,
-                                                actual_snp_weight=actual_snp_weight, na_snp_weight=na_snp_weight, na_seq_weight= na_seq_weight)
+                                                actual_snp_weight=actual_snp_weight, na_snp_weight=na_snp_weight, na_seq_weight= na_seq_weight,
+                                                verbose=verbose)
 
     } else{
       blockinfo_out <- blockinfo_calculation(dhm, window_sequence= window_sequence_list[[index]], window_anchor_gens = window_anchor_gens, blockinfo_mode=blockinfo_mode,
                                              window_size = window_size[index], merging_error = merging_error[index], bp_map = bp_map, at_least_one=at_least_one,
-                                             c_dhm=c_dhm, max_groups=max_groups)
+                                             c_dhm=c_dhm, max_groups=max_groups,
+                                             verbose=verbose)
 
     }
 
@@ -400,13 +418,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
 
     if(max_groups>0){
-      cat(paste("Generated:", nrow(window_sequence_list[[index]]), "windows\n"))
-      cat(paste("With size: Max", max(window_sequence_list[[index]][,3]), "Min", min(window_sequence_list[[index]][,3]), "Avg", round(mean(window_sequence_list[[index]][,3])*100)/100),"\n")
+      if(verbose) cat(paste("Generated:", nrow(window_sequence_list[[index]]), "windows\n"))
+      if(verbose) cat(paste("With size: Max", max(window_sequence_list[[index]][,3]), "Min", min(window_sequence_list[[index]][,3]), "Avg", round(mean(window_sequence_list[[index]][,3])*100)/100),"\n")
     }
 
-    data[[index]] <- nodes_calculation(blockinfo[[index]], window_sequence_list[[index]])
+    data[[index]] <- nodes_calculation(blockinfo[[index]], window_sequence_list[[index]], verbose = verbose)
 
-    data[[index]] <- simple_merge(data[[index]], intersect_func=intersect_func)
+    data[[index]] <- simple_merge(data[[index]], intersect_func=intersect_func, verbose = verbose)
     data[[index]] <- calculate_transition(data[[index]], intersect_func=intersect_func)
 
 
@@ -417,8 +435,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     nodes <- length(data[[index]])
 
     if(early_remove){
-      cat("Start_Early_remove\n")
-      cat(paste("Starting-Nodes:", nodes,"\n"))
+      if(verbose) cat("Start_Early_remove\n")
+      if(verbose) cat(paste("Starting-Nodes:", nodes,"\n"))
       if(length(node_min_early)==0){
         node_min_early <- node_min
       }
@@ -428,12 +446,12 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
     nodes <- length(data[[index]])
     iteration <- 1
-    cat("Start_CrossMerging_full\n")
+    if(verbose) cat("Start_CrossMerging_full\n")
     a <- start_end_block(data[[index]])
     a_old <- NULL
     while((length(a_old)==0 || (nrow(a_old)!=nrow(a)) || prod(a_old==a)==0) && ( length(a_old)==0 || (nrow(a_old)-nrow(a))>min_reduction_cross)){
       a_old <- a
-      cat(paste("Iteration", iteration, ":", nodes, "nodes\n"))
+      if(verbose) cat(paste("Iteration", iteration, ":", nodes, "nodes\n"))
       data[[index]] <- crossmerge(data[[index]], indi, nwindow[index], a, intersect_func=intersect_func)
       data[[index]] <- simple_merge_prob(data[[index]], indi, nwindow[index])
       a <- start_end_block(data[[index]])
@@ -444,10 +462,10 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
     nodes <- length(data[[index]])
     iteration <- 1
-    cat("Start_IgnoreSmall\n")
+    if(verbose) cat("Start_IgnoreSmall\n")
     while((iteration==1 || (nrow(a_old)!=nrow(a)) || prod(a_old==a)==0) && ( iteration==1 || (nrow(a_old)- nrow(a))>min_reduction_neglet)){
       a_old <- a
-      cat(paste("Iteration", iteration, ":", nodes, "nodes\n"))
+      if(verbose) cat(paste("Iteration", iteration, ":", nodes, "nodes\n"))
       data[[index]] <- ignore_small_nodes(data[[index]], indi, nwindow[index], node_min, gap, intersect_func=intersect_func)
       data[[index]] <- simple_merge_prob(data[[index]], indi, nwindow[index], intersect_func=intersect_func)
       data[[index]] <- crossmerge(data[[index]], indi, nwindow[index], intersect_func=intersect_func)
@@ -509,11 +527,11 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
     nodes <- length(blocklist)
     iteration <- 1
-    cat("Start_Blockmerging\n")
+    if(verbose) cat("Start_Blockmerging\n")
     helper <- blocklist_startend(blocklist, type="snp")
     helper_old <- NULL
     while(iteration <= min_majorblock_steps || length(helper_old)==0 || (nrow(helper_old)!=nrow(helper)) || prod(helper_old==helper)==0){
-      cat(paste("Iteration", iteration, ":", nodes, "blocks\n"))
+      if(verbose) cat(paste("Iteration", iteration, ":", nodes, "blocks\n"))
       helper_old <- helper
       blocklist <- block_merging(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list, off_lines, min_similarity=min_similarity,
                                  consider_all=consider_all, node_min=node_min, save_allblock=save_allblock, helper=helper,
@@ -544,8 +562,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
             min_majorblock <- min_majorblock_count[current_iteration]
 
           } else{
-            cat(paste0("Empty Blocklist! Min_majorblock was chosen to high. Automatically set to ", ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 5),"!\n"))
-            cat("This might still be way too high for your data!!! \n")
+            if(verbose) cat(paste0("Empty Blocklist! Min_majorblock was chosen to high. Automatically set to ", ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 5),"!\n"))
+            if(verbose) cat("This might still be way too high for your data!!! \n")
             blocklist <- list()
             for(index in 1:ncluster){
               if(length(partial_blocklist[[index]])>0){
@@ -574,10 +592,10 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       nodes <- length(blocklist)
       iteration <- 1
       extensions_done <- 0
-      cat("Start_Blockextending\n")
+      if(verbose) cat("Start_Blockextending\n")
       while(iteration==1 || (nrow(helper_old)!=nrow(helper)) || prod(helper_old==helper)==0 || extensions_done > 0){
         helper_old <- helper
-        cat(paste("Iteration", iteration, ":", nodes, "blocks; ", extensions_done, "block extensions\n"))
+        if(verbose) cat(paste("Iteration", iteration, ":", nodes, "blocks; ", extensions_done, "block extensions\n"))
         blocklist_out <- extend_block(blocklist, indi, nwindow, max_extending_diff=max_extending_diff,
                                       extending_ratio=extending_ratio, dataset=dataset, window_sequence_list=window_sequence_list)
         blocklist <- blocklist_out[[1]]
@@ -721,14 +739,14 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
     if(overlap_remove){
 
-      cat("Start_Overlap_removal:\n")
+      if(verbose) cat("Start_Overlap_removal:\n")
       t <- coverage_test(blocklist, type="window")
       t1 <- coverage_test(blocklist, type="window", max=100)
-      cat(paste0("Before: ", length(blocklist), " Blocks, ", round(100* mean(t), digit=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digit=2)," % Overlapping segments.\n"))
+      if(verbose) cat(paste0("Before: ", length(blocklist), " Blocks, ", round(100* mean(t), digits=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digits=2)," % Overlapping segments.\n"))
       blocklist <- overlap_removal(blocklist, data, node_min=node_min)
       t <- coverage_test(blocklist, type="window")
       t1 <- coverage_test(blocklist, type="window", max=100)
-      cat(paste0("After: ", length(blocklist), " Blocks, ", round(100* mean(t), digit=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digit=2)," % Overlapping segments.\n"))
+      if(verbose) cat(paste0("After: ", length(blocklist), " Blocks, ", round(100* mean(t), digits=2), " % Coverage, ", round(100 * (mean(t1)-mean(t)), digits=2)," % Overlapping segments.\n"))
 
     }
 

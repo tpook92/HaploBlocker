@@ -13,6 +13,9 @@ major_snp_calculation(blocklist, dhm, recoding = FALSE)
 
 \item{recoding}{If TRUE change allele coding (Major allele "A", Minor allele "C")}
 }
+\value{
+haplotype library with entered allele variants / frequencies
+}
 \description{
 Function to calculate the common allele for each SNP of a block
 }

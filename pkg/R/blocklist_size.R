@@ -4,7 +4,11 @@
 #' @param blocklist block-dataset
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @param first_block First block to consider in the computation (default: 1)
+#' @examples
+#' data(blocklist_ex_maze)
+#' blocklist_size(blocklist_ex_maze)
 #' @export
+#' @return Number of haplotypes in each block
 
 blocklist_size <- function(blocklist, intersect_func=intersect, first_block=1){
   if(length(blocklist)==0){
@@ -23,7 +27,11 @@ blocklist_size <- function(blocklist, intersect_func=intersect, first_block=1){
 #' @param blocklist block-dataset
 #' @param checker vector of haplotype nrs to consider
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
+#' @examples
+#' data(blocklist_ex_maze)
+#' blocklist_size_spes(blocklist_ex_maze, 1:10)
 #' @export
+#' @return Number of selected haplotypes in each block
 
 blocklist_size_spes <- function(blocklist,checker,intersect_func=intersect){
   be <- numeric(length(blocklist))

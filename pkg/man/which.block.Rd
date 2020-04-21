@@ -11,6 +11,13 @@ which.block(blocklist, nr)
 
 \item{nr}{number of haplotype to analyse}
 }
+\value{
+Binary vector coding present/absense of a haplotype in each block
+}
 \description{
 Function to derivde in which block a giving haplotype is
+}
+\examples{
+data(blocklist_ex_maze)
+which.block(blocklist_ex_maze, 1)
 }

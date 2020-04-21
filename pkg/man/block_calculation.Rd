@@ -31,7 +31,7 @@ block_calculation(dhm, window_sequence = NULL, window_size = 20,
   node_min_early = NULL, min_reduction_cross = -Inf,
   min_reduction_neglet = -Inf, parallel_window = Inf,
   window_overlap = 0, window_cores = 1, overlap_remove = FALSE,
-  na_value = (-9), deletion_count = FALSE)
+  na_value = (-9), deletion_count = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{dhm}{haploid SNP-dataset}
@@ -181,7 +181,16 @@ block_calculation(dhm, window_sequence = NULL, window_size = 20,
 \item{na_value}{Number/Character variable that is coding NA (default: -9)}
 
 \item{deletion_count}{If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions}
+
+\item{verbose}{Set to FALSE to not display any prints}
+}
+\value{
+haplotype library
 }
 \description{
 Function to generate haplotype blocks from haploid data
+}
+\examples{
+data(ex_maze)
+blocklist <- block_calculation(ex_maze)
 }

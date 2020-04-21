@@ -13,6 +13,13 @@ blocklist_size_spes(blocklist, checker, intersect_func = intersect)
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }
+\value{
+Number of selected haplotypes in each block
+}
 \description{
 Function to calculate the size of each block
+}
+\examples{
+data(blocklist_ex_maze)
+blocklist_size_spes(blocklist_ex_maze, 1:10)
 }

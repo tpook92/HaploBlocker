@@ -9,6 +9,9 @@ start_end_block(data)
 \arguments{
 \item{data}{node-dataset}
 }
+\value{
+Start/end points of window cluster nodes
+}
 \description{
 Function to calculate start and end points of a node dataset
 }

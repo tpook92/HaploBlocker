@@ -11,6 +11,9 @@ blocklist_reorder(blocklist, node_min = 5)
 
 \item{node_min}{minimum number of haplotypes per block (default: 5)}
 }
+\value{
+haplotype library
+}
 \description{
 Function to sort the blocks based on starting-position
 }

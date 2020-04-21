@@ -5,7 +5,11 @@
 #' @param indi number of haplotypes in the dataset
 #' @param type length measure (default: "window" , alt: "snp", "bp")
 #' @param max maximum number in each cell (overlapping blocks; default: 1)
+#' @examples
+#' data(blocklist_ex_maze)
+#' t <- coverage_test(blocklist_ex_maze)
 #' @export
+#' @return coverage matrix
 
 coverage_test <- function(blocklist, indi=NULL, type="snp", max=1){
   if(length(indi)==0){

@@ -2,7 +2,7 @@
 #'
 #' Function to calculate the number of haplotypes in each node
 #' @param data node-dataset
-#' @export
+#' @return size of each node in the window cluster
 
 nodes_size <- function(data){
   n <- length(data)

@@ -4,7 +4,7 @@
 #' @param blockinfo List with all relevant information to each window seperatly
 #' @param dhm haploid SNP-dataset
 #' @param window_size size of each window in the algorithm (default: 20)
-#' @export
+#' @return window-based haplotype information
 
 blockinfo_major <- function(blockinfo, dhm, window_size){
   for(index in 1:length(blockinfo)){

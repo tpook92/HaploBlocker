@@ -5,7 +5,11 @@
 #' @param cutoff2 minimum number of blocks to start/end to mark a recombination hotspot (default:5)
 #' @param bound_weighted weighted blocks in the detection of recombination hotspots according to size (default: TRUE)
 #' @param type length measure (default: "window" , alt: "snp", "bp")
+#' @examples
+#' data(blocklist_ex_maze)
+#' blocklist_plot_xsize(blocklist_ex_maze)
 #' @export
+#' @return Visualization of the haplotype block length according to frequency
 
 blocklist_plot_xsize <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, type="snp" ){
   size <- blocklist_size(blocklist)
@@ -19,7 +23,7 @@ blocklist_plot_xsize <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, ty
   start <- bpstart[switch]
   end <- bpend[switch]
   size <- size[switch]
-  plot(0,-100, xlim=c(1,sum(size)), ylim=c(0, max(end)), ylab=type, xlab="Indi per Block")
+  plot(0,-100, xlim=c(1,sum(size)), ylim=c(0, max(end)), ylab=type, xlab="individuals per block")
   current_value <- 1
   for(index in 1:length(start)){
     polygon(c(current_value,current_value+size[index], current_value+ size[index],current_value), c(start[index], start[index], end[index], end[index]))

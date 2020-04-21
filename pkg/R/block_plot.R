@@ -5,7 +5,11 @@
 #' @param type length measure (default: "window" , alt: "snp", "bp")
 #' @param indi number of haplotypes in the dataset
 #' @param bw bandwidth for the smoothing of the coverage (default: bw=1 - no smoothing)
+#' @examples
+#' data(blocklist_ex_maze)
+#' block_plot(blocklist_ex_maze)
 #' @export
+#' @return Visualization of local coverages/block variation
 
 block_plot <- function(blocklist,indi=NULL, type="snp", bw=1){
 
