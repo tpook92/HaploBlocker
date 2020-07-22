@@ -38,8 +38,30 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
   be <- blocklist_startend(blocklist, type="snp")
   size <- blocklist_size(blocklist)
 
+  # can be speed up with more memory use
+
+  '#
+  vsize <- unique(size)
+  slist <- list()
+  for(index in vsize){
+  slist[[index]] <- size >= index
+  }
+  vbe1 <- unique(be[,1])
+  vbe2 <- unique(be[,2])
+  vbelist1 <- list()
+  vbelist2 <- list()
+  for(index in vbe1){
+  vbelist1[[index]] <- index >= be[,1]
+  }
+  for(index in vbe2){
+  vbelist2[[index]] <- index <= be[,2]
+  }
+  #'
+
   for(index in nrow(be):1){
-    possible <- which(((be[index,1]>= be[,1]) * (be[index,2]<= be[,2]) * (1:nrow(be)!=index) * (size>=size[index]))==1)
+    possible <- which(((be[index,1]>= be[,1]) & (be[index,2]<= be[,2]) & (1:nrow(be)!=index) & (size>=size[index])))
+    #possible <- which(vbelist1[[be[index,1]]] & vbelist2[[be[index,2]]] & slist[[size[index]]])
+
     delete <- 1
     index2 <- 1
     npos <- length(possible)

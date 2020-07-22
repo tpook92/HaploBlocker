@@ -4,10 +4,10 @@
 \alias{calculate_transition}
 \title{Calculate transition probabilities between nodes}
 \usage{
-calculate_transition(data, intersect_func = intersect)
+calculate_transition(data1, intersect_func = intersect)
 }
 \arguments{
-\item{data}{node-dataset}
+\item{data1}{node-dataset}
 
 \item{intersect_func}{Used intersect-function (internally relevant for computation time)}
 }

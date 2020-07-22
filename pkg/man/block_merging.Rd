@@ -4,12 +4,29 @@
 \alias{block_merging}
 \title{Merge blocks}
 \usage{
-block_merging(blocklist, blockinfo, dataset, dhm, indi, nwindow,
-  window_sequence_list, off_lines = 5, min_similarity = 0.99,
-  consider_all = TRUE, save_allblock = TRUE, node_min = 0,
-  subgroups = NULL, min_per_subgroup = 0, anteil_filter = TRUE,
-  helper = NULL, c_dhm = NULL, c_dhm_mode = TRUE,
-  intersect_func = intersect, subgroup_exception = 0, run = 1)
+block_merging(
+  blocklist,
+  blockinfo,
+  dataset,
+  dhm,
+  indi,
+  nwindow,
+  window_sequence_list,
+  off_lines = 5,
+  min_similarity = 0.99,
+  consider_all = TRUE,
+  save_allblock = TRUE,
+  node_min = 0,
+  subgroups = NULL,
+  min_per_subgroup = 0,
+  anteil_filter = TRUE,
+  helper = NULL,
+  c_dhm = NULL,
+  c_dhm_mode = TRUE,
+  intersect_func = intersect,
+  subgroup_exception = 0,
+  run = 1
+)
 }
 \arguments{
 \item{blocklist}{block-dataset}

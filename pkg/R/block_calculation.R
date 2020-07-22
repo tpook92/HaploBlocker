@@ -153,9 +153,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     ncluster <- 1
   }
 
-  if(length(bp_map)>0){
-    bp_map <- as.numeric(bp_map)
-  }
+
   if(length(dhm)==1){
     data_type <- substr(dhm, start= nchar(dhm)-2, stop= nchar(dhm))
     if(data_type=="vcf"){
@@ -185,6 +183,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     dhm <- haplo
     if(verbose) cat("Data import successful. \n")
   }
+
+  if(length(bp_map)>0){
+    bp_map <- as.numeric(bp_map)
+  } else{
+    bp_map <- rep(0, nrow(dhm))
+  }
+
   if(nrow(dhm)>parallel_window){
     dhm_list <- list()
     snp_start <- NULL

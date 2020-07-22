@@ -1,7 +1,7 @@
-#exportPattern("^[^\\.]")
+exportPattern("^[^\\.]")
 
 ###exportPattern("^[[:alpha:]]+")
-exportPattern("^[ABD-Za-z]")
+# exportPattern("^[ABD-Za-z]")
 # export( positivliste )
 export(blocklist_comparison)
 export(blocklist_plot)

@@ -4,8 +4,12 @@
 \alias{block_dataset_construction}
 \title{Construct blockinfo dataset}
 \usage{
-block_dataset_construction(blockinfo, blocklist = NULL, indi = NULL,
-  nwindow = NULL)
+block_dataset_construction(
+  blockinfo,
+  blocklist = NULL,
+  indi = NULL,
+  nwindow = NULL
+)
 }
 \arguments{
 \item{blockinfo}{List with all relevant information to each window seperatly}

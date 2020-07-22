@@ -4,8 +4,15 @@
 \alias{extend_block}
 \title{Extend-Block}
 \usage{
-extend_block(blocklist, indi, nwindow, max_extending_diff = 1,
-  extending_ratio = 10, dataset, window_sequence_list)
+extend_block(
+  blocklist,
+  indi,
+  nwindow,
+  max_extending_diff = 1,
+  extending_ratio = 10,
+  dataset,
+  window_sequence_list
+)
 }
 \arguments{
 \item{blocklist}{blocklist created by blocklist_calculcation algorithm}

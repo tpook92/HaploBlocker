@@ -4,9 +4,16 @@
 \alias{blocklist_comparison}
 \title{Comparison of blocklists}
 \usage{
-blocklist_comparison(blocklist1, blocklist2, indi = NULL, type = "snp",
-  compair_region = NULL, shift = 0, turn.around = FALSE,
-  intersect_func = intersect)
+blocklist_comparison(
+  blocklist1,
+  blocklist2,
+  indi = NULL,
+  type = "snp",
+  compair_region = NULL,
+  shift = 0,
+  turn.around = FALSE,
+  intersect_func = intersect
+)
 }
 \arguments{
 \item{blocklist1}{blocklist created by blocklist_calculcation algorithm}

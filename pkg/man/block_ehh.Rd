@@ -4,9 +4,17 @@
 \alias{block_ehh}
 \title{Function to derive bEHH}
 \usage{
-block_ehh(blocklist = NULL, data = NULL, marker, plot = FALSE,
-  position1 = NULL, standardization = 3, group = NULL,
-  return_ehh = TRUE, verbose = TRUE)
+block_ehh(
+  blocklist = NULL,
+  data = NULL,
+  marker,
+  plot = FALSE,
+  position1 = NULL,
+  standardization = 3,
+  group = NULL,
+  return_ehh = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{blocklist}{blocklist}

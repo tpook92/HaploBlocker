@@ -40,7 +40,9 @@ block_ihh <- function(blocklist=NULL, data=NULL, plot=FALSE, position1=NULL, sta
                                                                    standardization = standardization, return_ehh=FALSE, group=group)
   }
 
+  ihh_scores[is.na(ihh_scores)] <- 0
   if(plot){
+
     plot(position1,ihh_scores[1,], type="l", ylab="IHH score", xlab="position", ylim=c(0, max(ihh_scores)))
     if(nrow(ihh_scores)>1){
       for(index in 2:nrow(ihh_scores)){

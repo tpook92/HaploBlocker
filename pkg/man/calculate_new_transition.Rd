@@ -4,8 +4,14 @@
 \alias{calculate_new_transition}
 \title{Simple Merge nodes}
 \usage{
-calculate_new_transition(data, nodes, nwindow, add_e = NULL,
-  add_a = NULL, intersect_func = intersect)
+calculate_new_transition(
+  data,
+  nodes,
+  nwindow,
+  add_e = NULL,
+  add_a = NULL,
+  intersect_func = intersect
+)
 }
 \arguments{
 \item{data}{node-dataset}

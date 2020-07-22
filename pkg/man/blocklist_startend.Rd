@@ -4,7 +4,7 @@
 \alias{blocklist_startend}
 \title{Merge blocks}
 \usage{
-blocklist_startend(blocklist, type = "snp", first_block = 1)
+blocklist_startend(blocklist, type = "snp", first_block = 1, internal = FALSE)
 }
 \arguments{
 \item{blocklist}{block-dataset}
@@ -12,6 +12,8 @@ blocklist_startend(blocklist, type = "snp", first_block = 1)
 \item{type}{length measure (default: "window" , alt: "snp", "bp")}
 
 \item{first_block}{First block to consider in the computation (default: 1)}
+
+\item{internal}{Set to TRUE to now provide col/rownames for start/end points}
 }
 \value{
 start/end points of haplotype blocks

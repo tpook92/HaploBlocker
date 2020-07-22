@@ -4,10 +4,17 @@
 \alias{block_windowdataset}
 \title{Function to derive block-dataset (uniform-window)}
 \usage{
-block_windowdataset(blocklist = NULL, data = NULL,
-  consider_nonblock = FALSE, return_dataset = FALSE,
-  non_haploblocker = FALSE, non_haploblocker_merging_error = 0,
-  min_freq_boundary = 0, min_length_window = 1, verbose = TRUE)
+block_windowdataset(
+  blocklist = NULL,
+  data = NULL,
+  consider_nonblock = FALSE,
+  return_dataset = FALSE,
+  non_haploblocker = FALSE,
+  non_haploblocker_merging_error = 0,
+  min_freq_boundary = 0,
+  min_length_window = 1,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{blocklist}{blocklist}

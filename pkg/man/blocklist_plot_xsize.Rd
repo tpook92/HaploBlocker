@@ -4,8 +4,12 @@
 \alias{blocklist_plot_xsize}
 \title{Function to plot a blocklist II}
 \usage{
-blocklist_plot_xsize(blocklist, cutoff2 = 5, bound_weighted = TRUE,
-  type = "snp")
+blocklist_plot_xsize(
+  blocklist,
+  cutoff2 = 5,
+  bound_weighted = TRUE,
+  type = "snp"
+)
 }
 \arguments{
 \item{blocklist}{blocklist created by blocklist_calculcation algorithm}

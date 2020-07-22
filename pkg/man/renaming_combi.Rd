@@ -4,10 +4,10 @@
 \alias{renaming_combi}
 \title{Renaming function}
 \usage{
-renaming_combi(data, nwindow)
+renaming_combi(data1, nwindow)
 }
 \arguments{
-\item{data}{node-dataset}
+\item{data1}{node-dataset}
 
 \item{nwindow}{number of windows in the dataset}
 }

@@ -1,7 +1,7 @@
 #' Ignore small nodes
 #'
 #' Internal Function remove windows which transition to less frequent haplotypes in adjecent windows
-#' @param data node-dataset
+#' @param data1 node-dataset
 #' @param indi number of haplotypes in the dataset
 #' @param nwindow number of windows in the dataset
 #' @param node_min minimum number of haplotypes per block (default: 5)
@@ -9,33 +9,30 @@
 #' @param intersect_func Used intersect-function (internally relevant for computation time)
 #' @return window cluster
 
-ignore_small_nodes <- function(data, indi , nwindow, node_min=5, gap=10, intersect_func=intersect){
+ignore_small_nodes <- function(data1, indi , nwindow, node_min=5, gap=10, intersect_func=intersect){
   resttiere <- matrix(0, nrow=indi, ncol=nwindow)
 
-  for(index in 1:length(data)){
-    if(data[[index]][[3]]< node_min){
-      resttiere[data[[index]][[5]], data[[index]][[1]]$window:data[[index]][[2]]$window] <- 1
-      data[[index]][[3]] <- 0
-      data[[index]][[5]] <- numeric(0)
+  recalc <- rep(FALSE,(length(data1)))
+  for(index in 1:length(data1)){
+    if(data1[[index]][[3]]< node_min){
+      resttiere[data1[[index]][[5]], data1[[index]][[1]]$window:data1[[index]][[2]]$window] <- 1
+      data1[[index]][[3]] <- 0
+      data1[[index]][[5]] <- numeric(0)
 
-      if(data[[index]][[2]]$window<nwindow){
-        next1 <- unique(c(0,data[[index]][[6]][,1]))[-1]
-        for(index2 in next1){
-          data[[index2]] <- calculate_new_transition(data, index2, nwindow, intersect_func=intersect_func)
-        }
+      if(data1[[index]][[2]]$window<nwindow){
+        recalc[data1[[index]][[6]][,1]] <- TRUE
       }
 
-
-      if(data[[index]][[1]]$window>1){
-        previous1 <- unique(c(0,data[[index]][[7]][,1]))[-1]
-        for(index2 in previous1){
-          data[[index2]] <- calculate_new_transition(data, index2, nwindow, intersect_func=intersect_func)
-        }
+      if(data1[[index]][[1]]$window>1){
+        recalc[data1[[index]][[7]][,1]] <- TRUE
       }
 
     }
   }
 
+  for(index in (1:length(data1))[recalc]){
+    data1[[index]] <- calculate_new_transition(data1, index, nwindow, intersect_func = intersect_func)
+  }
 
 
 
@@ -61,22 +58,22 @@ ignore_small_nodes <- function(data, indi , nwindow, node_min=5, gap=10, interse
 
 
   block1 <- matrix(0, nrow=indi, ncol=nwindow)
-  for(index in 1:length(data)){
-    block1[data[[index]][[5]], data[[index]][[1]]$window: data[[index]][[2]]$window] <- index
+  for(index in 1:length(data1)){
+    block1[data1[[index]][[5]], data1[[index]][[1]]$window: data1[[index]][[2]]$window] <- index
   }
 
 
   abc <- unique(c(0,block1 * checker))[-1]
 
   for(index in abc){
-    removes <- which(checker[,data[[index]][[1]]$window]==1)
-    data[[index]][[5]] <- intersect_func(data[[index]][[5]], (1:indi)[-removes])
-    data[[index]][[3]] <- length(data[[index]][[5]])
-    data[[index]] <- calculate_new_transition(data, index, nwindow, intersect_func=intersect_func)
+    removes <- which(checker[,data1[[index]][[1]]$window]==1)
+    data1[[index]][[5]] <- intersect_func(data1[[index]][[5]], (1:indi)[-removes])
+    data1[[index]][[3]] <- length(data1[[index]][[5]])
+    data1[[index]] <- calculate_new_transition(data1, index, nwindow, intersect_func=intersect_func)
   }
 
-  data <-renaming_combi(data, nwindow)
+  data1 <-renaming_combi(data1, nwindow)
 
-  return(data)
+  return(data1)
 
 }

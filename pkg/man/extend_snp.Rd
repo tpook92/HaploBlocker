@@ -4,8 +4,16 @@
 \alias{extend_snp}
 \title{Extend-SNP}
 \usage{
-extend_snp(blocklist, indi, nwindow, dhm, window_sequence_list, bp_map,
-  max_extending_diff_snp = 0, extending_ratio_snp = Inf)
+extend_snp(
+  blocklist,
+  indi,
+  nwindow,
+  dhm,
+  window_sequence_list,
+  bp_map,
+  max_extending_diff_snp = 0,
+  extending_ratio_snp = Inf
+)
 }
 \arguments{
 \item{blocklist}{blocklist created by blocklist_calculcation algorithm}

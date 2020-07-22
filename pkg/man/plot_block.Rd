@@ -4,11 +4,22 @@
 \alias{plot_block}
 \title{Plot Block_structure}
 \usage{
-plot_block(blocklist, type = "snp", orientation = "snp",
-  include = TRUE, indi = NULL, min_to_plot = 5, intensity = 0.7,
-  add_sort = TRUE, max_step = 500, snp_ori = NULL,
-  export_order = FALSE, import_order = FALSE, xlim = NULL,
-  n_colors = 20)
+plot_block(
+  blocklist,
+  type = "snp",
+  orientation = "snp",
+  include = TRUE,
+  indi = NULL,
+  min_to_plot = 5,
+  intensity = 0.7,
+  add_sort = TRUE,
+  max_step = 500,
+  snp_ori = NULL,
+  export_order = FALSE,
+  import_order = FALSE,
+  xlim = NULL,
+  n_colors = 20
+)
 }
 \arguments{
 \item{blocklist}{block-dataset}

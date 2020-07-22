@@ -4,9 +4,15 @@
 \alias{block_ihh}
 \title{Mainfunction to calculate haplotype blocks}
 \usage{
-block_ihh(blocklist = NULL, data = NULL, plot = FALSE,
-  position1 = NULL, standardization = 3, group = NULL,
-  verbose = TRUE)
+block_ihh(
+  blocklist = NULL,
+  data = NULL,
+  plot = FALSE,
+  position1 = NULL,
+  standardization = 3,
+  group = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{blocklist}{blocklist}

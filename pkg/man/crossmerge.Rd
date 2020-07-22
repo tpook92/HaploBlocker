@@ -4,10 +4,10 @@
 \alias{crossmerge}
 \title{Cross Merge nodes}
 \usage{
-crossmerge(data, indi, nwindow, a = NULL, intersect_func = intersect)
+crossmerge(data1, indi, nwindow, a = NULL, intersect_func = intersect)
 }
 \arguments{
-\item{data}{node-dataset}
+\item{data1}{node-dataset}
 
 \item{indi}{number of haplotypes in the dataset}
 

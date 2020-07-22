@@ -4,9 +4,17 @@
 \alias{add_offnode}
 \title{Off-variant-identification}
 \usage{
-add_offnode(blocklist, dataset, indi, nwindow, window_sequence, bp_map,
-  off_node_minimum_blocklength = 10, off_node_minimum_blocksize = 5,
-  raster = 5)
+add_offnode(
+  blocklist,
+  dataset,
+  indi,
+  nwindow,
+  window_sequence,
+  bp_map,
+  off_node_minimum_blocklength = 10,
+  off_node_minimum_blocksize = 5,
+  raster = 5
+)
 }
 \arguments{
 \item{blocklist}{blocklist created by blocklist_calculcation algorithm}

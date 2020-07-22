@@ -4,14 +4,27 @@
 \alias{identify_blocks}
 \title{Identify possible blocks base on the node-dataset}
 \usage{
-identify_blocks(data, indi, nwindow, min_share = 0.95,
-  consider_nodes = TRUE, consider_edge = TRUE, edge_min = 5,
-  subgroups = NULL, min_per_subgroup = 0, intersect_func = intersect,
-  identify_filter = FALSE, consider_multi = FALSE, multi_min = 5,
-  subgroup_exception = 0, double_share = 1, node_min = 5)
+identify_blocks(
+  data1,
+  indi,
+  nwindow,
+  min_share = 0.95,
+  consider_nodes = TRUE,
+  consider_edge = TRUE,
+  edge_min = 5,
+  subgroups = NULL,
+  min_per_subgroup = 0,
+  intersect_func = intersect,
+  identify_filter = FALSE,
+  consider_multi = FALSE,
+  multi_min = 5,
+  subgroup_exception = 0,
+  double_share = 1,
+  node_min = 5
+)
 }
 \arguments{
-\item{data}{node-dataset}
+\item{data1}{node-dataset}
 
 \item{indi}{number of haplotypes in the dataset}
 

@@ -4,11 +4,17 @@
 \alias{ignore_small_nodes}
 \title{Ignore small nodes}
 \usage{
-ignore_small_nodes(data, indi, nwindow, node_min = 5, gap = 10,
-  intersect_func = intersect)
+ignore_small_nodes(
+  data1,
+  indi,
+  nwindow,
+  node_min = 5,
+  gap = 10,
+  intersect_func = intersect
+)
 }
 \arguments{
-\item{data}{node-dataset}
+\item{data1}{node-dataset}
 
 \item{indi}{number of haplotypes in the dataset}
 

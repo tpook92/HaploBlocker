@@ -4,8 +4,16 @@
 \alias{block_closeblock_merging}
 \title{Merging neighbouring blocks}
 \usage{
-block_closeblock_merging(blocklist, blockinfo, indi, nwindow, max_diff_l,
-  max_diff_i, intersect_func = intersect, dataset)
+block_closeblock_merging(
+  blocklist,
+  blockinfo,
+  indi,
+  nwindow,
+  max_diff_l,
+  max_diff_i,
+  intersect_func = intersect,
+  dataset
+)
 }
 \arguments{
 \item{blocklist}{block-dataset}

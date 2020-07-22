@@ -4,10 +4,19 @@
 \alias{blockinfo_calculation}
 \title{Mainfunction to calculate haplotype blocks}
 \usage{
-blockinfo_calculation(dhm, window_sequence = NULL, window_size = 20,
-  merging_error = 1, bp_map = NULL, window_anchor_gens = NULL,
-  at_least_one = TRUE, max_groups = 0, blockinfo_mode = 0,
-  c_dhm = NULL, verbose = TRUE)
+blockinfo_calculation(
+  dhm,
+  window_sequence = NULL,
+  window_size = 20,
+  merging_error = 1,
+  bp_map = NULL,
+  window_anchor_gens = NULL,
+  at_least_one = TRUE,
+  max_groups = 0,
+  blockinfo_mode = 0,
+  c_dhm = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{dhm}{haploid SNP-dataset}

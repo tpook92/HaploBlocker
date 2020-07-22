@@ -4,8 +4,7 @@
 \alias{blocklist_plot}
 \title{Function to plot a blocklist}
 \usage{
-blocklist_plot(blocklist, cutoff2 = 5, bound_weighted = TRUE,
-  type = "snp")
+blocklist_plot(blocklist, cutoff2 = 5, bound_weighted = TRUE, type = "snp")
 }
 \arguments{
 \item{blocklist}{blocklist created by blocklist_calculcation algorithm}

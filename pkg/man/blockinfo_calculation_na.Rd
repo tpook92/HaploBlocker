@@ -4,10 +4,20 @@
 \alias{blockinfo_calculation_na}
 \title{Mainfunction to calculate haplotype blocks}
 \usage{
-blockinfo_calculation_na(dhm, window_sequence = NULL, window_size = 32,
-  merging_error = 3, bp_map = NULL, window_anchor_gens = NULL,
-  at_least_one = TRUE, blockinfo_mode = 0, actual_snp_weight = 5,
-  na_snp_weight = 2, na_seq_weight = 0, verbose = TRUE)
+blockinfo_calculation_na(
+  dhm,
+  window_sequence = NULL,
+  window_size = 32,
+  merging_error = 3,
+  bp_map = NULL,
+  window_anchor_gens = NULL,
+  at_least_one = TRUE,
+  blockinfo_mode = 0,
+  actual_snp_weight = 5,
+  na_snp_weight = 2,
+  na_seq_weight = 0,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{dhm}{haploid SNP-dataset}
