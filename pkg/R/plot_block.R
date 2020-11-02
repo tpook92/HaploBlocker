@@ -140,11 +140,19 @@ plot_block <- function(blocklist, type="snp", orientation="snp", include=TRUE, i
 
 
   }
+
+  xlab <- "SNP"
+  if(type=="bp"){
+    xlab = "base pair"
+  }
+  if(type=="window"){
+    xlab = "window"
+  }
   if(length(xlim)>0){
-    plot(0,-1000,ylim=c(0,length(order)), ylab="haplotype", xlab="SNP",
+    plot(0,-1000,ylim=c(0,length(order)), ylab="haplotype", xlab=xlab,
          cex.axis=1, cex.lab=1, xlim=xlim)
   } else{
-    plot(0,-1000,ylim=c(0,length(order)), xlim=c(1,max(se)), ylab="haplotype", xlab="SNP",
+    plot(0,-1000,ylim=c(0,length(order)), xlim=c(1,max(se)), ylab="haplotype", xlab=xlab,
          cex.axis=1, cex.lab=1)
   }
 

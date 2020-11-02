@@ -11,7 +11,7 @@ block_plot(blocklist, indi = NULL, type = "snp", bw = 1)
 
 \item{indi}{number of haplotypes in the dataset}
 
-\item{type}{length measure (default: "window" , alt: "snp", "bp")}
+\item{type}{length measure (default: "window" , alt: "snp")}
 
 \item{bw}{bandwidth for the smoothing of the coverage (default: bw=1 - no smoothing)}
 }

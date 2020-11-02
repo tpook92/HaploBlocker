@@ -37,6 +37,9 @@ blockinfo_calculation_na <- function(dhm, window_sequence=NULL, window_size=32, 
 
   if(length(window_sequence)==0){
     window_sequence <- cbind(0:(nrow(dhm)/window_size-1)*window_size+1, 1:(nrow(dhm)/window_size)*window_size)
+    if( nrow(dhm)/window_size> nrow(window_sequence)){
+      window_sequence <- rbind(window_sequence, c(window_size * nrow(window_sequence) + 1, nrow(dhm)))
+    }
   }
   if(ncol(window_sequence)==2){
     window_sequence <- cbind(window_sequence, window_sequence[,2]-window_sequence[,1]+1, window_sequence[,2]-window_sequence[,1]-merging_error+1)

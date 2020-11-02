@@ -130,6 +130,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     }
   }
 
+  if(length(subgroups)>0){
+    for(index in 1:length(subgroups)){
+      subgroups[[index]] <- sort(subgroups[[index]])
+    }
+  }
+
+
   {
     # foreach variables
     indexb <- NULL
@@ -188,6 +195,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     bp_map <- as.numeric(bp_map)
   } else{
     bp_map <- rep(0, nrow(dhm))
+  }
+
+  if(length(window_size)==1 && nrow(dhm) && window_size >= nrow(dhm)){
+    warning("Your dataset is extremely small - resulting in just one window for the window cluster!")
+    warning("window_size has been set to 1")
+    window_size <- 1
+
   }
 
   if(nrow(dhm)>parallel_window){

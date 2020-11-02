@@ -52,7 +52,7 @@ crossmerge <- function(data1, indi, nwindow, a=NULL, intersect_func=intersect){
 
               #if(data1[[index]][[6]][pos_a,2]== data1[[index]][[7]][pos_e,2]){
               if(d6[pos_a]== d7[pos_e]){
-                no_change <- FALSE
+
                 # Bestimmung der Exakten Aus-und Eingangstiere
                 if(data1[[index]][[7]][pos_e,1]==0){
                   sonstige <- NULL
@@ -89,7 +89,7 @@ crossmerge <- function(data1, indi, nwindow, a=NULL, intersect_func=intersect){
 
                 # Merge Knoten Wenn Aus/Eingangstiere Identisch
                 if(length(intersect_func(etier, atier))==max(length(atier), length(etier))){
-
+                  no_change <- FALSE
                   if(activ_a==0 && activ_e==0){
                     # 1. Fall: Eingangsknoten 0, Ausgangsknoten 0 - Erstelle zusaetzlichen Knoten
                     new_k <- length(data1) +1

@@ -26,7 +26,7 @@ major_snp_calculation <- function(blocklist, dhm, recoding=FALSE){
   for(index in 1:length(blocklist)){
     snp_seq <- major[blocklist[[index]][[2]]$snp: blocklist[[index]][[3]]$snp]
     freq <- numeric(length(snp_seq))
-    count <- rowSums(dhm[blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp, blocklist[[index]][[6]]]==major[blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp])
+    count <- rowSums(dhm[blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp, blocklist[[index]][[6]], drop=FALSE]==major[blocklist[[index]][[2]]$snp:blocklist[[index]][[3]]$snp, drop=FALSE])
 
     freq <- (count/blocklist[[index]][[5]])
     snp_seq[freq<0.5] <- minor[blocklist[[index]][[2]]$snp: blocklist[[index]][[3]]$snp][freq<0.5]

@@ -24,7 +24,16 @@ blocklist_plot <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, type="sn
   start <- bpstart[switch]
   end <- bpend[switch]
   size <- size[switch]
-  plot(-1000,0, xlim=c(1,length(start)), ylim=c(0, max(end)), xlab="block number", ylab="SNP")
+
+  xlab <- "SNP"
+  if(type=="bp"){
+    xlab = "base pair"
+  }
+  if(type=="window"){
+    xlab = "window"
+  }
+
+  plot(-1000,0, xlim=c(1,length(start)), ylim=c(0, max(end)), xlab="block number", ylab=xlab)
   for(index in 1:length(start)){
     lines(c(index,index), c(start[index], end[index]))
   }
@@ -40,12 +49,20 @@ blocklist_plot <- function(blocklist, cutoff2 = 5, bound_weighted=TRUE, type="sn
       tempest[1:size[index]+sofar] <- end[index]
       sofar <- sofar + size[index]
     }
-    xy <- density(tempest,bw=5, from=1, to=nwindow, n=nwindow)
 
-    candidate <- unique(c(0,(c(0,xy$y[-nwindow])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:nwindow))[-1]
+    if(type=="bp"){
+      nwindow = length(tempest)
+    }
+      xy <- density(tempest,bw=5, from=1, to=nwindow, n=nwindow)
+      candidate <- unique(c(0,(c(0,xy$y[-nwindow])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:nwindow))[-1]
+      abline(h=candidate)
 
-    abline(h=candidate)
+
   } else{
+
+    if(type=="bp"){
+      nwindow = length(tempest)
+    }
     xy <- density(c(start,end),bw=5, from=1, to=nwindow, n=nwindow)
 
     candidate <- unique(c(0,(c(0,xy$y[-nwindow])<c(xy$y)) * (c(xy$y)>c(xy$y[-1],0)) * (xy$y > 1/length(start)/2/5/2*cutoff2) * 1:nwindow))[-1]
