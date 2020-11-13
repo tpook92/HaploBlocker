@@ -31,6 +31,7 @@ export(fixcoding)
 export(codeSNPs)
 export(decodeSNPs)
 export(colSumsEqualSNPs)
+export(blocklist_subset)
 export(factorSNPs)
 
 importFrom("graphics", "abline", "lines", "plot", "polygon")

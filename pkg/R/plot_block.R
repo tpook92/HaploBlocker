@@ -25,7 +25,7 @@
 plot_block <- function(blocklist, type="snp", orientation="snp", include=TRUE, indi=NULL, min_to_plot = 5,
                       intensity=0.7, add_sort=TRUE, max_step=500,
                       snp_ori=NULL,
-                      export_order=FALSE, import_order=FALSE,
+                      export_order=FALSE, import_order=NULL,
                       xlim=NULL, n_colors=20){
 
   if(length(indi)==0){
@@ -36,110 +36,114 @@ plot_block <- function(blocklist, type="snp", orientation="snp", include=TRUE, i
   se <- blocklist_startend(blocklist, type=type)
   order <- NULL
 
-  if(length(orientation_f)==0){
-    order <- 1:indi
-  } else if(orientation_f[1]=="front"){
-    orientation <- 1:8
-  } else if(orientation_f[1]=="mid"){
-    orientation <- 1:8 + ceiling(nrow(se)/2-3)
-  } else if(orientation_f[1]=="back"){
-    orientation <- 1:8 + nrow(se) -8
-  } else if(orientation_f[1]=="snp"){
-    if(length(snp_ori)==0){
-      snp_ori <- mean(c(max(se), min(se)))
-    }
-    orientation <- which(((se[,1]<= snp_ori)+ (se[,2]>= snp_ori))==2)
+  if(length(import_order)>1){
+    order <- import_order
   } else{
-    order <- orientation_f
-  }
 
-  if(length(orientation)>0 && import_order==FALSE){
-    sorted <- orientation[1]
-    orientation <- orientation[-1]
-    while(length(orientation)>0){
-      overlap <- numeric(length(orientation))
-      actives <- blocklist[[sorted[length(sorted)]]][[6]]
-      i1 <- 1
-      for(index in orientation){
-        nextone <- blocklist[[index]][[6]]
-        overlap[i1] <- length(intersect(nextone,actives))/ length(nextone)
-        i1 <- i1 + 1
+    if(orientation_f[1]=="front"){
+      orientation <- 1:8
+    } else if(orientation_f[1]=="mid"){
+      orientation <- 1:8 + ceiling(nrow(se)/2-3)
+    } else if(orientation_f[1]=="back"){
+      orientation <- 1:8 + nrow(se) -8
+    } else if(orientation_f[1]=="snp"){
+      if(length(snp_ori)==0){
+        snp_ori <- mean(c(max(se), min(se)))
       }
-      sorted <- c(sorted, orientation[which.max(overlap)[1]])
-      orientation <- orientation[-which.max(overlap)[1]]
+      orientation <- which(((se[,1]<= snp_ori)+ (se[,2]>= snp_ori))==2)
     }
-    orientation <- sorted
 
-  }
-  if(length(order)==0){
-    if(include==TRUE){
-      orientation <- c(orientation, 0)
-    }
-    for(index in orientation){
-      pl <- length(order)
-      if(index==0){
-        order <- unique(c(order,1:indi))
-        index <- ceiling(median(orientation[-length(orientation)]))
-      } else{
-        order <- unique(c(order,blocklist[[index]][[6]]))
-      }
 
-      if(add_sort==TRUE && length(order)>pl){
-        if(pl>0){
-          added <- order[-(1:pl)]
-        } else{
-          added <- order
+    if(length(orientation)>0 && (length(import_order)==0 || (length(import_order)==1 && import_order==FALSE))){
+      sorted <- orientation[1]
+      orientation <- orientation[-1]
+      while(length(orientation)>0){
+        overlap <- numeric(length(orientation))
+        actives <- blocklist[[sorted[length(sorted)]]][[6]]
+        i1 <- 1
+        for(index in orientation){
+          nextone <- blocklist[[index]][[6]]
+          overlap[i1] <- length(intersect(nextone,actives))/ length(nextone)
+          i1 <- i1 + 1
         }
-        groups <- list()
-        groups[[1]] <- added
-        for(step in 1:max_step){
+        sorted <- c(sorted, orientation[which.max(overlap)[1]])
+        orientation <- orientation[-which.max(overlap)[1]]
+      }
+      orientation <- sorted
 
-          if(length(groups)<length(added)){
-            if((index-step) >0 && length(intersect(blocklist[[index-step]][[6]], added))>0){
-              new_groups <- list()
-              for(group in 1:length(groups)){
-                same <- base::intersect(groups[[group]], blocklist[[index-step]][[6]])
-                rest <- base::intersect(groups[[group]], (1:indi)[-blocklist[[index-step]][[6]]])
-                if(length(same)>0){
-                  new_groups[[length(new_groups)+1]] <- same
-                }
-                if(length(rest)>0){
-                  new_groups[[length(new_groups)+1]] <- rest
-                }
+    }
+    if(length(order)==0){
+      if(include==TRUE){
+        orientation <- c(orientation, 0)
+      }
+      for(index in orientation){
+        pl <- length(order)
+        if(index==0){
+          order <- unique(c(order,1:indi))
+          index <- ceiling(median(orientation[-length(orientation)]))
+        } else{
+          order <- unique(c(order,blocklist[[index]][[6]]))
+        }
 
+        if(add_sort==TRUE && length(order)>pl){
+          if(pl>0){
+            added <- order[-(1:pl)]
+          } else{
+            added <- order
+          }
+          groups <- list()
+          groups[[1]] <- added
+          for(step in 1:max_step){
+
+            if(length(groups)<length(added)){
+              if((index-step) >0 && length(intersect(blocklist[[index-step]][[6]], added))>0){
+                new_groups <- list()
+                for(group in 1:length(groups)){
+                  same <- base::intersect(groups[[group]], blocklist[[index-step]][[6]])
+                  rest <- base::intersect(groups[[group]], (1:indi)[-blocklist[[index-step]][[6]]])
+                  if(length(same)>0){
+                    new_groups[[length(new_groups)+1]] <- same
+                  }
+                  if(length(rest)>0){
+                    new_groups[[length(new_groups)+1]] <- rest
+                  }
+
+                }
+                groups <- new_groups
               }
-              groups <- new_groups
-            }
-            if((index+step) <=length(blocklist) && length(intersect(blocklist[[index+step]][[6]], added))>0){
-              new_groups <- list()
-              for(group in 1:length(groups)){
-                same <- base::intersect(groups[[group]], blocklist[[index+step]][[6]])
-                rest <- base::intersect(groups[[group]], (1:indi)[-blocklist[[index+step]][[6]]])
-                if(length(same)>0){
-                  new_groups[[length(new_groups)+1]] <- same
-                }
-                if(length(rest)>0){
-                  new_groups[[length(new_groups)+1]] <- rest
-                }
+              if((index+step) <=length(blocklist) && length(intersect(blocklist[[index+step]][[6]], added))>0){
+                new_groups <- list()
+                for(group in 1:length(groups)){
+                  same <- base::intersect(groups[[group]], blocklist[[index+step]][[6]])
+                  rest <- base::intersect(groups[[group]], (1:indi)[-blocklist[[index+step]][[6]]])
+                  if(length(same)>0){
+                    new_groups[[length(new_groups)+1]] <- same
+                  }
+                  if(length(rest)>0){
+                    new_groups[[length(new_groups)+1]] <- rest
+                  }
 
 
+                }
+                groups <- new_groups
               }
-              groups <- new_groups
             }
+
+          }
+          if(pl>0){
+            order <- c(order[(1:pl)],unlist(groups))
+          } else{
+            order <- c(unlist(groups))
           }
 
         }
-        if(pl>0){
-          order <- c(order[(1:pl)],unlist(groups))
-        } else{
-          order <- c(unlist(groups))
-        }
-
       }
+
+
     }
-
-
   }
+
+
 
   xlab <- "SNP"
   if(type=="bp"){

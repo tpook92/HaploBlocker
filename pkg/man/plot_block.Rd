@@ -16,7 +16,7 @@ plot_block(
   max_step = 500,
   snp_ori = NULL,
   export_order = FALSE,
-  import_order = FALSE,
+  import_order = NULL,
   xlim = NULL,
   n_colors = 20
 )
