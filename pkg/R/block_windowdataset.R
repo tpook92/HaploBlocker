@@ -199,11 +199,14 @@ block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FAL
   row_names <- numeric(nrow(bin_dataset))
   for(index in 1:length(var_permarker)){
     if(length(var_permarker[index])>0){
-      for(index2 in 1:var_permarker[index]){
-        bin_dataset[counter,] <- dataset[index,]==index2
-        row_names[counter] <- paste0("window:",start_block[index],"-", end_block[index], "variant", index2)
-        counter <- counter + 1
+      if(var_permarker[index]>0){
+        for(index2 in 1:var_permarker[index]){
+          bin_dataset[counter,] <- dataset[index,]==index2
+          row_names[counter] <- paste0("window:",start_block[index],"-", end_block[index], "variant", index2)
+          counter <- counter + 1
+        }
       }
+
     }
   }
   if(return_dataset){
