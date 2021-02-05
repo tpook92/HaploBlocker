@@ -12,6 +12,22 @@ For explanation on the usage we refer to our user manual. The wiki is currently 
 
 ## Version history
 
+### Version 1.6.0
+
+Fixed typo in parallel computing
+
+Improved data import from vcf/ped-file
+
+RandomFieldsUtils update (0.6.6)
+
+### Version 1.5.18
+
+Hotfixes in utility/plot functions
+
+Added blocklist_subset to only consider a subset of haplotypes in the haplotype library
+
+Updates for the use in graph-genomes (extended doku will follow)
+
 ### Version 1.5.2
 
 Added the option to identify non-overlapping haplotype blocks (overlap_remove = TRUE in block_calculation() )
