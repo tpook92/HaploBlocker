@@ -76,6 +76,7 @@
 #' @param deletion_count If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions
 #' @param na_value Number/Character variable that is coding NA (default: -9)
 #' @param verbose Set to FALSE to not display any prints
+#' @param inbred Set to TRUE when working with inbred material and importing genomic data from file
 #' @examples
 #' data(ex_maze)
 #' blocklist <- block_calculation(ex_maze)
@@ -118,7 +119,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                               window_cores=1, overlap_remove=FALSE,
                               na_value=(-9),
                               deletion_count=FALSE,
-                              verbose=TRUE){
+                              verbose=TRUE,
+                              inbred = FALSE){
 
   if(adaptive_mode==TRUE){
     multi_window_mode <- TRUE
@@ -162,32 +164,13 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
 
 
   if(length(dhm)==1){
-    data_type <- substr(dhm, start= nchar(dhm)-2, stop= nchar(dhm))
-    if(data_type=="vcf"){
-      if(verbose) cat("Data input identified as vcf-file - extract genomic information. \n")
-      if(requireNamespace("vcfR", quietly = TRUE)){
-        vcf_file <- vcfR::read.vcfR(dhm)
-        haplo1 <- substr(vcf_file@gt[,-1], start=1, stop=1)
-        haplo2 <- substr(vcf_file@gt[,-1], start=3, stop=3)
-        haplo <- cbind(haplo1, haplo2)
-        haplo <- haplo[,c(0,ncol(haplo1)) + rep(1:ncol(haplo1), each=2)]
-      } else{
-        stop("Data-import failed! vcfR-package not available!")
-      }
-    } else if(data_type=="ped"){
-      if(verbose) cat("Data input identified as Ped-map-file - extract genomic information. \n")
-      if(verbose) cat("Haplotype phase is assumed to be by colum - No internal phasing performed! \n")
-      ped_file <- utils::read.table(dhm)
-      haplo12 <- t(ped_file[,-(1:6)])
-      haplo <- matrix(0, ncol = ncol(haplo12)*2, nrow=nrow(haplo12)/2)
-      for(index1 in 1:ncol(haplo12)){
-        haplo[,index1*2+c(-1,0)] <- matrix(haplo12[,index1], ncol=2, byrow=TRUE)
-      }
-    } else{
-      stop("Data type could not be identified. Please manually import the dataset. \n")
+
+    data_file <- data_import(dhm, inbred=inbred, verbose=verbose)
+    dhm <- data_file[[1]]
+    if(length(bp_map)==0){
+      bp_map <- data_file[[2]]
     }
-    #storage.mode(haplo) <- "integer"
-    dhm <- haplo
+    rm(data_file)
     if(verbose) cat("Data import successful. \n")
   }
 
@@ -208,9 +191,10 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     dhm_list <- list()
     snp_start <- NULL
     bp_map_list <- list()
-    for(index in 1:ceiling(nrow(dhm)/parallel_window-0.1)){
+    n_windows <- max(1,ceiling((nrow(dhm)-window_overlap)/parallel_window))
+    for(index in 1:n_windows){
       snp_start <- c(snp_start, (index-1)*parallel_window)
-      if(index!=ceiling(nrow(dhm)/parallel_window-0.1)){
+      if(index!=n_windows){
         dhm_list[[index]] <- dhm[1:(parallel_window+window_overlap) + (index-1)*parallel_window,]
         if(length(bp_map>0)){
           bp_map_list[[index]] <- bp_map[1:(parallel_window+window_overlap) + (index-1)*parallel_window]
@@ -276,7 +260,8 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                         deletion_count = deletion_count,
                         na_value = na_value,
                         overlap_remove = overlap_remove,
-                        verbose = verbose
+                        verbose = verbose,
+                        inbred = inbred
 
                         )
       return(blockl)
@@ -293,6 +278,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       blocklist_list <- parallel::mclapply(dhm_list, block_calculation_par, mc.cores=window_cores)
     }
 
+    rm(dhm_list)
 
 
     # modify Start/End
@@ -620,11 +606,42 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
         blocklist <- blocklist_out[[1]]
         extensions_done <- blocklist_out[[2]]
 
+
         blocklist <- block_merging(blocklist, blockinfo, dataset, dhm, indi, nwindow, window_sequence_list, off_lines, min_similarity=min_similarity,
                                    consider_all=consider_all, node_min=node_min, save_allblock=save_allblock, c_dhm=c_dhm,
                                    c_dhm_mode=c_dhm_mode , intersect_func=intersect_func,
                                    min_per_subgroup=min_per_subgroup, subgroup_exception=subgroup_exception,
                                    run=(iteration-1))
+
+        if(length(blocklist)==0){
+
+          if(length(target_coverage)>0){
+            blocklist <- blocklist_start
+            min_majorblock_count[current_iteration] <- ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 2)
+            min_majorblock <- min_majorblock_count[current_iteration]
+
+          } else{
+            if(verbose) cat(paste0("Empty Blocklist! Min_majorblock was chosen to high. Automatically set to ", ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 5),"!\n"))
+            if(verbose) cat("This might still be way too high for your data!!! \n")
+            blocklist <- list()
+            for(index in 1:ncluster){
+              if(length(partial_blocklist[[index]])>0){
+                for(index2 in 1:length(partial_blocklist[[index]])){
+                  blocklist[[length(blocklist)+1]] <- partial_blocklist[[index]][[index2]]
+                  blocklist[[length(blocklist)]][[12]] <- index
+                }
+              }
+            }
+            min_majorblock <- ceiling(min(iteration-1, min_majorblock_steps-1)/(min_majorblock_steps-1)*min_majorblock / 5)
+          }
+          if(min_majorblock<=1){
+            stop("Empty blocklist with infinitisimal min_majorblock. Check input dataset.")
+          }
+          helper_old <- NULL
+          iteration <- 0
+
+        }
+
 
         if(merge_closeblock==TRUE){
           blocklist <- block_closeblock_merging(blocklist, blockinfo, indi, nwindow, max_diff_l, max_diff_i, intersect_func=intersect_func,

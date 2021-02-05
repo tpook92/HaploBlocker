@@ -1,9 +1,9 @@
 /*
- Authors
+ Authors 
  Martin Schlather, schlather@math.uni-mannheim.de
 
 
- Copyright (C) 2015 Martin Schlather
+ Copyright (C) 2015 -- 2019 Martin Schlather
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,23 +17,26 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.  
 */
 
 
-#ifndef RFxport_H
-#define RFxport_H 1
+#ifndef Miraculixxport_H
+#define Miraculixxport_H 1
+
 
 #include <zzz_RandomFieldsUtils.h>
 
-#define UTILSCALLS \
-  CALL(getErrorString);				\
-  CALL(setErrorLoc);				\
+
+#define UTILSCALLS				\
   CALL(getUtilsParam);				\
   CALL(attachRFoptions);			\
   CALL(detachRFoptions);			\
-  CALL(scalarX)
-
+  CALL(utilsparam_NULL);			\
+  CALL(utilsparam_DELETE);			\
+  CALL(scalarX);				\
+  CALL(pid)
+  
 #ifdef CALL
 #undef CALL
 #endif
@@ -42,4 +45,13 @@ UTILSCALLS;
 
 void includeXport();
 extern utilsparam* GLOBAL_UTILS;
+extern int CORES;
+extern int PL;
+void PIDKEY_DELETE();
+typedef
+struct globalparam globalparam;
+globalparam *WhichOptionList(bool local);
+bool parallel();
+
+
 #endif

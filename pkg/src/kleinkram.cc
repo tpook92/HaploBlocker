@@ -19,11 +19,36 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.  
 */
 
-#include <R_ext/Lapack.h>
+//#include <R_ext/Lapack.h>
 //#include "def.h" // never change this line
-#include <General_utils.h> //#include <General_utils.h>
+
+ 
+#include <General_utils.h> 
+#include "xport_import.h"
+#include "kleinkram.h"
 #include "xport_import.h"
 
+
+
+//const char *RTYPE_NAMES[LAST_R_TYPE_NAME + 1] = {
+//  "Nil" /* 0 */,
+//  "Symbols", "List of dotted pairs", "Closure", "Environement", "Promises",
+//  "Language", "Special", "Builtin", "Char", "Logical" /* 10 */,
+//  "??", "??", "Integer", "Real", "Complex", "String", "Dots", "Any", "Vector", 
+//  "Expression" /*20 */,
+// "Byte code", "Pointer", "Reference", "Raw bytes", "S4" /* 25 */, "", "", "", "",
+//  "Fresh node" /* 30 */,
+//  "Freed", "Others"};
+
+const char *RTYPE_NAMES[LAST_R_TYPE_NAME + 1] = {
+  "NILSXP" /* 0 */,
+  "SYMSXP", "LISTSXP", "CLOSXP", "ENVSXP", "PROMSXP",
+  "LANGSXP", "SPECIALSXP", "BUILTINSXP", "CHARSXP", "LGLSXP" /* 10 */,
+  "??", "??", "INTSXP", "REALSXP", "CPLXSXP", "STRSXP", "DOTSXP", "ANYSXP",
+  "ECSXP", "EXPRSXP" /*20 */,
+  "BCODESXP", "EXTPTRSXP", "WEAKREFSXP", "RAWSXP", "S4SXP" /* 25 */, "", "", "",
+  "", "NEWSXP" /* 30 */,
+  "FREESXP", "??SXP"};
 
 #define SCALAR(A,B,C) Ext_scalarX(A,B,C, SCALAR_AVX)
 //#define SCALARINT(A,B,C) Ext_scalarInt(A,B,C, SCALAR_BASE)
@@ -448,18 +473,18 @@ double *matrixmult(double *m1, double *m2, int dim1, int dim2, int dim3) {
 SEXP TooLarge(int *n, int l){
 #define nTooLarge 2 // mit op
   const char *tooLarge[nTooLarge] = {"size", "msg"};
-  SEXP namevec, info;
-  PROTECT(info=allocVector(VECSXP, nTooLarge));
+  SEXP namevec, msg;
+  PROTECT(msg=allocVector(VECSXP, nTooLarge));
   PROTECT(namevec = allocVector(STRSXP, nTooLarge));
   for (int i=0; i<nTooLarge; i++)
     SET_STRING_ELT(namevec, i, mkChar(tooLarge[i]));
-  setAttrib(info, R_NamesSymbol, namevec);
+  setAttrib(msg, R_NamesSymbol, namevec);
   int i=0;
-  SET_VECTOR_ELT(info, i++, Int(n, l, l));
-  SET_VECTOR_ELT(info, i,
+  SET_VECTOR_ELT(msg, i++, Int(n, l));
+  SET_VECTOR_ELT(msg, i,
 		 mkString("too many elements - increase max.elements"));
   UNPROTECT(2);
-  return info;
+  return msg;
 }
 
 SEXP TooSmall(){
@@ -483,9 +508,7 @@ SEXP Int(int *V, int n, int max) {
   return dummy;
 }
 
-SEXP Int(int* V, int n) {
-  return Int(V, n, MAXINT);
-}
+SEXP Int(int* V, int n) { return Int(V, n, n); }
 
 
 SEXP Logic(bool* V, int n, int max) {
@@ -498,9 +521,7 @@ SEXP Logic(bool* V, int n, int max) {
   UNPROTECT(1);
   return dummy;
 }
-SEXP Logic(bool* V, int n) {
-  return Logic(V, n, MAXINT);
-}
+SEXP Logic(bool* V, int n) { return Logic(V, n, n); }
 
 SEXP Num(double* V, int n, int max) {
   SEXP dummy;
@@ -512,9 +533,7 @@ SEXP Num(double* V, int n, int max) {
   UNPROTECT(1);
   return dummy;
 }
-SEXP Num(double* V, int n) {
-  return Num(V, n, MAXINT);
-}
+SEXP Num(double* V, int n) {  return Num(V, n, n); }
 
 SEXP Result(double* V, int n, int max) {
   SEXP dummy;
@@ -528,7 +547,7 @@ SEXP Result(double* V, int n, int max) {
 }
 
 SEXP Result(double* V, int n) {
-  return Result(V, n, MAXINT);
+  return Result(V, n, n);
 }
 
 SEXP Char(const char **V, int n, int max) {
@@ -544,9 +563,7 @@ SEXP Char(const char **V, int n, int max) {
   return dummy;
 }
 
-SEXP Char(const char **V, int n) {
-  return Char(V, n, MAXINT);
-}
+SEXP Char(const char **V, int n) { return Char(V, n, n); }
 
 SEXP Mat(double* V, int row, int col, int max) {
   if (V==NULL) return allocMatrix(REALSXP, 0, 0);
@@ -704,6 +721,8 @@ SEXP String(char V[][MAXCHAR], int n, int max) {
   return str;
 }
 
+SEXP String(char V[][MAXCHAR], int n) {return String(V, n, n);}
+ 
 
 SEXP String(int *V, const char * List[], int n, int endvalue) {
   SEXP str;
@@ -739,7 +758,8 @@ double Real(SEXP p, char *name, int idx) {
     }
   }
 
- RFERROR2("'%.50s' can not be transformed to double! (type=%d)\n", name, TYPEOF(p));  
+  RFERROR2("'%.50s' can not be transformed to double! (got'%.50s')\n",
+	   name, R_TYPE_NAME(TYPEOF(p)));  
   return RF_NA;  // to avoid warning from compiler
 }
 
@@ -784,7 +804,8 @@ int Integer(SEXP p, char *name, int idx, bool nulltoNA) {
     default : {}
     }
   } else if (nulltoNA) return NA_INTEGER;
-  RFERROR2("%.50s: unmatched type of parameter [type=%d]", name, TYPEOF(p));
+  RFERROR2("%.50s: incorrect type. Got '%.50s'.",
+	   name, R_TYPE_NAME(TYPEOF(p)));
   return NA_INTEGER; // compiler warning vermeiden
 }
 
@@ -814,7 +835,7 @@ void Integer2(SEXP el, char *name, int *vec) {
   }
  
   vec[0] = Integer(el, name, 0);
-  if (vec[0] == NA_INTEGER || vec[0] < 1)
+  if (vec[0] != NA_INTEGER && vec[0] < 1)
     RFERROR1("first component of '%.50s' must be at least 1", name);
   if (n==1) vec[1] = vec[0];
   else {
@@ -822,11 +843,10 @@ void Integer2(SEXP el, char *name, int *vec) {
     if ( vec[1] != NA_INTEGER && vec[1] < vec[0])
       RFERROR1("'%.50s' must be increasing", name);
     if (n > 2) {
-      int v = vec[0] + 1;
-      for (int i = 1; i<n; i++, v++)
-	if (Integer(el, name, i) != v)
-	  RFERROR1("'%.50s' is not a sequence of numbers",name); 
-
+      vec[1] = vec[0];
+      for (int i = 1; i<n; i++)
+	if (Integer(el, name, i) != ++(vec[1]))
+	  RFERROR1("'%.50s' is not a sequence of numbers",name);
     }
   }
 }
@@ -838,7 +858,7 @@ void Integer2(SEXP el, char *name, int *vec) {
 bool Logical(SEXP p, char *name, int idx) {
    if (p != R_NilValue)
     assert(idx < length(p));
-    switch (TYPEOF(p)) {
+   switch (TYPEOF(p)) {
     case REALSXP:
       if (ISNAN(REAL(p)[idx])) return NA_LOGICAL ;
       else return (bool) REAL(p)[idx];
@@ -1055,7 +1075,8 @@ void GetName(SEXP el, char *name, const char * List[], int n,
 
   if (TYPEOF(el) == NILSXP) goto ErrorHandling;
   if (len_el > maxlen_ans) 
-    RFERROR2("option '%.50s' is too lengthy. Maximum length is %d.", name, maxlen_ans);
+    RFERROR2("option '%.50s' is too lengthy. Maximum length is %d.",
+	     name, maxlen_ans);
 
   if (TYPEOF(el) == STRSXP) {    
     for (k=0; k<len_el; k++) {
@@ -1075,13 +1096,17 @@ void GetName(SEXP el, char *name, const char * List[], int n,
 ErrorHandling0:
   SPRINTF(dummy, "'%.50s': unknown value '%.50s'. Possible values are:", 
 	  name, CHAR(STRING_ELT(el, k)));
+  //  printf("'%s': ", CHAR(STRING_ELT(el, k)));
   int i;
   for (i=0; i<n-1; i++) {
-    char info[1000];
-    SPRINTF(info, "%.50s '%.50s',", dummy, List[i]);    
-    STRCPY(dummy, info);
+    char msg[1000];
+    // printf("'%s', ", List[i]);
+    SPRINTF(msg, "%.900s '%.50s',", dummy, List[i]);    
+    STRCPY(dummy, msg);
   }
-  RFERROR2("%.50s and '%.50s'.", dummy, List[i]);  
+  //printf("'%s'\n ", List[i]);
+  	  
+  RFERROR2("%.900s and '%.50s'.", dummy, List[i]);  
  
  ErrorHandling:
   if (defaultvalue >= 0) {
@@ -1115,6 +1140,7 @@ double lonmod(double x, double modulus) {
     y = x + modulus + halfmodulus;
   return Mod(y, modulus) - halfmodulus;
 }
+
 
 /*
 
@@ -1185,20 +1211,6 @@ void vectordist(double *v, int *Dim, double *Dist, int *diag){
     }
   }
 } 
-
-
-int addressbits(void VARIABLE_IS_NOT_USED *addr) {
-#ifndef RANDOMFIELDS_DEBUGGING  
-  return 0;
-#else
-  double x = (Long) addr,
-    cut = 1e9;
-  x = x - TRUNC(x / cut) * cut;
-  return (int) x;
-#endif
-
-}
-
 
 
 

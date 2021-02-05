@@ -33,6 +33,7 @@ export(decodeSNPs)
 export(colSumsEqualSNPs)
 export(blocklist_subset)
 export(factorSNPs)
+export(data_import)
 
 importFrom("graphics", "abline", "lines", "plot", "polygon")
 importFrom("stats", "density", "median", "ksmooth")

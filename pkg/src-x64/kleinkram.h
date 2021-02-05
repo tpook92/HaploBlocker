@@ -28,9 +28,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef kleinkram_rfutils_h
 #define kleinkram_rfutils_h 1
 
+
+
 #include <R.h>
 #include <Rinternals.h>
-#include <Basic_utils.h> //#include <Basic_utils.h>
+#include <Basic_utils.h> //#include <local1.h>
+
+#define USE_OWN_ALG (GLOBAL.solve.pivotMaxTakeOwn == MAXINT)
+
+
+
+#define LAST_R_TYPE_NAME 32
+extern const char *RTYPE_NAMES[LAST_R_TYPE_NAME + 1];
+#define R_TYPE_NAME(X) RTYPE_NAMES[MIN(X, LAST_R_TYPE_NAME)]
+
+
 
 typedef char name_type[][MAXCHAR];
 
@@ -53,28 +65,28 @@ usr_bool UsrBoolRelaxed(SEXP p, char *name, int idx);
 #define POSNUM PositiveReal(el, name)
 
 
-
-SEXP Logic(bool* V, int n, int max) ;
-SEXP Num(double* V, int n, int max) ;
-SEXP Int(int *V, int n, int max) ;
-SEXP Char(const char **V, int n, int max) ;
+//SEXP Logic(bool* V, int n, int max) ;
+//SEXP Num(double* V, int n, int max) ;
+//SEXP Int(int *V, int n, int max) ;
+//SEXP Char(const char **V, int n, int max) ;
+//SEXP String(char V[][MAXCHAR], int n, int max);
 SEXP Mat(double* V, int row, int col, int max);
 SEXP Mat_t(double* V, int row, int col, int max);
 SEXP MatInt(int* V, int row, int col, int max) ;
 SEXP MatString(char **V, int row, int col, int max);
 SEXP Array3D(int** V, int depth, int row, int col, int max) ;
-SEXP String(char *V);
 
 SEXP Logic(bool* V, int n) ;
 SEXP Num(double* V, int n) ;
-SEXP Int(int *V, int n) ;
+SEXP Int(int *V, int n);
 SEXP Char(const char **V, int n) ;
 SEXP Mat(double* V, int row, int col);
 SEXP Mat_t(double* V, int row, int col);
 SEXP MatInt(int* V, int row, int col) ;
 SEXP MatString(char** V, int row, int col);
 SEXP Array3D(int** V, int depth, int row, int col) ;
-SEXP String(char V[][MAXCHAR], int n, int max);
+SEXP String(char *V);
+SEXP String(char V[][MAXCHAR], int n);
 SEXP String(int *V, const char * List[], int n, int endvalue);
 
 
@@ -112,6 +124,8 @@ SEXP ExtendedBooleanUsr(usr_bool x);
  
 
 
+#ifndef akfjsakfjskajf
+
 double XkCXtl(double *X, double *C, int nrow, int dim, int k, int l);
 void XCXt(double *X, double *C, double *V, int nrow, int dim);
 void AtA(double *a, int nrow, int ncol, double *A);
@@ -135,6 +149,10 @@ void matmult_2ndtransp(double *A, double *B, double *C, int m, int l);
 void matmult_tt(double *A, double *B, double *C, int m, int l, int n);
 double *matrixmult(double *m1, double *m2, int dim1, int dim2, int dim3);
 
+double scalar(double *A, double *B, int N);
+
+#endif
+
 
 
 void GetName(SEXP el, char *name, const char * List[], int n,
@@ -144,7 +162,7 @@ int GetName(SEXP el, char *name, const char * List[], int n,
 	    int defaultvalue) ;
 
 
-#define SCALAR_PROD(A, B, N, ANS) {			\
+#define SCALAR_PROD_OLD(A, B, N, ANS) {			\
     int  k_ =0,				\
     end_ = N - 4;				\
   ANS = 0.0;					\
@@ -164,11 +182,12 @@ int GetName(SEXP el, char *name, const char * List[], int n,
     for (int k_=0; k_<end_; (A)[k_++]=VALUE);		\
 }
 
-double scalar(double *A, double *B, int N);
 double ownround(double x);
 
 #define Mod(Z, modulus) ((Z) - FLOOR((Z) / (modulus)) * (modulus))
 double lonmod(double x, double modulus); 
+
+
 
 /*
 extern "C" void vectordist(double *v, int *dim, double *dist, int *diag); 

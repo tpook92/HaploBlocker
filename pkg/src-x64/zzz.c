@@ -33,9 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //char2int7[] = { CHARSXP, CHARSXP, INTSXP, INTSXP, INTSXP, INTSXP, INTSXP,  INTSXP, INTSXP};
 
 static const R_CMethodDef cMethods[]  = {
-  CDEF(initHaploBlocker, 0, none),
-  CDEF(attachRFoptionsHaploBlocker, 0, none),
-  CDEF(detachRFoptionsHaploBlocker, 0, none),
+   CDEF(loadoptions, 0, none),
+  CDEF(detachoptions, 0, none),
   //  CDEF(, 0, none),
   {NULL, NULL, 0, none}
 };
@@ -44,7 +43,8 @@ static const R_CMethodDef cMethods[]  = {
 #define CALLDEF(name, n) {#name, (DL_FUNC) &name, n}
 static R_CallMethodDef callMethods[]  = {
   // in die respectiven C-Dateien muss adoption.h eingebunden sein
-  CALLDEF(fixcoding, 1),
+  CALLDEF(attachoptions, 0),
+ CALLDEF(fixcoding, 1),
   CALLDEF(codeSNPs, 4),
   CALLDEF(decodeSNPs, 1),
   CALLDEF(factorSNPs, 3),

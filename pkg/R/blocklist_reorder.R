@@ -8,6 +8,7 @@
 
 blocklist_reorder <- function(blocklist, node_min=5){
   size <- blocklist_size(blocklist)
+  node_min <- node_min
   removes <- which(size<node_min)
   if(length(removes)>0){
     for(index in sort(removes, decreasing=TRUE)){
@@ -17,8 +18,13 @@ blocklist_reorder <- function(blocklist, node_min=5){
   se <- blocklist_startend(blocklist, type="snp")
   new.order <- sort(se[,1],index.return=TRUE)$ix
   new_blocklist <- list()
-  for(index in 1:length(blocklist)){
-    new_blocklist[[index]] <- blocklist[[new.order[index]]]
+  if(length(blocklist)>0){
+    for(index in 1:length(blocklist)){
+      new_blocklist[[index]] <- blocklist[[new.order[index]]]
+    }
+    return(new_blocklist)
+  } else{
+    return(list())
   }
-  return(new_blocklist)
+
 }

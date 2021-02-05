@@ -1,11 +1,11 @@
 Package: HaploBlocker
 Type: Package
 Title: HaploBlocker
-Version: 1.5.18
+Version: 1.6.00
 Author: Torsten Pook[aut, cre], Martin Schlather[aut]
 Maintainer: Torsten Pook <torsten.pook@uni-goettingen.de>
 Description: Framework for the creation of haplotype blocks and haplotype library in phased genomic data. Haplotype blocks blocks are identified as cases of groupwise Identity-by-Descent. Associated publication: Pook et al. 2019 <doi:10.1534/genetics.119.302283>.
-Depends: R (>= 3.0), RandomFieldsUtils (>= 0.3.54)
+Depends: R (>= 3.0), RandomFieldsUtils (>= 0.6.6)
 Suggests: vcfR, RColorBrewer, foreach, doParallel
 LinkingTo: RandomFieldsUtils
 License: GPL ( >= 3)

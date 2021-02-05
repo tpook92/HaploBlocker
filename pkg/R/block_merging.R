@@ -105,7 +105,7 @@ block_merging <- function(blocklist, blockinfo, dataset, dhm, indi, nwindow, win
     # Kontrolle Enthalten
 
     for(index in 1:length(blocklist)){
-      if(length(blocklist[[index]][[10]])==0 || blocklist[[index]][[10]] != (blocklist[[index]][[3]]$snp - blocklist[[index]][[2]]$snp +1)){
+      if(length(blocklist[[index]][[10]])==0 || (blocklist[[index]][[10]] != (blocklist[[index]][[3]]$snp - blocklist[[index]][[2]]$snp +1))){
 
         haplotyp <- blocklist[[index]][[4]]
         major <- blocklist[[index]][[7]]$snp

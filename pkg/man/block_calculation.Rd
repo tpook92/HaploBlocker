@@ -79,7 +79,8 @@ block_calculation(
   overlap_remove = FALSE,
   na_value = (-9),
   deletion_count = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  inbred = FALSE
 )
 }
 \arguments{
@@ -232,6 +233,8 @@ block_calculation(
 \item{deletion_count}{If TRUE 0s are handles as deletions. Not increasing rating // counted as major positions}
 
 \item{verbose}{Set to FALSE to not display any prints}
+
+\item{inbred}{Set to TRUE when working with inbred material and importing genomic data from file}
 }
 \value{
 haplotype library

@@ -28,107 +28,87 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 // ACHTUNG: Reihenfolge nicht aendern!
+#include "intrinsics.h"
+#include <Basic_utils.h>
+#include <zzz_RandomFieldsUtils.h>
 #include "chaploblocker.h"
 #include "options.h"
 //#include "def.h"
 #include "xport_import.h"
-#include <Basic_utils.h>
 #include "error.h"
-#include <zzz_RandomFieldsUtils.h>
+#include "kleinkram.h"
 
 
 
-CALL1(void, getErrorString, errorstring_type, errorstring)
-CALL1(void, setErrorLoc, errorloc_type, errorloc)
 
-
-
-const char * prefixlist[prefixN] =
-  {"blocker"};
+const char * prefixlist[prefixN] = {"blocker", "blocker_messagesx"};
 
 
 // IMPORTANT: all names of general must be at least 3 letters long !!!
-const char *blocker[blockerN] =
-  {"unused!", "unused!"};
+const char *blocker[blockerN] = {"(unused)" };
+const char *messages[messagesN] = 
+  {"(none)"}; 
+  
 
-
-
-int PL=C_PRINTLEVEL,
-  CORES=INITCORES;
 globalparam GLOBAL = {
-blocker_START
+blocker_START,
+  messages_START
 };
-utilsparam *GLOBAL_UTILS;
 
 
 const char **all[prefixN] = {blocker};
 int allN[prefixN] = {blockerN};
 
 
-void setparameter(int i, int j, SEXP el, char name[200],
-		  bool VARIABLE_IS_NOT_USED isList, int local) {
-#ifdef DO_PARALLEL
-  if (local != isGLOBAL) ERR1("Options specific to haploblocker, here '%s', can be set only via 'RFoptions' outside any parallel code.", name);
-#endif  
-  globalparam *options = &GLOBAL;
+void setoptions(int i, int j, SEXP el, char name[200],
+		  bool VARIABLE_IS_NOT_USED isList, bool local) {
+
+ if (!local && parallel())
+    ERR("'RFoptions' may not be set from a parallel process.");
+      
+  globalparam *options = WhichOptionList(local);
+ 
   switch(i) {
   case 0: {// blocker
     blocker_param *gp;
     gp = &(options->blocker);
     switch(j) {
     case 0: gp->ANY_diff_value = POS0NUM; break;
-    case 1: gp->ANY_allequal_value = POS0NUM; break;
      default: BUG;
     }}
     break;
+  case 1: {
+    messages_param *gp = &(options->messages);
+    switch(j) {
+    case 0: gp->warn_dummy = LOGI; break;
+    default: BUG;
+    }}
+    break;   
   default: BUG;
   }
 }
 
 
-void finalparameter(int VARIABLE_IS_NOT_USED local) {
-  PL = GLOBAL_UTILS->basic.Cprintlevel;
-  CORES = GLOBAL_UTILS->basic.cores;
-}
 
-void getparameter(SEXP sublist, int i, int VARIABLE_IS_NOT_USED local) {
+void getoptions(SEXP sublist, int i, bool local) {
   int  k = 0;
-  globalparam *options = &GLOBAL;
+  globalparam *options = WhichOptionList(local);
   switch(i) {
   case 0 : {
     blocker_param *p = &(options->blocker);
     ADD(ScalarReal(p->ANY_diff_value));
-    ADD(ScalarReal(p->ANY_allequal_value));
   }
     break;
+
+    case 1 : {
+   messages_param *p = &(options->messages);
+   ADD(ScalarLogical(p->warn_dummy));
+  }
+    break;   
+ 
   default : BUG;
   }
     assert (i == prefixN - 1);
 }
 
-
-void attachRFoptionsHaploBlocker() {
-  includeXport();
-  Ext_getUtilsParam(&GLOBAL_UTILS);
-  //  GLOBAL_UTILS->solve.max_chol = 8192;
-  //  GLOBAL_UTILS->solve.max_svd = 6555;
-/*
-  spam.min.n = as.integer(400) # 400
-  spam.tol = 1e-8
-  spam.min.p = 0.8 # 0.8
-  spam.n = as.integer(1:500)
-  spam.factor = as.integer(4294967)# prime, so that n * factor is still integer
-  silent = TRUE
-*/
-  finalparameter(isGLOBAL);
-  Ext_attachRFoptions(prefixlist, prefixN, all, allN,
-		      setparameter, finalparameter, getparameter, NULL,
-		      -10, false);
-  finalparameter(isGLOBAL);
-  
-}
-
-void detachRFoptionsHaploBlocker() {
-  Ext_detachRFoptions(prefixlist, prefixN);
-}
 

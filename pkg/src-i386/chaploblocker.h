@@ -15,14 +15,14 @@ extern "C" {
   SEXP decodeSNPs(SEXP CM);
   SEXP factorSNPs(SEXP M, SEXP Start, SEXP End);
   SEXP colSumsEqualSNPs(SEXP  CM, SEXP start, SEXP CV, SEXP Select);
-  void initHaploBlocker();
   SEXP intersect(SEXP A, SEXP B);
 
-  SEXP RFoptions(SEXP options);
-  void RelaxUnknownRFoption(int *relax);
+  void loadoptions();
+  SEXP attachoptions();
+  void detachoptions();
+  //  SEXP copyoptions();
 
-  void attachRFoptionsHaploBlocker();
-  void detachRFoptionsHaploBlocker();
+  
 #ifdef __cplusplus
 }
 #endif

@@ -21,24 +21,20 @@
 
 
 
-## sudo apt-get install tcl8.5-dev
-## sudo apt-get install tk8.5-dev
-## see R Installation and Administration
-##./configure --with-tcl-config=/usr/lib/tcl8.5/tclConfig.sh --with-tk-config=/usr/lib/tk8.5/tkConfig.sh
-# sudo tar xvf ~/TMP/bwidget-1.9.5.tar
-
-
 .onLoad <- function(lib, pkg) {
-  .C("initHaploBlocker");
-  .C("attachRFoptionsHaploBlocker")
+   .C("loadoptions")
 }
+
+GetMessage <-function() .Call("attachoptions")
 
 .onAttach <- function (lib, pkg) {
 }
 
 .onDetach <- function(lib) {
+  packageStartupMessage(GetMessage());
 }
 
 .onUnload <- function(lib, pkg){
-  .C("detachRFoptionsHaploBlocker")
+  .C("detachoptions")
 }
+ 

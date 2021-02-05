@@ -28,20 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define miraculix_error_H 1
 
 #include <General_utils.h>
-//#include "error.h"
-
-#ifdef DO_PARALLEL
 #define LOCAL_MSG char MSG[LENERRMSG]
-
-#else  // not DO_PARALLEL
-#define LOCAL_MSG
-extern char ERRMSG[LENERRMSG], MSG[LENERRMSG], BUG_MSG[250], MSG2[LENERRMSG];
-extern errorloc_type ERROR_LOC;
-extern errorstring_type ERRORSTRING;
-#endif
-
-
-#define STOP // assert(false)
 
 
 #endif
