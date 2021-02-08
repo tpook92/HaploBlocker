@@ -4,13 +4,29 @@ R-package: Calculation of haplotype blocks and libraries
 This is the github repository for your R-package HaploBlocker. 
 A paper on HaploBlocker has been published in Genetics (https://www.genetics.org/content/212/4/1045)
 
-The newest release 1.5.2 is mostly adding an optional modus to identify non-overlapping blocks. Outputs on defaults should be the same. The newest version of HaploBlocker is using RandomFieldsUtils 0.5.9 (This is more than what is available on CRAN!). 1.4.X and below is using RandomFieldsUtils 0.5.3.
+The newest release 1.6.0 is mostly adding an optional modus to identify non-overlapping blocks. Outputs on defaults should be the same. The newest version of HaploBlocker is using RandomFieldsUtils 0.6.6 (This is more than what is available on CRAN!). 1.5.X is using 0.5.9, 1.4.X and below is using RandomFieldsUtils 0.5.3. 
 
 For further questions (torsten.pook@uni-goettingen.de)
 
 For explanation on the usage we refer to our user manual. The wiki is currently not equivilant (https://github.com/tpook92/HaploBlocker/wiki) - its just a couple of figure and not top priority as the user manual (Guidelines_to_HaploBlocker) should do.
 
 ## Version history
+
+### Version 1.6.0
+
+Fixed typo in parallel computing
+
+Improved data import from vcf/ped-file
+
+RandomFieldsUtils update (0.6.6)
+
+### Version 1.5.18
+
+Hotfixes in utility/plot functions
+
+Added blocklist_subset to only consider a subset of haplotypes in the haplotype library
+
+Updates for the use in graph-genomes (extended doku will follow)
 
 ### Version 1.5.2
 
