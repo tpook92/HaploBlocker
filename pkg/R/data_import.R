@@ -25,7 +25,6 @@ data_import <- function(dhm, inbred=FALSE, verbose=TRUE){
       haplo1 <- substr(vcf_data, start=1, stop=1)
       haplo2 <- substr(vcf_data, start=3, stop=3)
       bp <- as.numeric(vcf_file[,2])
-      stop("Data-import failed! vcfR-package not available!")
     }
     if(mean(haplo1==haplo2)>0.95){
       cat("Your material seems to be highly homozygous. Consider setting the parameter inbred to TRUE (only consider 1 haplotype per line)!\n")
