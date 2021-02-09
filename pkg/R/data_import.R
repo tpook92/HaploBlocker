@@ -11,7 +11,7 @@ data_import <- function(dhm, inbred=FALSE, verbose=TRUE){
 
   data_type <- substr(dhm, start= nchar(dhm)-3, stop= nchar(dhm))
 
-  if(data_type==".vcf" || "f.gz"){
+  if(data_type==".vcf" || data_type == "f.gz"){
     if(verbose) cat("Data input identified as vcf-file - extract genomic information. \n")
     if(requireNamespace("vcfR", quietly = TRUE)){
       vcf_file <- vcfR::read.vcfR(dhm)
