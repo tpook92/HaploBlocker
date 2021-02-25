@@ -24,6 +24,7 @@ data_import <- function(dhm, inbred=FALSE, verbose=TRUE){
       vcf_data <- as.matrix(vcf_file[,-(1:9)])
       haplo1 <- substr(vcf_data, start=1, stop=1)
       haplo2 <- substr(vcf_data, start=3, stop=3)
+      haplo <- cbind(haplo1, haplo2)
       bp <- as.numeric(vcf_file[,2])
     }
     if(mean(haplo1==haplo2)>0.95){

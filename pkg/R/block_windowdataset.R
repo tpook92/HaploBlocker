@@ -72,7 +72,7 @@ block_windowdataset <- function(blocklist=NULL, data=NULL, consider_nonblock=FAL
 
   }
 
-  start_block <- c(min(se), end_block[1:(length(end_block)-1)]+1)
+  start_block <- c(1, end_block[1:(length(end_block)-1)]+1)
 
   if(min_length_window>0){
 
