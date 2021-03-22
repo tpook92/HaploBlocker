@@ -126,10 +126,21 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
     multi_window_mode <- TRUE
     if((length(window_size)==1 && window_size==20)){
       window_size <- c(5,10,20,50)
+      if(overlap_remove){
+        window_size <- 20
+        warning("Adaptive mode only use a single window size (20) when using overlap removal.")
+      }
     }
     if(length(target_coverage)==0){
       target_coverage <- 0.9
     }
+  }
+
+  if(length(window_size)>1 && overlap_remove){
+    if(adaptive_mode){
+      warning("Adaptive mode will use multiple different window sizes")
+    }
+    stop("The use of multiple window sizes and overlap removal at the same time is not supported!")
   }
 
   if(length(subgroups)>0){
