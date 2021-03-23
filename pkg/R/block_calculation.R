@@ -334,6 +334,10 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
                                      recalculate_biggest=recalculate_biggest, window_size=window_size,
                                      deletion_count=deletion_count, present_data=present_data)
 
+      if(overlap_remove){
+        warning("Overlapping segments between windows can contain overlapping blocks. If that is not wanted set window_overlap = 0 or not run in parallel!")
+      }
+
     }
 
     if(big_output && developer_mode){
