@@ -75,7 +75,7 @@ overlap_removal <- function(blocklist=NULL, data=NULL, node_min=5){
       indis <- sort(unique(indis))
 
 
-      new_blocks[[length(new_blocks)+1]] <- list(nodes,start,end,infostuff,length(indis), indis)
+      new_blocks[[length(new_blocks)+1]] <- list(nodes,start,end,infostuff,length(indis), indis, NULL, NULL, NULL, NULL, NULL, 1)
     } else{
       seg <- mean(max(se[candidates,1]), min(se[candidates,2]))
       main <- suppressWarnings(as.numeric(blocklist[[candidates[[1]]]][[1]]))
@@ -128,7 +128,7 @@ overlap_removal <- function(blocklist=NULL, data=NULL, node_min=5){
         }
 
 
-        new_blocks[[length(new_blocks)+1]] <- list(nodes,start,end,infostuff,length(indis), indis)
+        new_blocks[[length(new_blocks)+1]] <- list(nodes,start,end,infostuff,length(indis), indis, NULL, NULL, NULL, NULL, NULL, 1)
       }
       for(index in active_block){
         upstream[[index]] <- upstream[[index]][-(1:seg_length)]
@@ -164,7 +164,7 @@ overlap_removal <- function(blocklist=NULL, data=NULL, node_min=5){
         }
 
 
-        new_blocks[[length(new_blocks)+1]] <- list(nodes,start,end,infostuff,length(indis), indis)
+        new_blocks[[length(new_blocks)+1]] <- list(nodes,start,end,infostuff,length(indis), indis, NULL, NULL, NULL, NULL, NULL, 1)
       }
       for(index in active_block){
         downstream[[index]] <- downstream[[index]][-(1:seg_length)]

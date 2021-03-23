@@ -289,7 +289,7 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
       blocklist_list <- parallel::mclapply(dhm_list, block_calculation_par, mc.cores=window_cores)
     }
 
-    rm(dhm_list)
+   rm(dhm_list)
 
 
     # modify Start/End
@@ -857,7 +857,6 @@ block_calculation <- function(dhm, window_sequence=NULL, window_size=20, merging
   if(major_snp_calculation==TRUE){
     blocklist <- major_snp_calculation(blocklist, dhm, recoding=recoding)
   }
-
 
 
   if(!developer_mode){
