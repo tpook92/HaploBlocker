@@ -1,7 +1,7 @@
 Package: HaploBlocker
 Type: Package
 Title: HaploBlocker
-Version: 1.6.06
+Version: 1.7.00
 Author: Torsten Pook[aut, cre], Martin Schlather[aut]
 Maintainer: Torsten Pook <torsten.pook@uni-goettingen.de>
 Description: Framework for the creation of haplotype blocks and haplotype library in phased genomic data. Haplotype blocks blocks are identified as cases of groupwise Identity-by-Descent. Associated publication: Pook et al. 2019 <doi:10.1534/genetics.119.302283>.
@@ -11,7 +11,7 @@ LinkingTo: RandomFieldsUtils
 License: GPL ( >= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 URL: http://www.uni-goettingen.de/de/92842.html
 NeedsCompilation: yes
-Packaged: 2020-04-21 12:27:28 UTC
+Packaged: 2024-02-25 12:27:28 UTC
