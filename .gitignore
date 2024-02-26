@@ -3,3 +3,4 @@ pkg/.Rbuildignore
 pkg/.Rproj.user/
 pkg/.Rhistory
 pkg/Rprof.out
+.Rproj.user
