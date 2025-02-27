@@ -91,15 +91,15 @@ founder_detection <- function(dhm=NULL, dhm_founder = NULL, dhm_off = NULL, foun
     for(line in (nfounder+1):ncol(dhm)){
       print(line)
 
-      subs <- NULL # Start/end points of haplotype blocks
+      subs <- list() # Start/end points of haplotype blocks
       foundern <- list() # Potential founders (either of the two haplotypes of a founder)
       for(index in 1:length(blocklist)){
         if(sum(blocklist[[index]][[6]]==line)>0){
-          subs <- rbind(subs, c(blocklist[[index]][[2]]$snp, blocklist[[index]][[3]]$snp ))
+          subs[[length(subs)+1]] <- c(blocklist[[index]][[2]]$snp, blocklist[[index]][[3]]$snp )
           foundern[[length(foundern)+1]] <- intersect(blocklist[[index]][[6]], founding)
         }
       }
-
+      subs <- do.call(rbind,subs)
 
 
       # version 2: extend haplotype blocks in case genotypes exactly match (still conservative!)
@@ -180,7 +180,7 @@ founder_detection <- function(dhm=NULL, dhm_founder = NULL, dhm_off = NULL, foun
           mult[-avail_parent] <- 0
         }
 
-        forward[,index] <- mult * colSums(rec_matrix * forward[,index-1])
+        forward[,index] <- mult * (t(forward[,index-1]) %*% rec_matrix)[,]
         forward[,index] <- forward[,index] / sum(forward[,index])
       }
 
@@ -202,7 +202,7 @@ founder_detection <- function(dhm=NULL, dhm_founder = NULL, dhm_off = NULL, foun
           mult[-avail_parent] <- 0
         }
 
-        backward[,index] <- mult * colSums(rec_matrix * backward[,index+1])
+        backward[,index] <- mult * (t(backward[,index+1]) %*% rec_matrix)[,]
         backward[,index] <- backward[,index] / sum(backward[,index])
       }
 
